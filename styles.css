@@ -1647,8 +1647,9 @@ h1 strong {
   }
 
   .site-counter {
-    right: 10px;
-    bottom: 88px;
+    position: static;
+    width: fit-content;
+    margin: 0 18px 12px auto;
     opacity: 0.92;
   }
 
