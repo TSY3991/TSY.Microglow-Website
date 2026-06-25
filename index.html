@@ -211,8 +211,8 @@
             </div>
             <div class="tool-record">
               <span>最新紀錄</span>
-              <strong>78% 正確率</strong>
-              <span>上次練習：今天</span>
+              <strong id="quizRecordAccuracy">尚無紀錄</strong>
+              <span id="quizRecordMeta">完成一次測驗後顯示</span>
             </div>
             <a
               class="launch-button"
@@ -255,5 +255,20 @@
         </section>
       </main>
     </div>
+    <div
+      class="site-counter"
+      aria-label="網站使用統計"
+      title="本機瀏覽器統計；全站即時人數需串接後端服務"
+    >
+      <span>
+        <small>訪客</small>
+        <strong id="siteVisitorCount">--</strong>
+      </span>
+      <span>
+        <small>在線</small>
+        <strong id="siteOnlineCount">--</strong>
+      </span>
+    </div>
+    <script src="./scripts/portal-records.js"></script>
   </body>
 </html>
