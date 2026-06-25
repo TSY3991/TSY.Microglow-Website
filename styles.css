@@ -70,7 +70,7 @@ a {
 
 a,
 button,
-.category-tabs span {
+.category-tabs button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1048,7 +1048,7 @@ h1 strong {
   padding-bottom: 0;
 }
 
-.category-tabs span {
+.category-tabs button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1058,7 +1058,9 @@ h1 strong {
   border-radius: 999px;
   color: var(--ink-soft);
   background: rgba(255, 253, 248, 0.74);
+  font: inherit;
   font-weight: 800;
+  cursor: pointer;
   white-space: nowrap;
   transition:
     transform 160ms ease,
@@ -1074,10 +1076,11 @@ h1 strong {
   box-shadow: 0 8px 20px rgba(14, 143, 136, 0.22);
 }
 
-.category-tabs span:hover,
-.category-tabs span:focus-visible {
+.category-tabs button:hover,
+.category-tabs button:focus-visible {
   transform: translateY(-1px);
   border-color: rgba(14, 143, 136, 0.28);
+  outline: none;
   box-shadow: 0 10px 24px rgba(42, 47, 45, 0.1);
 }
 
@@ -1090,8 +1093,24 @@ h1 strong {
   color: #9a9a95;
 }
 
+.search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  color: var(--ink);
+  background: transparent;
+  font: inherit;
+  font-weight: 800;
+}
+
+.search-box input::placeholder {
+  color: #9a9a95;
+}
+
 .search-symbol {
   position: relative;
+  flex: 0 0 auto;
   width: 17px;
   height: 17px;
   border: 2px solid #7e8583;
@@ -1108,6 +1127,11 @@ h1 strong {
   background: #7e8583;
   transform: rotate(45deg);
   content: "";
+}
+
+.primary-tool[hidden],
+.tool-empty[hidden] {
+  display: none;
 }
 
 .primary-tool {
@@ -1131,6 +1155,17 @@ h1 strong {
   border-radius: inherit;
   content: "";
   pointer-events: none;
+}
+
+.tool-empty {
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px dashed rgba(14, 143, 136, 0.24);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  background: rgba(255, 253, 248, 0.68);
+  font-weight: 800;
+  text-align: center;
 }
 
 .corner-ribbon {
@@ -1785,7 +1820,7 @@ h1 strong {
     min-height: 34px;
   }
 
-  .category-tabs span,
+  .category-tabs button,
   .launch-button,
   .follow-button {
     min-height: 46px;

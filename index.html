@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <div class="app-shell">
+    <div class="app-shell" id="top">
       <aside class="side-panel" aria-label="主導覽">
         <a class="brand" href="./" aria-label="TSY 微光創作室首頁">
           <span class="brand-mark" aria-hidden="true">
@@ -29,7 +29,7 @@
         <nav class="nav-groups" aria-label="網站入口">
           <section class="nav-section" aria-labelledby="nav-main">
             <h2 id="nav-main">主入口</h2>
-            <a class="nav-item active" href="./" aria-current="page">
+            <a class="nav-item active" href="#top" data-filter-trigger="all" aria-current="page">
               <span class="nav-symbol home-symbol" aria-hidden="true"></span>
               <span>首頁</span>
             </a>
@@ -37,7 +37,7 @@
 
           <section class="nav-section" aria-labelledby="nav-tools">
             <h2 id="nav-tools">工具箱</h2>
-            <a class="nav-item" href="https://tsy3991.github.io/amateur-radio-quiz/">
+            <a class="nav-item" href="#quick-title" data-filter-trigger="quiz">
               <span class="nav-symbol link-symbol" aria-hidden="true"></span>
               <span>測驗練習</span>
             </a>
@@ -179,19 +179,30 @@
           <div class="section-bar">
             <h2 id="quick-title">快速入口</h2>
             <div class="category-tabs" aria-label="入口分類">
-              <span class="active">全部</span>
-              <span>測驗練習</span>
-              <span>學習工具</span>
-              <span>創作工具</span>
-              <span>實用工具</span>
+              <button class="active" type="button" data-filter-trigger="all" aria-pressed="true">全部</button>
+              <button type="button" data-filter-trigger="quiz" aria-pressed="false">測驗練習</button>
+              <button type="button" data-filter-trigger="learning" aria-pressed="false">學習工具</button>
+              <button type="button" data-filter-trigger="creative" aria-pressed="false">創作工具</button>
+              <button type="button" data-filter-trigger="utility" aria-pressed="false">實用工具</button>
             </div>
-            <div class="search-box" aria-label="搜尋工具或測驗">
-              <span>搜尋工具或測驗...</span>
+            <label class="search-box" for="toolSearchInput" aria-label="搜尋工具或測驗">
+              <input
+                id="toolSearchInput"
+                type="search"
+                placeholder="搜尋工具或測驗..."
+                autocomplete="off"
+              >
               <span class="search-symbol" aria-hidden="true"></span>
-            </div>
+            </label>
           </div>
 
-          <article class="primary-tool">
+          <article
+            class="primary-tool"
+            data-tool-card
+            data-category="quiz"
+            data-title="三等業餘無線電人員測驗練習"
+            data-keywords="測驗 練習 題庫 模擬考 錯題本 本機紀錄 無線電 三等 業餘 電台"
+          >
             <span class="corner-ribbon" aria-hidden="true"></span>
             <div class="tool-visual" aria-hidden="true">
               <span class="antenna"></span>
@@ -222,6 +233,7 @@
               <span class="arrow-symbol" aria-hidden="true"></span>
             </a>
           </article>
+          <p class="tool-empty" data-tool-empty hidden>找不到符合的入口。可以換個關鍵字或切回全部。</p>
         </section>
 
         <section class="recommendations" aria-labelledby="recommend-title">

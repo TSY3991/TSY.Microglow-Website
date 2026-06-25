@@ -158,3 +158,93 @@
   });
   window.addEventListener("pagehide", removeTab);
 })();
+
+(function () {
+  const searchInput = document.querySelector("#toolSearchInput");
+  const cards = Array.from(document.querySelectorAll("[data-tool-card]"));
+  const emptyState = document.querySelector("[data-tool-empty]");
+  const filterTriggers = Array.from(document.querySelectorAll("[data-filter-trigger]"));
+
+  if (!cards.length || !filterTriggers.length) return;
+
+  let activeFilter = "all";
+
+  function normalize(value) {
+    return String(value || "").toLowerCase().trim();
+  }
+
+  function getCardText(card) {
+    return normalize([
+      card.dataset.title,
+      card.dataset.category,
+      card.dataset.keywords,
+      card.textContent
+    ].join(" "));
+  }
+
+  function updateTriggerState() {
+    filterTriggers.forEach((trigger) => {
+      const triggerFilter = trigger.dataset.filterTrigger || "all";
+      const isActive = triggerFilter === activeFilter;
+      const inNav = Boolean(trigger.closest(".nav-groups"));
+
+      trigger.classList.toggle("active", isActive);
+
+      if (trigger.tagName === "BUTTON") {
+        trigger.setAttribute("aria-pressed", String(isActive));
+      }
+
+      if (inNav && isActive) {
+        trigger.setAttribute("aria-current", "page");
+      } else if (inNav) {
+        trigger.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  function applyFilters() {
+    const query = normalize(searchInput?.value);
+    let visibleCount = 0;
+
+    cards.forEach((card) => {
+      const cardCategory = card.dataset.category || "";
+      const matchesFilter = activeFilter === "all" || cardCategory === activeFilter;
+      const matchesSearch = !query || getCardText(card).includes(query);
+      const shouldShow = matchesFilter && matchesSearch;
+
+      card.hidden = !shouldShow;
+      if (shouldShow) visibleCount += 1;
+    });
+
+    if (emptyState) {
+      emptyState.hidden = visibleCount > 0;
+    }
+  }
+
+  function setFilter(filter) {
+    activeFilter = filter || "all";
+    updateTriggerState();
+    applyFilters();
+  }
+
+  filterTriggers.forEach((trigger) => {
+    trigger.addEventListener("click", (event) => {
+      const filter = trigger.dataset.filterTrigger || "all";
+      const inNav = Boolean(trigger.closest(".nav-groups"));
+      const target = filter === "all" ? document.querySelector("#top") : document.querySelector("#quick-title");
+
+      event.preventDefault();
+      if (inNav && searchInput) {
+        searchInput.value = "";
+      }
+      setFilter(filter);
+      target?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  });
+
+  searchInput?.addEventListener("input", applyFilters);
+  setFilter("all");
+})();
