@@ -1,4 +1,199 @@
 (function () {
+  const tools = [
+    {
+      id: "amateur-radio-quiz",
+      category: "quiz",
+      categoryLabel: "測驗練習",
+      title: "三等業餘無線電人員測驗練習",
+      description: "提供題庫練習、模擬考、錯題本與本機學習紀錄",
+      url: "https://tsy3991.github.io/amateur-radio-quiz/",
+      cta: "開始練習",
+      keywords: "測驗 練習 題庫 模擬考 錯題本 本機紀錄 無線電 三等 業餘 電台",
+      tags: ["題庫", "模擬考", "錯題本", "本機紀錄"],
+      featured: true,
+      record: true
+    }
+  ];
+
+  const categoryLabels = {
+    quiz: "測驗",
+    learning: "學習",
+    creative: "創作",
+    utility: "實用"
+  };
+
+  const toolGrid = document.querySelector("#toolGrid");
+  const toolCountEl = document.querySelector("#portalToolCount");
+  const todayEntryEl = document.querySelector("#portalTodayEntry");
+  const categoryCountEl = document.querySelector("#portalCategoryCount");
+
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  }
+
+  function renderTool(tool) {
+    const tags = tool.tags
+      .map((tag) => `<strong>${escapeHtml(tag)}</strong>`)
+      .join("");
+    const record = tool.record
+      ? `<div class="tool-record">
+          <span>最新紀錄</span>
+          <strong id="quizRecordAccuracy">尚無紀錄</strong>
+          <span id="quizRecordMeta">完成一次測驗後顯示</span>
+        </div>`
+      : `<div class="tool-record is-static">
+          <span>工具狀態</span>
+          <strong>已上線</strong>
+          <span>${escapeHtml(categoryLabels[tool.category] || tool.categoryLabel)}</span>
+        </div>`;
+
+    return `<article
+        class="primary-tool tool-card${tool.featured ? " is-featured" : ""}"
+        data-tool-card
+        data-category="${escapeHtml(tool.category)}"
+        data-title="${escapeHtml(tool.title)}"
+        data-keywords="${escapeHtml(tool.keywords)}"
+      >
+        <span class="corner-ribbon" aria-hidden="true"></span>
+        <div class="tool-visual" aria-hidden="true">
+          <span class="antenna"></span>
+          <span class="signal signal-one"></span>
+          <span class="signal signal-two"></span>
+        </div>
+        <div class="tool-copy">
+          <p>${escapeHtml(tool.categoryLabel)}</p>
+          <h3>${escapeHtml(tool.title)}</h3>
+          <span>${escapeHtml(tool.description)}</span>
+          <div class="feature-tags" aria-label="工具特色">${tags}</div>
+        </div>
+        ${record}
+        <a class="launch-button" href="${escapeHtml(tool.url)}">
+          <span>${escapeHtml(tool.cta)}</span>
+          <span class="arrow-symbol" aria-hidden="true"></span>
+        </a>
+      </article>`;
+  }
+
+  function renderTools() {
+    if (!toolGrid) return;
+
+    toolGrid.innerHTML = tools.map(renderTool).join("");
+
+    const liveTools = tools.filter((tool) => tool.url);
+
+    if (toolCountEl) toolCountEl.textContent = `${liveTools.length} 個`;
+    if (todayEntryEl) todayEntryEl.textContent = `${liveTools.length} 個`;
+    if (categoryCountEl) categoryCountEl.textContent = `${Object.keys(categoryLabels).length} 類`;
+  }
+
+  function setupFilters() {
+    const searchInput = document.querySelector("#toolSearchInput");
+    const cards = Array.from(document.querySelectorAll("[data-tool-card]"));
+    const emptyState = document.querySelector("[data-tool-empty]");
+    const filterTriggers = Array.from(document.querySelectorAll("[data-filter-trigger]"));
+
+    if (!cards.length || !filterTriggers.length) return;
+
+    let activeFilter = "all";
+    let activeNavRole = "home";
+
+    function normalize(value) {
+      return String(value || "").toLowerCase().trim();
+    }
+
+    function getCardText(card) {
+      return normalize([
+        card.dataset.title,
+        card.dataset.category,
+        card.dataset.keywords,
+        card.textContent
+      ].join(" "));
+    }
+
+    function updateTriggerState() {
+      filterTriggers.forEach((trigger) => {
+        const triggerFilter = trigger.dataset.filterTrigger || "all";
+        const navRole = trigger.dataset.navRole;
+        let isActive = triggerFilter === activeFilter;
+        const inNavigation = Boolean(trigger.closest(".nav-groups, .mobile-dock"));
+
+        if (inNavigation && navRole) {
+          isActive = triggerFilter === activeFilter && navRole === activeNavRole;
+        }
+
+        trigger.classList.toggle("active", isActive);
+
+        if (trigger.tagName === "BUTTON") {
+          trigger.setAttribute("aria-pressed", String(isActive));
+        }
+
+        if (inNavigation && isActive) {
+          trigger.setAttribute("aria-current", "page");
+        } else if (inNavigation) {
+          trigger.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    function applyFilters() {
+      const query = normalize(searchInput?.value);
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const cardCategory = card.dataset.category || "";
+        const matchesFilter = activeFilter === "all" || cardCategory === activeFilter;
+        const matchesSearch = !query || getCardText(card).includes(query);
+        const shouldShow = matchesFilter && matchesSearch;
+
+        card.hidden = !shouldShow;
+        if (shouldShow) visibleCount += 1;
+      });
+
+      if (emptyState) {
+        emptyState.hidden = visibleCount > 0;
+      }
+    }
+
+    function setFilter(filter, navRole) {
+      activeFilter = filter || "all";
+      activeNavRole = navRole || (activeFilter === "all" ? "tools" : activeFilter);
+      updateTriggerState();
+      applyFilters();
+    }
+
+    filterTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        const filter = trigger.dataset.filterTrigger || "all";
+        const inNavigation = Boolean(trigger.closest(".nav-groups, .mobile-dock"));
+        const navRole = trigger.dataset.navRole || (filter === "all" ? "tools" : filter);
+        const target = filter === "all" ? document.querySelector("#top") : document.querySelector("#quick-title");
+        const scrollTarget = navRole === "tools" ? document.querySelector("#quick-title") : target;
+
+        event.preventDefault();
+        if (inNavigation && searchInput) {
+          searchInput.value = "";
+        }
+        setFilter(filter, navRole);
+        scrollTarget?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+    });
+
+    searchInput?.addEventListener("input", applyFilters);
+    setFilter("all", "home");
+  }
+
+  renderTools();
+  setupFilters();
+})();
+
+(function () {
   const STATS_KEY = "amateurRadioQuiz.stats.v1";
   const accuracyEl = document.querySelector("#quizRecordAccuracy");
   const metaEl = document.querySelector("#quizRecordMeta");
@@ -157,94 +352,4 @@
     if (event.key === ONLINE_KEY) updateCounter();
   });
   window.addEventListener("pagehide", removeTab);
-})();
-
-(function () {
-  const searchInput = document.querySelector("#toolSearchInput");
-  const cards = Array.from(document.querySelectorAll("[data-tool-card]"));
-  const emptyState = document.querySelector("[data-tool-empty]");
-  const filterTriggers = Array.from(document.querySelectorAll("[data-filter-trigger]"));
-
-  if (!cards.length || !filterTriggers.length) return;
-
-  let activeFilter = "all";
-
-  function normalize(value) {
-    return String(value || "").toLowerCase().trim();
-  }
-
-  function getCardText(card) {
-    return normalize([
-      card.dataset.title,
-      card.dataset.category,
-      card.dataset.keywords,
-      card.textContent
-    ].join(" "));
-  }
-
-  function updateTriggerState() {
-    filterTriggers.forEach((trigger) => {
-      const triggerFilter = trigger.dataset.filterTrigger || "all";
-      const isActive = triggerFilter === activeFilter;
-      const inNav = Boolean(trigger.closest(".nav-groups"));
-
-      trigger.classList.toggle("active", isActive);
-
-      if (trigger.tagName === "BUTTON") {
-        trigger.setAttribute("aria-pressed", String(isActive));
-      }
-
-      if (inNav && isActive) {
-        trigger.setAttribute("aria-current", "page");
-      } else if (inNav) {
-        trigger.removeAttribute("aria-current");
-      }
-    });
-  }
-
-  function applyFilters() {
-    const query = normalize(searchInput?.value);
-    let visibleCount = 0;
-
-    cards.forEach((card) => {
-      const cardCategory = card.dataset.category || "";
-      const matchesFilter = activeFilter === "all" || cardCategory === activeFilter;
-      const matchesSearch = !query || getCardText(card).includes(query);
-      const shouldShow = matchesFilter && matchesSearch;
-
-      card.hidden = !shouldShow;
-      if (shouldShow) visibleCount += 1;
-    });
-
-    if (emptyState) {
-      emptyState.hidden = visibleCount > 0;
-    }
-  }
-
-  function setFilter(filter) {
-    activeFilter = filter || "all";
-    updateTriggerState();
-    applyFilters();
-  }
-
-  filterTriggers.forEach((trigger) => {
-    trigger.addEventListener("click", (event) => {
-      const filter = trigger.dataset.filterTrigger || "all";
-      const inNav = Boolean(trigger.closest(".nav-groups"));
-      const target = filter === "all" ? document.querySelector("#top") : document.querySelector("#quick-title");
-
-      event.preventDefault();
-      if (inNav && searchInput) {
-        searchInput.value = "";
-      }
-      setFilter(filter);
-      target?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    });
-  });
-
-  searchInput?.addEventListener("input", applyFilters);
-  setFilter("all");
 })();

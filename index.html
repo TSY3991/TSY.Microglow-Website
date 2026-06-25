@@ -29,7 +29,7 @@
         <nav class="nav-groups" aria-label="網站入口">
           <section class="nav-section" aria-labelledby="nav-main">
             <h2 id="nav-main">主入口</h2>
-            <a class="nav-item active" href="#top" data-filter-trigger="all" aria-current="page">
+            <a class="nav-item active" href="#top" data-filter-trigger="all" data-nav-role="home" aria-current="page">
               <span class="nav-symbol home-symbol" aria-hidden="true"></span>
               <span>首頁</span>
             </a>
@@ -92,7 +92,7 @@
           <div class="top-stat">
             <span class="stat-icon flame-icon" aria-hidden="true"></span>
             <span>公開工具</span>
-            <strong>1 個</strong>
+            <strong id="portalToolCount">1 個</strong>
           </div>
           <div class="top-stat">
             <span class="stat-icon coin-icon" aria-hidden="true"></span>
@@ -158,13 +158,13 @@
           <article class="metric-card">
             <span class="metric-icon game-icon" aria-hidden="true"></span>
             <p>今日入口</p>
-            <strong>1 個</strong>
+            <strong id="portalTodayEntry">1 個</strong>
             <span>測驗練習已上線</span>
           </article>
           <article class="metric-card">
             <span class="metric-icon target-icon" aria-hidden="true"></span>
             <p>工具分類</p>
-            <strong>4 類</strong>
+            <strong id="portalCategoryCount">4 類</strong>
             <span>測驗、學習、創作、實用</span>
           </article>
           <article class="metric-card">
@@ -196,43 +196,7 @@
             </label>
           </div>
 
-          <article
-            class="primary-tool"
-            data-tool-card
-            data-category="quiz"
-            data-title="三等業餘無線電人員測驗練習"
-            data-keywords="測驗 練習 題庫 模擬考 錯題本 本機紀錄 無線電 三等 業餘 電台"
-          >
-            <span class="corner-ribbon" aria-hidden="true"></span>
-            <div class="tool-visual" aria-hidden="true">
-              <span class="antenna"></span>
-              <span class="signal signal-one"></span>
-              <span class="signal signal-two"></span>
-            </div>
-            <div class="tool-copy">
-              <p>測驗練習</p>
-              <h3>三等業餘無線電人員測驗練習</h3>
-              <span>提供題庫練習、模擬考、錯題本與本機學習紀錄</span>
-              <div class="feature-tags" aria-label="工具特色">
-                <strong>題庫</strong>
-                <strong>模擬考</strong>
-                <strong>錯題本</strong>
-                <strong>本機紀錄</strong>
-              </div>
-            </div>
-            <div class="tool-record">
-              <span>最新紀錄</span>
-              <strong id="quizRecordAccuracy">尚無紀錄</strong>
-              <span id="quizRecordMeta">完成一次測驗後顯示</span>
-            </div>
-            <a
-              class="launch-button"
-              href="https://tsy3991.github.io/amateur-radio-quiz/"
-            >
-              <span>開始練習</span>
-              <span class="arrow-symbol" aria-hidden="true"></span>
-            </a>
-          </article>
+          <div class="tool-grid" id="toolGrid" aria-live="polite"></div>
           <p class="tool-empty" data-tool-empty hidden>找不到符合的入口。可以換個關鍵字或切回全部。</p>
         </section>
 
@@ -267,17 +231,39 @@
         </section>
       </main>
     </div>
+    <nav class="mobile-dock" aria-label="手機快速導覽">
+      <a class="active" href="#top" data-filter-trigger="all" data-nav-role="home" aria-current="page">
+        <span class="nav-symbol home-symbol" aria-hidden="true"></span>
+        <strong>首頁</strong>
+      </a>
+      <a href="#quick-title" data-filter-trigger="all" data-nav-role="tools">
+        <span class="nav-symbol cube-symbol" aria-hidden="true"></span>
+        <strong>工具</strong>
+      </a>
+      <a href="#quick-title" data-filter-trigger="quiz">
+        <span class="nav-symbol link-symbol" aria-hidden="true"></span>
+        <strong>測驗</strong>
+      </a>
+      <a
+        href="https://www.facebook.com/TSY.Microglow"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span class="nav-symbol bell-symbol" aria-hidden="true"></span>
+        <strong>消息</strong>
+      </a>
+    </nav>
     <div
       class="site-counter"
-      aria-label="網站使用統計"
-      title="本機瀏覽器統計；全站即時人數需串接後端服務"
+      aria-label="本機網站使用統計"
+      title="本機瀏覽器統計；非全站即時人數"
     >
       <span>
-        <small>訪客</small>
+        <small>本機訪客</small>
         <strong id="siteVisitorCount">--</strong>
       </span>
       <span>
-        <small>在線</small>
+        <small>本機在線</small>
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
