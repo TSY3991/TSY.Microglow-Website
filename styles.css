@@ -583,7 +583,7 @@ p {
 .hero {
   display: grid;
   grid-template-columns: minmax(420px, 0.42fr) minmax(0, 1fr);
-  align-items: end;
+  align-items: start;
   gap: 28px;
   margin-bottom: 18px;
 }
@@ -755,8 +755,10 @@ h1 strong {
 
 .hero-banner {
   position: relative;
+  align-self: start;
   min-width: 0;
   min-height: 245px;
+  margin-top: 92px;
   overflow: hidden;
   border-radius: var(--radius);
   background:
@@ -1645,6 +1647,10 @@ h1 strong {
 
   .hero {
     grid-template-columns: 1fr;
+  }
+
+  .hero-banner {
+    margin-top: 0;
   }
 
   .hero-copy {
