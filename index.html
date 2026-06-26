@@ -67,9 +67,8 @@
             </span>
             <a
               class="nav-item"
-              href="https://www.facebook.com/TSY.Microglow"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#news-title"
+              data-news-trigger
             >
               <span class="nav-symbol bell-symbol" aria-hidden="true"></span>
               <span>消息中心</span>
@@ -115,13 +114,35 @@
           </a>
         </header>
 
-        <section class="hero" aria-labelledby="page-title">
-          <div class="hero-copy">
-            <h1 id="page-title">
-              <span>TSY 微光創作室</span>
-              <strong>TSY.Microglow</strong>
-            </h1>
-            <p class="hero-line">工具、測驗與創作入口</p>
+        <section class="hero" aria-labelledby="news-title">
+          <div class="hero-news">
+            <div class="news-heading">
+              <span>最新消息</span>
+              <h1 id="news-title">主站更新公告</h1>
+            </div>
+            <div class="news-list" aria-label="最新消息列表">
+              <article class="news-item">
+                <time datetime="2026-06-26">06/26</time>
+                <div>
+                  <strong>手機版入口重新整理</strong>
+                  <p>調整品牌區、資訊卡與底部導覽，提升小螢幕閱讀與操作。</p>
+                </div>
+              </article>
+              <article class="news-item">
+                <time datetime="2026-06-26">06/26</time>
+                <div>
+                  <strong>新增主站版本與探索者 XP</strong>
+                  <p>入口使用行為與測驗紀錄會累積本機進度。</p>
+                </div>
+              </article>
+              <article class="news-item">
+                <time datetime="2026-06-25">06/25</time>
+                <div>
+                  <strong>無線電測驗入口上線</strong>
+                  <p>快速入口可前往三等業餘無線電人員測驗練習。</p>
+                </div>
+              </article>
+            </div>
           </div>
 
           <div class="hero-banner" aria-label="探索學習創造">
@@ -244,11 +265,7 @@
         <span class="nav-symbol link-symbol" aria-hidden="true"></span>
         <strong>測驗</strong>
       </a>
-      <a
-        href="https://www.facebook.com/TSY.Microglow"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href="#news-title" data-news-trigger>
         <span class="nav-symbol bell-symbol" aria-hidden="true"></span>
         <strong>消息</strong>
       </a>

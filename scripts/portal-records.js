@@ -264,6 +264,10 @@
           trigger.removeAttribute("aria-current");
         }
       });
+      document.querySelectorAll("[data-news-trigger]").forEach((trigger) => {
+        trigger.classList.remove("active");
+        trigger.removeAttribute("aria-current");
+      });
     }
 
     function applyFilters() {
@@ -324,9 +328,31 @@
     setFilter("all", "home");
   }
 
+  function setupNewsNavigation() {
+    const newsTarget = document.querySelector("#news-title");
+    const newsTriggers = Array.from(document.querySelectorAll("[data-news-trigger]"));
+
+    newsTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        document.querySelectorAll(".nav-groups .nav-item, .mobile-dock a").forEach((item) => {
+          item.classList.remove("active");
+          item.removeAttribute("aria-current");
+        });
+        trigger.classList.add("active");
+        trigger.setAttribute("aria-current", "page");
+        newsTarget?.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+    });
+  }
+
   renderTools();
   markVisit();
   setupFilters();
+  setupNewsNavigation();
   document.querySelectorAll("[data-tool-launch]").forEach((link) => {
     link.addEventListener("click", () => {
       incrementProgress("launches", link.dataset.toolLaunch);

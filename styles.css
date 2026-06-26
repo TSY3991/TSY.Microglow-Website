@@ -593,6 +593,92 @@ p {
   padding: 6px 0 26px;
 }
 
+.hero-news {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding: 8px 0 22px;
+}
+
+.news-heading {
+  display: grid;
+  gap: 6px;
+}
+
+.news-heading span {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 30px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: var(--teal-dark);
+  background: var(--teal-soft);
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.hero-news h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.78rem;
+  font-weight: 950;
+  line-height: 1.12;
+  letter-spacing: 0;
+  text-shadow: none;
+}
+
+.news-list {
+  display: grid;
+  gap: 10px;
+}
+
+.news-item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(32, 42, 40, 0.085);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 248, 0.74);
+  box-shadow: 0 10px 22px rgba(42, 47, 45, 0.055);
+}
+
+.news-item > div {
+  min-width: 0;
+}
+
+.news-item time {
+  display: inline-flex;
+  width: 48px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  color: #c46d00;
+  background: #fff1d6;
+  font-size: 0.84rem;
+  font-weight: 950;
+}
+
+.news-item strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.28;
+  overflow-wrap: anywhere;
+}
+
+.news-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.42;
+  overflow-wrap: anywhere;
+}
+
 h1 {
   display: flex;
   flex-wrap: wrap;
@@ -1540,6 +1626,10 @@ h1 strong {
     padding-bottom: 0;
   }
 
+  .hero-news {
+    padding-bottom: 0;
+  }
+
   .mission-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -1743,7 +1833,7 @@ h1 strong {
   }
 
   .top-stat {
-    grid-template-columns: 36px auto;
+    grid-template-columns: 36px minmax(0, 1fr);
     min-height: 58px;
     padding: 9px 10px;
   }
@@ -1778,6 +1868,35 @@ h1 strong {
 
   .hero-copy {
     display: none;
+  }
+
+  .hero-news {
+    gap: 12px;
+    padding: 0;
+  }
+
+  .hero-news h1 {
+    font-size: 1.36rem;
+  }
+
+  .news-list {
+    gap: 8px;
+  }
+
+  .news-item {
+    grid-template-columns: 50px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .news-item time {
+    width: 44px;
+    height: 32px;
+    font-size: 0.78rem;
+  }
+
+  .news-item p {
+    font-size: 0.82rem;
   }
 
   .hero-banner {
