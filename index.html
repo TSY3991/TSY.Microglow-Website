@@ -80,9 +80,9 @@
         <div class="explorer-status" aria-label="微光探索者狀態">
           <img class="mascot" src="./assets/explorer-mascot.png" alt="" aria-hidden="true">
           <div>
-            <strong>微光探索者</strong>
-            <span>探索・學習・創造</span>
-            <div class="xp-track" aria-hidden="true"><span></span></div>
+            <strong id="explorerRank">微光探索者</strong>
+            <span id="explorerMeta">探索・學習・創造</span>
+            <div class="xp-track" aria-label="探索者經驗值"><span id="explorerXpBar"></span></div>
           </div>
         </div>
       </aside>
@@ -102,7 +102,7 @@
           <div class="top-stat">
             <span class="stat-icon trophy-icon" aria-hidden="true"></span>
             <span>主站版本</span>
-            <strong>Lv.1</strong>
+            <strong id="portalLevel">Lv.1</strong>
           </div>
           <a
             class="follow-button"
@@ -146,12 +146,12 @@
               <p>本週任務</p>
               <strong>整理工具入口，讓作品集中展示</strong>
               <div class="progress-track" aria-label="完成進度 1 / 4">
-                <span></span>
+                <span id="missionProgressBar"></span>
               </div>
             </div>
             <div class="mission-score">
               <span>+50</span>
-              <strong>1 / 4</strong>
+              <strong id="missionScore">1 / 4</strong>
             </div>
           </article>
 

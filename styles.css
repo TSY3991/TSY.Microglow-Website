@@ -401,10 +401,11 @@ p {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--teal), var(--green));
+  transition: width 240ms ease;
 }
 
 .xp-track span {
-  width: 58%;
+  width: 0%;
 }
 
 .dashboard {
@@ -908,7 +909,7 @@ h1 strong {
 }
 
 .progress-track span {
-  width: 42%;
+  width: 0%;
 }
 
 .mission-score {

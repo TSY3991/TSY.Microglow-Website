@@ -1,4 +1,6 @@
 (function () {
+  const STATS_KEY = "amateurRadioQuiz.stats.v1";
+  const PROGRESS_KEY = "tsyMicroglowPortal.progress.v1";
   const tools = [
     {
       id: "amateur-radio-quiz",
@@ -26,6 +28,12 @@
   const toolCountEl = document.querySelector("#portalToolCount");
   const todayEntryEl = document.querySelector("#portalTodayEntry");
   const categoryCountEl = document.querySelector("#portalCategoryCount");
+  const portalLevelEl = document.querySelector("#portalLevel");
+  const explorerRankEl = document.querySelector("#explorerRank");
+  const explorerMetaEl = document.querySelector("#explorerMeta");
+  const explorerXpBarEl = document.querySelector("#explorerXpBar");
+  const missionProgressBarEl = document.querySelector("#missionProgressBar");
+  const missionScoreEl = document.querySelector("#missionScore");
 
   function escapeHtml(value) {
     return String(value)
@@ -71,7 +79,7 @@
           <div class="feature-tags" aria-label="工具特色">${tags}</div>
         </div>
         ${record}
-        <a class="launch-button" href="${escapeHtml(tool.url)}">
+        <a class="launch-button" href="${escapeHtml(tool.url)}" data-tool-launch="${escapeHtml(tool.id)}">
           <span>${escapeHtml(tool.cta)}</span>
           <span class="arrow-symbol" aria-hidden="true"></span>
         </a>
@@ -88,6 +96,125 @@
     if (toolCountEl) toolCountEl.textContent = `${liveTools.length} 個`;
     if (todayEntryEl) todayEntryEl.textContent = `${liveTools.length} 個`;
     if (categoryCountEl) categoryCountEl.textContent = `${Object.keys(categoryLabels).length} 類`;
+  }
+
+  function todayKey() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
+
+  function readJson(key, fallback) {
+    try {
+      const raw = window.localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function writeJson(key, value) {
+    try {
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // Ignore private-mode storage failures.
+    }
+  }
+
+  function readProgress() {
+    const progress = readJson(PROGRESS_KEY, {});
+    return {
+      visitedDays: Array.isArray(progress.visitedDays) ? progress.visitedDays : [],
+      searches: Number(progress.searches) || 0,
+      filters: Number(progress.filters) || 0,
+      launches: progress.launches && typeof progress.launches === "object" ? progress.launches : {}
+    };
+  }
+
+  function readQuizSessions() {
+    const stats = readJson(STATS_KEY, null);
+    return Array.isArray(stats?.sessions) ? stats.sessions : [];
+  }
+
+  function markVisit() {
+    const progress = readProgress();
+    const today = todayKey();
+
+    if (!progress.visitedDays.includes(today)) {
+      progress.visitedDays.push(today);
+      writeJson(PROGRESS_KEY, progress);
+    }
+  }
+
+  function incrementProgress(field, toolId) {
+    const progress = readProgress();
+
+    if (field === "launches" && toolId) {
+      progress.launches[toolId] = (Number(progress.launches[toolId]) || 0) + 1;
+    } else if (field === "searches" || field === "filters") {
+      progress[field] += 1;
+    }
+
+    writeJson(PROGRESS_KEY, progress);
+    updateProgressUi();
+  }
+
+  function sumLaunches(launches) {
+    return Object.values(launches).reduce((total, value) => total + (Number(value) || 0), 0);
+  }
+
+  function computeXp(progress, sessions) {
+    const visitXp = Math.min(progress.visitedDays.length * 5, 100);
+    const searchXp = Math.min(progress.searches * 2, 50);
+    const filterXp = Math.min(progress.filters * 2, 50);
+    const launchXp = Math.min(sumLaunches(progress.launches) * 10, 200);
+    const quizXp = Math.min(sessions.length * 20, 300);
+    const bestAccuracy = sessions.reduce((best, session) => {
+      const score = Number(session?.score) || 0;
+      const total = Number(session?.total || session?.answered) || 0;
+      const accuracy = total > 0 ? Math.round((score / total) * 100) : 0;
+      return Math.max(best, accuracy);
+    }, 0);
+    const milestoneXp = bestAccuracy >= 90 ? 50 : bestAccuracy >= 80 ? 30 : bestAccuracy >= 60 ? 15 : 0;
+
+    return 20 + visitXp + searchXp + filterXp + launchXp + quizXp + milestoneXp;
+  }
+
+  function levelFromXp(xp) {
+    return Math.min(10, Math.floor(xp / 100) + 1);
+  }
+
+  function computePortalLevel() {
+    const liveToolCount = tools.filter((tool) => tool.url).length;
+    let level = 1;
+
+    if (liveToolCount >= 1) level = 2;
+    if (liveToolCount >= 3) level = 3;
+    if (liveToolCount >= 5) level = 4;
+    if (liveToolCount >= 8) level = 5;
+
+    return level;
+  }
+
+  function updateProgressUi() {
+    const progress = readProgress();
+    const sessions = readQuizSessions();
+    const xp = computeXp(progress, sessions);
+    const explorerLevel = levelFromXp(xp);
+    const currentLevelXp = (explorerLevel - 1) * 100;
+    const nextLevelXp = explorerLevel * 100;
+    const xpInLevel = Math.max(0, xp - currentLevelXp);
+    const xpNeeded = nextLevelXp - currentLevelXp;
+    const xpPercent = explorerLevel >= 10 ? 100 : Math.min(100, Math.round((xpInLevel / xpNeeded) * 100));
+    const liveToolCount = tools.filter((tool) => tool.url).length;
+    const missionTotal = 4;
+    const missionCurrent = Math.min(liveToolCount, missionTotal);
+
+    if (portalLevelEl) portalLevelEl.textContent = `Lv.${computePortalLevel()}`;
+    if (explorerRankEl) explorerRankEl.textContent = `微光探索者 Lv.${explorerLevel}`;
+    if (explorerMetaEl) explorerMetaEl.textContent = `${xp} XP・${progress.visitedDays.length} 天探索`;
+    if (explorerXpBarEl) explorerXpBarEl.style.width = `${xpPercent}%`;
+    if (missionProgressBarEl) missionProgressBarEl.style.width = `${Math.round((missionCurrent / missionTotal) * 100)}%`;
+    if (missionScoreEl) missionScoreEl.textContent = `${missionCurrent} / ${missionTotal}`;
   }
 
   function setupFilters() {
@@ -177,6 +304,7 @@
         if (inNavigation && searchInput) {
           searchInput.value = "";
         }
+        incrementProgress("filters");
         setFilter(filter, navRole);
         scrollTarget?.scrollIntoView({
           behavior: "smooth",
@@ -185,12 +313,33 @@
       });
     });
 
-    searchInput?.addEventListener("input", applyFilters);
+    let searchTracked = false;
+    searchInput?.addEventListener("input", () => {
+      applyFilters();
+      if (!searchTracked && normalize(searchInput.value).length >= 2) {
+        searchTracked = true;
+        incrementProgress("searches");
+      }
+    });
     setFilter("all", "home");
   }
 
   renderTools();
+  markVisit();
   setupFilters();
+  document.querySelectorAll("[data-tool-launch]").forEach((link) => {
+    link.addEventListener("click", () => {
+      incrementProgress("launches", link.dataset.toolLaunch);
+    });
+  });
+  updateProgressUi();
+  window.addEventListener("focus", updateProgressUi);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) updateProgressUi();
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key === STATS_KEY || event.key === PROGRESS_KEY) updateProgressUi();
+  });
 })();
 
 (function () {
