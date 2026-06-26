@@ -1,5 +1,6 @@
 (function () {
   const STATS_KEY = "amateurRadioQuiz.stats.v1";
+  const GAME_STATS_KEY = "tsyMicroglowPortal.gameStats.v1";
   const PROGRESS_KEY = "tsyMicroglowPortal.progress.v1";
   const tools = [
     {
@@ -14,11 +15,25 @@
       tags: ["題庫", "模擬考", "錯題本", "本機紀錄"],
       featured: true,
       record: true
+    },
+    {
+      id: "microglow-tetris",
+      category: "game",
+      categoryLabel: "小遊戲",
+      title: "微光俄羅斯方塊",
+      description: "經典方塊消除小遊戲，適合短時間挑戰反應與排列策略。",
+      url: "https://tsy3991.github.io/microglow-tetris/",
+      cta: "開始遊玩",
+      keywords: "小遊戲 俄羅斯方塊 Tetris 方塊 消除 休閒 挑戰",
+      tags: ["小遊戲", "方塊消除", "休閒挑戰", "本機紀錄"],
+      featured: false,
+      record: true
     }
   ];
 
   const categoryLabels = {
     quiz: "測驗",
+    game: "小遊戲",
     learning: "學習",
     creative: "創作",
     utility: "實用"
@@ -47,11 +62,12 @@
     const tags = tool.tags
       .map((tag) => `<strong>${escapeHtml(tag)}</strong>`)
       .join("");
+    const emptyRecordMeta = tool.category === "game" ? "遊玩一次後顯示" : "完成一次測驗後顯示";
     const record = tool.record
       ? `<div class="tool-record">
           <span>最新紀錄</span>
-          <strong id="quizRecordAccuracy">尚無紀錄</strong>
-          <span id="quizRecordMeta">完成一次測驗後顯示</span>
+          <strong data-record-value="${escapeHtml(tool.id)}">尚無紀錄</strong>
+          <span data-record-meta="${escapeHtml(tool.id)}">${emptyRecordMeta}</span>
         </div>`
       : `<div class="tool-record is-static">
           <span>工具狀態</span>
@@ -163,11 +179,16 @@
   }
 
   function computeXp(progress, sessions) {
+    const gameStats = readJson(GAME_STATS_KEY, {});
+    const gamePlays = Object.values(gameStats?.games || {}).reduce((total, game) => {
+      return total + (Number(game?.plays) || 0);
+    }, 0);
     const visitXp = Math.min(progress.visitedDays.length * 5, 100);
     const searchXp = Math.min(progress.searches * 2, 50);
     const filterXp = Math.min(progress.filters * 2, 50);
     const launchXp = Math.min(sumLaunches(progress.launches) * 10, 200);
     const quizXp = Math.min(sessions.length * 20, 300);
+    const gameXp = Math.min(gamePlays * 10, 200);
     const bestAccuracy = sessions.reduce((best, session) => {
       const score = Number(session?.score) || 0;
       const total = Number(session?.total || session?.answered) || 0;
@@ -176,7 +197,7 @@
     }, 0);
     const milestoneXp = bestAccuracy >= 90 ? 50 : bestAccuracy >= 80 ? 30 : bestAccuracy >= 60 ? 15 : 0;
 
-    return 20 + visitXp + searchXp + filterXp + launchXp + quizXp + milestoneXp;
+    return 20 + visitXp + searchXp + filterXp + launchXp + quizXp + gameXp + milestoneXp;
   }
 
   function levelFromXp(xp) {
@@ -364,16 +385,19 @@
     if (!document.hidden) updateProgressUi();
   });
   window.addEventListener("storage", (event) => {
-    if (event.key === STATS_KEY || event.key === PROGRESS_KEY) updateProgressUi();
+    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY || event.key === PROGRESS_KEY) updateProgressUi();
   });
 })();
 
 (function () {
   const STATS_KEY = "amateurRadioQuiz.stats.v1";
-  const accuracyEl = document.querySelector("#quizRecordAccuracy");
-  const metaEl = document.querySelector("#quizRecordMeta");
+  const GAME_STATS_KEY = "tsyMicroglowPortal.gameStats.v1";
+  const quizValueEl = document.querySelector('[data-record-value="amateur-radio-quiz"]');
+  const quizMetaEl = document.querySelector('[data-record-meta="amateur-radio-quiz"]');
+  const tetrisValueEl = document.querySelector('[data-record-value="microglow-tetris"]');
+  const tetrisMetaEl = document.querySelector('[data-record-meta="microglow-tetris"]');
 
-  if (!accuracyEl || !metaEl) return;
+  if (!quizValueEl && !tetrisValueEl) return;
 
   function readStats() {
     try {
@@ -381,6 +405,17 @@
       if (!raw) return null;
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed?.sessions) ? parsed.sessions : [];
+    } catch {
+      return null;
+    }
+  }
+
+  function readGameStats() {
+    try {
+      const raw = window.localStorage.getItem(GAME_STATS_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed?.games && typeof parsed.games === "object" ? parsed.games : null;
     } catch {
       return null;
     }
@@ -412,12 +447,14 @@
   }
 
   function updateQuizRecord() {
+    if (!quizValueEl || !quizMetaEl) return;
+
     const sessions = readStats();
     const latest = Array.isArray(sessions) ? getLatestSession(sessions) : null;
 
     if (!latest) {
-      accuracyEl.textContent = "尚無紀錄";
-      metaEl.textContent = "完成一次測驗後顯示";
+      quizValueEl.textContent = "尚無紀錄";
+      quizMetaEl.textContent = "完成一次測驗後顯示";
       return;
     }
 
@@ -427,17 +464,41 @@
     const label = latest.label || "測驗練習";
     const dateText = formatRelativeDate(latest.date);
 
-    accuracyEl.textContent = `${accuracy}% 正確率`;
-    metaEl.textContent = `${label}：${dateText}`;
+    quizValueEl.textContent = `${accuracy}% 正確率`;
+    quizMetaEl.textContent = `${label}：${dateText}`;
   }
 
-  updateQuizRecord();
-  window.addEventListener("focus", updateQuizRecord);
+  function updateGameRecord() {
+    if (!tetrisValueEl || !tetrisMetaEl) return;
+
+    const game = readGameStats()?.["microglow-tetris"];
+
+    if (!game) {
+      tetrisValueEl.textContent = "尚無紀錄";
+      tetrisMetaEl.textContent = "遊玩一次後顯示";
+      return;
+    }
+
+    const bestScore = Number(game.bestScore) || 0;
+    const plays = Number(game.plays) || 0;
+    const dateText = game.updatedAt ? formatRelativeDate(game.updatedAt) : "最近";
+
+    tetrisValueEl.textContent = `最高 ${bestScore.toLocaleString("zh-TW")} 分`;
+    tetrisMetaEl.textContent = `${plays} 次遊玩：${dateText}`;
+  }
+
+  function updateRecords() {
+    updateQuizRecord();
+    updateGameRecord();
+  }
+
+  updateRecords();
+  window.addEventListener("focus", updateRecords);
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) updateQuizRecord();
+    if (!document.hidden) updateRecords();
   });
   window.addEventListener("storage", (event) => {
-    if (event.key === STATS_KEY) updateQuizRecord();
+    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY) updateRecords();
   });
 })();
 

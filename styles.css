@@ -294,6 +294,7 @@ p {
 .cube-symbol::before,
 .book-symbol::before,
 .star-symbol::before,
+.gamepad-symbol::before,
 .bell-symbol::before {
   width: 18px;
   height: 18px;
@@ -305,6 +306,22 @@ p {
 .link-symbol::before {
   border-radius: 9px;
   transform: rotate(-35deg);
+}
+
+.gamepad-symbol::before {
+  width: 20px;
+  height: 14px;
+  border-radius: 8px;
+}
+
+.gamepad-symbol::after {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: -5px 0 0 currentColor, 5px -2px 0 currentColor, 9px 2px 0 currentColor;
+  content: "";
 }
 
 .doc-symbol::after {
