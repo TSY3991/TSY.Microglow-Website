@@ -1765,7 +1765,7 @@ h1 strong {
 
   .side-panel {
     display: block;
-    padding: 22px 18px 18px;
+    padding: 16px 18px 14px;
   }
 
   .site-counter {
@@ -1781,16 +1781,17 @@ h1 strong {
   }
 
   .brand {
-    display: grid;
+    display: flex;
     width: 100%;
-    justify-items: center;
-    gap: 8px;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: left;
   }
 
   .brand-mark {
-    width: 94px;
-    height: 72px;
+    width: 70px;
+    height: 54px;
   }
 
   .nav-groups {
@@ -1844,12 +1845,12 @@ h1 strong {
   }
 
   .brand-copy strong {
-    font-size: 1.42rem;
+    font-size: 1.22rem;
     line-height: 1.12;
   }
 
   .brand-copy span {
-    font-size: 1.06rem;
+    font-size: 0.96rem;
   }
 
   .dashboard {
