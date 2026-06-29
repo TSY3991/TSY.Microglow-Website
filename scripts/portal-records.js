@@ -42,6 +42,7 @@
   const toolGrid = document.querySelector("#toolGrid");
   const toolCountEl = document.querySelector("#portalToolCount");
   const todayEntryEl = document.querySelector("#portalTodayEntry");
+  const todayEntryDetailEl = document.querySelector("#portalTodayEntryDetail");
   const categoryCountEl = document.querySelector("#portalCategoryCount");
   const portalLevelEl = document.querySelector("#portalLevel");
   const explorerRankEl = document.querySelector("#explorerRank");
@@ -55,7 +56,8 @@
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;");
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
   }
 
   function renderTool(tool) {
@@ -108,9 +110,15 @@
     toolGrid.innerHTML = tools.map(renderTool).join("");
 
     const liveTools = tools.filter((tool) => tool.url);
+    const liveCategories = Array.from(new Set(liveTools.map((tool) => tool.categoryLabel)));
 
     if (toolCountEl) toolCountEl.textContent = `${liveTools.length} 個`;
     if (todayEntryEl) todayEntryEl.textContent = `${liveTools.length} 個`;
+    if (todayEntryDetailEl) {
+      todayEntryDetailEl.textContent = liveCategories.length
+        ? `${liveCategories.join(" / ")}已上線`
+        : "持續上線中";
+    }
     if (categoryCountEl) categoryCountEl.textContent = `${Object.keys(categoryLabels).length} 類`;
   }
 
@@ -227,14 +235,18 @@
     const xpNeeded = nextLevelXp - currentLevelXp;
     const xpPercent = explorerLevel >= 10 ? 100 : Math.min(100, Math.round((xpInLevel / xpNeeded) * 100));
     const liveToolCount = tools.filter((tool) => tool.url).length;
-    const missionTotal = 4;
+    const missionTotal = Object.keys(categoryLabels).length;
     const missionCurrent = Math.min(liveToolCount, missionTotal);
 
     if (portalLevelEl) portalLevelEl.textContent = `Lv.${computePortalLevel()}`;
     if (explorerRankEl) explorerRankEl.textContent = `微光探索者 Lv.${explorerLevel}`;
     if (explorerMetaEl) explorerMetaEl.textContent = `${xp} XP・${progress.visitedDays.length} 天探索`;
     if (explorerXpBarEl) explorerXpBarEl.style.width = `${xpPercent}%`;
-    if (missionProgressBarEl) missionProgressBarEl.style.width = `${Math.round((missionCurrent / missionTotal) * 100)}%`;
+    if (missionProgressBarEl) {
+      missionProgressBarEl.style.width = `${Math.round((missionCurrent / missionTotal) * 100)}%`;
+      const track = missionProgressBarEl.parentElement;
+      if (track) track.setAttribute("aria-label", `完成進度 ${missionCurrent} / ${missionTotal}`);
+    }
     if (missionScoreEl) missionScoreEl.textContent = `${missionCurrent} / ${missionTotal}`;
   }
 
@@ -322,8 +334,9 @@
         const filter = trigger.dataset.filterTrigger || "all";
         const inNavigation = Boolean(trigger.closest(".nav-groups, .mobile-dock"));
         const navRole = trigger.dataset.navRole || (filter === "all" ? "tools" : filter);
-        const target = filter === "all" ? document.querySelector("#top") : document.querySelector("#quick-title");
-        const scrollTarget = navRole === "tools" ? document.querySelector("#quick-title") : target;
+        const scrollTarget = navRole === "home"
+          ? document.querySelector("#top")
+          : document.querySelector("#quick-title");
 
         event.preventDefault();
         if (inNavigation && searchInput) {
@@ -338,13 +351,18 @@
       });
     });
 
-    let searchTracked = false;
+    let searchDebounce = null;
+    let lastTrackedQuery = "";
     searchInput?.addEventListener("input", () => {
       applyFilters();
-      if (!searchTracked && normalize(searchInput.value).length >= 2) {
-        searchTracked = true;
-        incrementProgress("searches");
-      }
+      window.clearTimeout(searchDebounce);
+      searchDebounce = window.setTimeout(() => {
+        const query = normalize(searchInput.value);
+        if (query.length >= 2 && query !== lastTrackedQuery) {
+          lastTrackedQuery = query;
+          incrementProgress("searches");
+        }
+      }, 600);
     });
     setFilter("all", "home");
   }
@@ -394,10 +412,8 @@
   const GAME_STATS_KEY = "tsyMicroglowPortal.gameStats.v1";
   const quizValueEl = document.querySelector('[data-record-value="amateur-radio-quiz"]');
   const quizMetaEl = document.querySelector('[data-record-meta="amateur-radio-quiz"]');
-  const tetrisValueEl = document.querySelector('[data-record-value="microglow-tetris"]');
-  const tetrisMetaEl = document.querySelector('[data-record-meta="microglow-tetris"]');
 
-  if (!quizValueEl && !tetrisValueEl) return;
+  if (!quizValueEl) return;
 
   function readStats() {
     try {
@@ -405,17 +421,6 @@
       if (!raw) return null;
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed?.sessions) ? parsed.sessions : [];
-    } catch {
-      return null;
-    }
-  }
-
-  function readGameStats() {
-    try {
-      const raw = window.localStorage.getItem(GAME_STATS_KEY);
-      if (!raw) return null;
-      const parsed = JSON.parse(raw);
-      return parsed?.games && typeof parsed.games === "object" ? parsed.games : null;
     } catch {
       return null;
     }
@@ -468,37 +473,13 @@
     quizMetaEl.textContent = `${label}：${dateText}`;
   }
 
-  function updateGameRecord() {
-    if (!tetrisValueEl || !tetrisMetaEl) return;
-
-    const game = readGameStats()?.["microglow-tetris"];
-
-    if (!game) {
-      tetrisValueEl.textContent = "尚無紀錄";
-      tetrisMetaEl.textContent = "遊玩一次後顯示";
-      return;
-    }
-
-    const bestScore = Number(game.bestScore) || 0;
-    const plays = Number(game.plays) || 0;
-    const dateText = game.updatedAt ? formatRelativeDate(game.updatedAt) : "最近";
-
-    tetrisValueEl.textContent = `最高 ${bestScore.toLocaleString("zh-TW")} 分`;
-    tetrisMetaEl.textContent = `${plays} 次遊玩：${dateText}`;
-  }
-
-  function updateRecords() {
-    updateQuizRecord();
-    updateGameRecord();
-  }
-
-  updateRecords();
-  window.addEventListener("focus", updateRecords);
+  updateQuizRecord();
+  window.addEventListener("focus", updateQuizRecord);
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) updateRecords();
+    if (!document.hidden) updateQuizRecord();
   });
   window.addEventListener("storage", (event) => {
-    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY) updateRecords();
+    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY) updateQuizRecord();
   });
 })();
 
