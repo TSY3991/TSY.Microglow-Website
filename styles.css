@@ -295,6 +295,7 @@ p {
 .book-symbol::before,
 .star-symbol::before,
 .gamepad-symbol::before,
+.bug-symbol::before,
 .bell-symbol::before {
   width: 18px;
   height: 18px;
@@ -321,6 +322,21 @@ p {
   border-radius: 50%;
   background: currentColor;
   box-shadow: -5px 0 0 currentColor, 5px -2px 0 currentColor, 9px 2px 0 currentColor;
+  content: "";
+}
+
+.bug-symbol::before {
+  width: 17px;
+  height: 17px;
+  border-radius: 50% 50% 7px 7px;
+}
+
+.bug-symbol::after {
+  position: absolute;
+  width: 15px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 6px 0 currentColor;
   content: "";
 }
 
@@ -1543,6 +1559,7 @@ h1 strong {
 .recommendations {
   display: grid;
   gap: 14px;
+  margin-bottom: 24px;
 }
 
 .recommend-grid {
@@ -1644,6 +1661,97 @@ h1 strong {
   font-size: 0.82rem;
   font-weight: 900;
   white-space: nowrap;
+}
+
+.feedback-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid rgba(14, 143, 136, 0.14);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(223, 243, 238, 0.78), rgba(255, 248, 231, 0.76)),
+    rgba(255, 253, 248, 0.84);
+  box-shadow: 0 14px 34px rgba(42, 47, 45, 0.07);
+}
+
+.feedback-copy {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.feedback-kicker {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 28px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: var(--teal-dark);
+  background: rgba(14, 143, 136, 0.13);
+  font-size: 0.82rem;
+  font-weight: 950;
+}
+
+.feedback-copy h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.24rem;
+  line-height: 1.22;
+}
+
+.feedback-copy p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: end;
+}
+
+.feedback-button,
+.feedback-secondary {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.feedback-button {
+  gap: 10px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+  box-shadow: 0 12px 26px rgba(14, 143, 136, 0.2);
+}
+
+.feedback-button .bug-symbol {
+  position: relative;
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+}
+
+.feedback-secondary {
+  padding: 0 14px;
+  color: var(--teal-dark);
+  border: 1px solid rgba(14, 143, 136, 0.18);
+  background: rgba(255, 253, 248, 0.7);
 }
 
 @container (max-width: 760px) {
@@ -1761,8 +1869,13 @@ h1 strong {
   }
 
   .mission-row,
-  .recommend-grid {
+  .recommend-grid,
+  .feedback-panel {
     grid-template-columns: 1fr;
+  }
+
+  .feedback-actions {
+    justify-content: start;
   }
 
   .primary-tool {
@@ -1822,8 +1935,8 @@ h1 strong {
     left: 12px;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
     padding: 7px;
     border: 1px solid rgba(32, 42, 40, 0.1);
     border-radius: 16px;
@@ -1835,13 +1948,13 @@ h1 strong {
   .mobile-dock a {
     display: grid;
     min-width: 0;
-    min-height: 56px;
+    min-height: 54px;
     place-items: center;
     gap: 4px;
     border: 1px solid transparent;
     border-radius: 12px;
     color: var(--ink-soft);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     font-weight: 900;
   }
 
@@ -1857,7 +1970,7 @@ h1 strong {
   }
 
   .mobile-dock strong {
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     line-height: 1;
   }
 
@@ -2118,6 +2231,20 @@ h1 strong {
     grid-template-columns: 48px minmax(0, 1fr);
   }
 
+  .feedback-panel {
+    padding: 16px;
+  }
+
+  .feedback-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .feedback-button,
+  .feedback-secondary {
+    width: 100%;
+  }
+
   .soon-label {
     grid-column: 1 / -1;
     justify-self: start;
@@ -2141,7 +2268,8 @@ h1 strong {
   .mission-card,
   .metric-card,
   .primary-tool,
-  .recommend-card {
+  .recommend-card,
+  .feedback-panel {
     padding-inline: 14px;
   }
 }

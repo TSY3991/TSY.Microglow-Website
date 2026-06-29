@@ -77,6 +77,10 @@
               <span class="nav-symbol bell-symbol" aria-hidden="true"></span>
               <span>消息中心</span>
             </a>
+            <a class="nav-item" href="#feedback-title">
+              <span class="nav-symbol bug-symbol" aria-hidden="true"></span>
+              <span>問題回報</span>
+            </a>
           </section>
         </nav>
 
@@ -125,6 +129,20 @@
               <h1 id="news-title">主站更新公告</h1>
             </div>
             <div class="news-list" aria-label="最新消息列表，桌機最多顯示十則，手機最多顯示五則">
+              <article class="news-item">
+                <time datetime="2026-06-27">06/27</time>
+                <div>
+                  <strong>新增問題回報入口</strong>
+                  <p>可透過入口網站送出 Bug、連結失效與操作異常回報。</p>
+                </div>
+              </article>
+              <article class="news-item">
+                <time datetime="2026-06-27">06/27</time>
+                <div>
+                  <strong>遊戲大廳改為獨立專案</strong>
+                  <p>遊戲入口已改連至 TSY.Microglow-Games，方便後續新增遊戲。</p>
+                </div>
+              </article>
               <article class="news-item">
                 <time datetime="2026-06-26">06/26</time>
                 <div>
@@ -255,6 +273,33 @@
             </article>
           </div>
         </section>
+
+        <section class="feedback-panel" aria-labelledby="feedback-title">
+          <div class="feedback-copy">
+            <span class="feedback-kicker">問題回報</span>
+            <h2 id="feedback-title">遇到 Bug 或連結失效？</h2>
+            <p>請留下發生頁面、裝置、瀏覽器、操作步驟與截圖，方便後續修正與公告。</p>
+          </div>
+          <div class="feedback-actions">
+            <a
+              class="feedback-button"
+              href="https://github.com/TSY3991/TSY.Microglow-Website/issues/new?title=%5BBug%5D%20%E5%85%A5%E5%8F%A3%E7%B6%B2%E7%AB%99%E5%95%8F%E9%A1%8C%E5%9B%9E%E5%A0%B1&body=%E5%95%8F%E9%A1%8C%E9%A0%81%E9%9D%A2%EF%BC%9A%0A%0A%E8%A3%9D%E7%BD%AE%EF%BC%8F%E7%80%8F%E8%A6%BD%E5%99%A8%EF%BC%9A%0A%0A%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%A9%9F%EF%BC%9A%0A%0A%E9%A0%90%E6%9C%9F%E7%B5%90%E6%9E%9C%EF%BC%9A%0A%0A%E5%AF%A6%E9%9A%9B%E7%B5%90%E6%9E%9C%EF%BC%9A%0A%0A%E6%88%AA%E5%9C%96%EF%BC%88%E5%A6%82%E6%9C%89%EF%BC%89%EF%BC%9A"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="bug-symbol" aria-hidden="true"></span>
+              <strong>回報 Bug</strong>
+            </a>
+            <a
+              class="feedback-secondary"
+              href="https://github.com/TSY3991/TSY.Microglow-Website/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              查看已回報
+            </a>
+          </div>
+        </section>
       </main>
     </div>
     <nav class="mobile-dock" aria-label="手機快速導覽">
@@ -269,6 +314,10 @@
       <a href="#quick-title" data-filter-trigger="quiz">
         <span class="nav-symbol link-symbol" aria-hidden="true"></span>
         <strong>測驗</strong>
+      </a>
+      <a href="#quick-title" data-filter-trigger="game">
+        <span class="nav-symbol gamepad-symbol" aria-hidden="true"></span>
+        <strong>遊戲</strong>
       </a>
       <a href="#news-title" data-news-trigger>
         <span class="nav-symbol bell-symbol" aria-hidden="true"></span>
