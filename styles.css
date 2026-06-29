@@ -1912,14 +1912,14 @@ h1 strong {
 
   .brand {
     display: flex;
-    max-width: calc(100vw - 24px);
-    width: fit-content;
+    max-width: 100%;
+    width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: clamp(10px, 2.8vw, 14px);
-    margin-inline: auto;
+    margin-inline: 0;
     text-align: left;
-    transform: translateX(clamp(-10px, -2vw, -6px));
+    transform: none;
   }
 
   .brand-mark {
