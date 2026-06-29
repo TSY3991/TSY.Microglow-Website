@@ -1912,16 +1912,22 @@ h1 strong {
 
   .brand {
     display: flex;
+    max-width: 100%;
     width: 100%;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: clamp(8px, 3vw, 12px);
     text-align: left;
   }
 
   .brand-mark {
-    width: 70px;
-    height: 54px;
+    width: clamp(50px, 15vw, 70px);
+    height: clamp(40px, 11.5vw, 54px);
+  }
+
+  .brand-copy {
+    max-width: min(72vw, 280px);
+    min-width: 0;
   }
 
   .nav-groups {
@@ -1975,12 +1981,18 @@ h1 strong {
   }
 
   .brand-copy strong {
-    font-size: 1.22rem;
+    overflow: visible;
+    font-size: clamp(1.02rem, 5vw, 1.22rem);
     line-height: 1.12;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .brand-copy span {
-    font-size: 0.96rem;
+    font-size: clamp(0.82rem, 3.8vw, 0.96rem);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
   }
 
   .dashboard {
@@ -2257,7 +2269,11 @@ h1 strong {
   }
 
   .side-panel {
-    padding-inline: 14px;
+    padding-inline: 12px;
+  }
+
+  .brand-copy {
+    max-width: calc(100vw - 94px);
   }
 
   h1 {
