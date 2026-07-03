@@ -1,0 +1,8 @@
+# Nested independent repo (deployed as TSY.Microglow-Games)
+/Games/
+
+# Local tooling
+/.claude/
+/.agents/
+/.codex/
+/node_modules/

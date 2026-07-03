@@ -21,11 +21,11 @@
       category: "game",
       categoryLabel: "小遊戲",
       title: "微光遊戲大廳",
-      description: "集中放置微光創作室的小遊戲，包含俄羅斯方塊與後續新增的休閒挑戰。",
+      description: "集中放置微光創作室的小遊戲，包含俄羅斯方塊、貪吃蛇、小朋友下樓梯、微光寶石與微光連珠對戰等休閒挑戰。",
       url: "https://tsy3991.github.io/TSY.Microglow-Games/",
       cta: "進入大廳",
-      keywords: "小遊戲 遊戲大廳 俄羅斯方塊 Tetris 貪吃蛇 Snake 休閒 挑戰",
-      tags: ["小遊戲", "遊戲大廳", "休閒挑戰", "持續新增"],
+      keywords: "小遊戲 遊戲大廳 俄羅斯方塊 Tetris 貪吃蛇 Snake 小朋友下樓梯 下樓梯 Downstairs 微光寶石 消消樂 match3 微光連珠對戰 轉珠 怪物 戰鬥 舒壓 休閒 挑戰",
+      tags: ["小遊戲", "遊戲大廳", "舒壓消消樂", "持續新增"],
       featured: false,
       record: false
     }
