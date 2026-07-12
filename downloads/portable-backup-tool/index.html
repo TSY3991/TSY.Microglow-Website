@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="隨身硬碟同步備份工具下載頁，提供 Windows x64／ARM64 安裝版與免安裝版下載，版本資訊自動同步 GitHub 最新發布。"
+    >
+    <title>隨身硬碟同步備份工具｜下載頁面｜TSY.Microglow</title>
+    <link rel="icon" href="../../assets/logo-mark.png" type="image/png">
+    <link rel="stylesheet" href="./download.css?v=20260712a">
+  </head>
+  <body>
+    <main class="download-shell">
+      <header class="download-topbar">
+        <a class="back-link" href="../../">← 回入口網站</a>
+      </header>
+
+      <section class="download-hero" aria-labelledby="tool-title">
+        <p class="eyebrow">實用工具・Windows 桌面程式</p>
+        <h1 id="tool-title">隨身硬碟同步備份工具</h1>
+        <p class="hero-desc">
+          把電腦資料夾自動備份到隨身硬碟（USB隨身碟、行動硬碟），支援保守同步與鏡像同步，
+          備份端刪除的檔案會先隔離 30 天才清除，不會直接消失。
+        </p>
+        <div class="hero-meta">
+          <span class="version-badge" data-version>載入中…</span>
+          <span class="published-meta" data-published></span>
+        </div>
+      </section>
+
+      <section class="download-section" aria-labelledby="download-title">
+        <h2 id="download-title">下載</h2>
+        <p class="status-message" data-status hidden></p>
+        <div class="download-grid" data-downloads>
+          <p class="loading-placeholder">正在載入最新版本的下載連結…</p>
+        </div>
+        <p class="extra-files" data-fallback></p>
+        <p class="releases-link">
+          找不到你需要的版本，或想看歷史版本？
+          <a href="https://github.com/TSY3991/TSY.PortableBackupTool/releases" target="_blank" rel="noopener noreferrer">
+            前往 GitHub Releases 完整頁面
+          </a>
+        </p>
+      </section>
+
+      <section class="verify-section" aria-labelledby="verify-title">
+        <h2 id="verify-title">下載完整性驗證（SHA-256）</h2>
+        <p>
+          下載完成後，建議用以下指令核對雜湊值，確認檔案在傳輸過程中沒有被竄改或損毀：
+        </p>
+        <pre class="verify-command">certutil -hashfile 檔案路徑 SHA256</pre>
+        <pre class="verify-sha" data-sha>正在載入雜湊值…</pre>
+      </section>
+
+      <section class="notes-section" aria-labelledby="notes-title">
+        <h2 id="notes-title">版本更新說明</h2>
+        <div class="release-notes" data-notes>
+          <p>正在載入更新說明…</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="./download.js?v=20260712a"></script>
+  </body>
+</html>

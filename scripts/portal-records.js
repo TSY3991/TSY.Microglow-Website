@@ -35,13 +35,12 @@
       categoryLabel: "實用工具",
       title: "隨身硬碟同步備份工具",
       description: "把電腦資料夾自動備份到隨身硬碟（USB隨身碟、行動硬碟），支援保守同步與鏡像同步，備份端刪除的檔案會先隔離 30 天才清除，不會直接消失。",
-      url: "https://github.com/TSY3991/TSY.PortableBackupTool/releases/latest",
+      url: "./downloads/portable-backup-tool/",
       cta: "前往下載",
       keywords: "備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 Windows 桌面工具 下載 安裝 免安裝",
       tags: ["自動備份", "保守同步", "鏡像同步", "刪除隔離 30 天"],
       featured: false,
-      record: false,
-      newTab: true
+      record: false
     }
   ];
 
