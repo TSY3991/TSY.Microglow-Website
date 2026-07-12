@@ -14,7 +14,8 @@
       keywords: "測驗 練習 題庫 模擬考 錯題本 本機紀錄 無線電 三等 業餘 電台",
       tags: ["題庫", "模擬考", "錯題本", "本機紀錄"],
       featured: true,
-      record: true
+      record: true,
+      recordEmptyText: "完成一次測驗後顯示"
     },
     {
       id: "microglow-games",
@@ -77,12 +78,11 @@
     const tags = tool.tags
       .map((tag) => `<strong>${escapeHtml(tag)}</strong>`)
       .join("");
-    const emptyRecordMeta = tool.category === "game" ? "遊玩一次後顯示" : "完成一次測驗後顯示";
     const record = tool.record
       ? `<div class="tool-record">
           <span>最新紀錄</span>
           <strong data-record-value="${escapeHtml(tool.id)}">尚無紀錄</strong>
-          <span data-record-meta="${escapeHtml(tool.id)}">${emptyRecordMeta}</span>
+          <span data-record-meta="${escapeHtml(tool.id)}">${escapeHtml(tool.recordEmptyText || "完成一次後顯示")}</span>
         </div>`
       : `<div class="tool-record is-static">
           <span>工具狀態</span>
@@ -247,9 +247,12 @@
     const xpInLevel = Math.max(0, xp - currentLevelXp);
     const xpNeeded = nextLevelXp - currentLevelXp;
     const xpPercent = explorerLevel >= 10 ? 100 : Math.min(100, Math.round((xpInLevel / xpNeeded) * 100));
-    const liveToolCount = tools.filter((tool) => tool.url).length;
+    // Mission tracks "categories with at least one live tool", not raw tool
+    // count — a category with 2+ tools shouldn't inflate progress past 100%
+    // of what's actually filled in.
+    const liveCategoryCount = new Set(tools.filter((tool) => tool.url).map((tool) => tool.category)).size;
     const missionTotal = Object.keys(categoryLabels).length;
-    const missionCurrent = Math.min(liveToolCount, missionTotal);
+    const missionCurrent = Math.min(liveCategoryCount, missionTotal);
 
     if (portalLevelEl) portalLevelEl.textContent = `Lv.${computePortalLevel()}`;
     if (explorerRankEl) explorerRankEl.textContent = `微光探索者 Lv.${explorerLevel}`;
