@@ -30,15 +30,15 @@
       record: false
     },
     {
-      id: "portable-backup-tool",
+      id: "microglow-tools",
       category: "utility",
       categoryLabel: "實用工具",
-      title: "隨身硬碟同步備份工具",
-      description: "把電腦資料夾自動備份到隨身硬碟（USB隨身碟、行動硬碟），支援保守同步與鏡像同步，備份端刪除的檔案會先隔離 30 天才清除，不會直接消失。",
-      url: "./downloads/portable-backup-tool/",
-      cta: "前往下載",
-      keywords: "備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 Windows 桌面工具 下載 安裝 免安裝",
-      tags: ["自動備份", "保守同步", "鏡像同步", "刪除隔離 30 天"],
+      title: "微光工具箱",
+      description: "集中放置微光創作室的實用小工具，包含隨身硬碟同步備份工具等可下載的桌面程式與網頁工具。",
+      url: "https://tsy3991.github.io/TSY.Microglow-Tools/",
+      cta: "進入工具箱",
+      keywords: "工具箱 實用工具 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 Windows 桌面工具 下載 安裝 免安裝",
+      tags: ["工具箱", "桌面工具", "持續新增"],
       featured: false,
       record: false
     }
