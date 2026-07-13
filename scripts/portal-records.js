@@ -404,10 +404,24 @@
     });
   }
 
+  function setupNewsToggle() {
+    const newsList = document.querySelector("#newsList");
+    const toggleButton = document.querySelector("#newsToggle");
+    if (!newsList || !toggleButton) return;
+    toggleButton.addEventListener("click", () => {
+      const collapsed = newsList.dataset.collapsed !== "false";
+      newsList.dataset.collapsed = collapsed ? "false" : "true";
+      toggleButton.setAttribute("aria-expanded", collapsed ? "true" : "false");
+      toggleButton.textContent = collapsed ? "收合消息" : "查看更多消息";
+      if (!collapsed) newsList.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   renderTools();
   markVisit();
   setupFilters();
   setupNewsNavigation();
+  setupNewsToggle();
   document.querySelectorAll("[data-tool-launch]").forEach((link) => {
     link.addEventListener("click", () => {
       incrementProgress("launches", link.dataset.toolLaunch);

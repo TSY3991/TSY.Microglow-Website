@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#0f766e">
     <title>TSY 微光創作室｜TSY.Microglow</title>
     <link rel="icon" href="./assets/logo-mark.png" type="image/png">
-    <link rel="stylesheet" href="./styles.css?v=20260713a">
+    <link rel="stylesheet" href="./styles.css?v=20260713d">
   </head>
   <body>
     <div class="app-shell" id="top">
@@ -127,7 +127,7 @@
               <span>最新消息</span>
               <h1 id="news-title">主站更新公告</h1>
             </div>
-            <div class="news-list" aria-label="最新消息列表，桌機最多顯示十則，手機最多顯示五則">
+            <div class="news-list" id="newsList" data-collapsed="true" aria-label="最新消息列表，預設顯示最新 4 則，可展開查看全部">
               <article class="news-item">
                 <time datetime="2026-07-13">07/13</time>
                 <div>
@@ -213,6 +213,9 @@
                 </div>
               </article>
             </div>
+            <button type="button" class="news-toggle" id="newsToggle" aria-expanded="false" aria-controls="newsList">
+              查看更多消息
+            </button>
           </div>
 
           <div class="hero-banner" aria-label="探索學習創造">
@@ -386,6 +389,6 @@
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
-    <script src="./scripts/portal-records.js?v=20260713c"></script>
+    <script src="./scripts/portal-records.js?v=20260713d"></script>
   </body>
 </html>
