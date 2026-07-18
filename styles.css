@@ -716,6 +716,7 @@ p {
 }
 
 .news-item {
+  position: relative;
   display: grid;
   grid-template-columns: 56px minmax(0, 1fr);
   gap: 12px;
@@ -725,6 +726,29 @@ p {
   border-radius: var(--radius);
   background: rgba(255, 253, 248, 0.74);
   box-shadow: 0 10px 22px rgba(42, 47, 45, 0.055);
+}
+
+/* Stretched link: the anchor sits on the title, but its ::after covers the
+   whole card so the entire news item is clickable when a link exists. */
+.news-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.news-link::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+}
+
+.news-item:has(.news-link:hover) {
+  border-color: rgba(14, 143, 136, 0.45);
+  background: rgba(223, 243, 238, 0.6);
+}
+
+.news-item:has(.news-link:hover) .news-link {
+  color: var(--teal-dark);
 }
 
 .news-item > div {

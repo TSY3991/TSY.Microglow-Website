@@ -335,6 +335,14 @@
 
       if (emptyState) {
         emptyState.hidden = visibleCount > 0;
+        if (visibleCount === 0) {
+          // No search query + a specific category selected means the category
+          // simply has no tools yet — say "coming soon" instead of the
+          // search-flavored "no results" copy.
+          emptyState.textContent = !query && activeFilter !== "all"
+            ? "這個分類的工具準備中，敬請期待！"
+            : "找不到符合的入口。可以換個關鍵字或切回全部。";
+        }
       }
     }
 
