@@ -1,0 +1,15 @@
+microglow-platform Supabase 白話設定說明
+
+1. 雲端 Region 在 Dashboard 建立 Project 時決定；本機 Docker 不會建立或改變亞太 Region。
+2. Docker 只負責本機重建資料庫、測試 migration、pgTAP 與 lint。
+3. 本機改用 55220–55224 等 port，因 Windows 保留 Supabase 預設的 54300–54499。
+4. 本機 Analytics 已關閉，避免開放無 TLS 的 Docker daemon；共用後端必要功能不受影響。
+5. 2026-07-22 已完成 9 個 migrations 重建、27／27 測試與零警告 lint。
+6. Project Ref 在 Dashboard 的 Settings → General → Project Settings → Reference ID。
+7. 可以提供 Project Ref，但不要把資料庫密碼、Secret Key、service-role key 或 Access Token 貼進對話。
+8. 遠端部署前只做 migration list 與 db push dry-run；等明確回覆「允許遠端部署」後才能真正 db push。
+9. 禁止對遠端執行 db reset，也不推送 seed 測試資料。
+10. 入口網站與 Games 不會天然共享瀏覽器登入狀態，必須使用中央登入跳轉與精確 callback。
+11. 價格雷達正式網址尚未確認，所以目前不填猜測網址。
+12. 第一階段沒有需要部署的 Edge Function，也不建立規避 CAPTCHA 或網站保護的爬蟲。
+13. Supabase 部署不代表允許 Git commit 或 push，兩者仍需另外確認。

@@ -1,0 +1,3 @@
+-- Reference data is inserted by migrations so that a remote database rebuilt
+-- from migrations receives the same game definitions. Keep local-only sample
+-- users and test data out of the repository until a dedicated fixture exists.

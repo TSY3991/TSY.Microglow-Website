@@ -6,3 +6,13 @@
 /.agents/
 /.codex/
 /node_modules/
+
+# Local environment files (never commit credentials)
+.env
+.env.*
+!.env.example
+
+# Supabase CLI local state
+/supabase/.temp/
+/supabase/.branches/
+/supabase/.env
