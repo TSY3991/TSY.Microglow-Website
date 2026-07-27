@@ -640,6 +640,69 @@ p {
   transform: translateX(120%);
 }
 
+.account-status-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 66px;
+  padding: 0 20px;
+  color: #063e39;
+  background: linear-gradient(135deg, #7ce9d9, #36d7c4);
+  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.22);
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.account-status-link span {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: #0f766e;
+  background: #ffffff;
+  font-size: 1.2rem;
+}
+
+.account-status-link div {
+  display: grid;
+  min-width: 0;
+  text-align: left;
+}
+
+.account-status-link small {
+  overflow: hidden;
+  color: rgba(6, 62, 57, 0.7);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-status-link strong {
+  overflow: hidden;
+  font-size: 0.95rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-status-link:hover,
+.account-status-link:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.18);
+  transform: translateY(-2px);
+}
+
+.account-status-link.is-guest {
+  background: linear-gradient(135deg, #ffe08a, #ffd76a);
+}
+
+.account-status-link.is-signed-in {
+  background: linear-gradient(135deg, #8ff0c9, #36d7c4);
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(420px, 0.42fr) minmax(0, 1fr);

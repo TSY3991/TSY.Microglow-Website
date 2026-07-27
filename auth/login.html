@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net https://challenges.cloudflare.com; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co; frame-src https://challenges.cloudflare.com"
+    >
+    <meta name="description" content="TSY.Microglow 共用會員登入中心。">
+    <meta name="theme-color" content="#0f766e">
+    <title>會員登入｜TSY.Microglow</title>
+    <link rel="icon" href="../assets/logo-mark.png" type="image/png">
+    <link rel="stylesheet" href="./auth.css?v=20260726a">
+  </head>
+  <body>
+    <main class="auth-shell">
+      <a class="auth-back" href="../" data-auth-back>← 返回入口網站</a>
+
+      <section class="auth-card" aria-labelledby="auth-title">
+        <div class="auth-brand">
+          <img src="../assets/logo-mark.png" alt="">
+          <p>TSY.MICROGLOW ACCOUNT</p>
+          <h1 id="auth-title">一個帳號，進入所有微光服務</h1>
+          <span>入口網站負責正式會員登入；遊戲、工具與未來的價格雷達共用同一個會員 UID。</span>
+          <ul>
+            <li>跨服務會員資料</li>
+            <li>好友、房間與正式排行榜</li>
+            <li>同一裝置持續登入</li>
+          </ul>
+        </div>
+
+        <div class="auth-panel">
+          <div class="auth-tabs" role="tablist" aria-label="會員帳號">
+            <button class="is-active" type="button" role="tab" aria-selected="true" data-auth-tab="login">會員登入</button>
+            <button type="button" role="tab" aria-selected="false" data-auth-tab="signup">免費註冊</button>
+          </div>
+
+          <form class="auth-form" data-auth-form novalidate>
+            <label>
+              <span>Email</span>
+              <input type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required data-auth-email>
+            </label>
+            <label>
+              <span>密碼</span>
+              <input type="password" autocomplete="current-password" minlength="8" placeholder="至少 8 個字元" required data-auth-password>
+            </label>
+            <div class="turnstile-slot" data-turnstile-widget aria-label="安全驗證"></div>
+            <button class="auth-primary" type="submit" data-auth-submit>登入並繼續</button>
+            <p class="auth-status" data-auth-status aria-live="polite">正在檢查帳號狀態…</p>
+          </form>
+
+          <section class="signed-panel" data-signed-panel hidden>
+            <span>目前登入</span>
+            <strong data-signed-label>微光會員</strong>
+            <p>此裝置已建立正式會員 session，可以直接返回原服務。</p>
+            <a class="auth-primary" href="../" data-auth-continue>繼續前往</a>
+            <button class="auth-secondary" type="button" data-auth-signout>登出此裝置</button>
+          </section>
+
+          <p class="auth-note">訪客試玩仍由各遊戲建立匿名帳號；訪客紀錄轉正式會員將在後續階段另行處理。</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+    <script src="../scripts/microglow-auth.js?v=20260726a"></script>
+    <script src="../scripts/auth-login.js?v=20260726a"></script>
+  </body>
+</html>

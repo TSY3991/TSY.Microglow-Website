@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#0f766e">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co"
     >
     <meta property="og:title" content="TSY 微光創作室｜TSY.Microglow">
     <meta property="og:description" content="TSY 微光創作室（TSY.Microglow）的工具、測驗網站與作品主入口。">
@@ -21,7 +21,7 @@
     <meta name="twitter:card" content="summary">
     <title>TSY 微光創作室｜TSY.Microglow</title>
     <link rel="icon" href="./assets/logo-mark.png" type="image/png">
-    <link rel="stylesheet" href="./styles.css?v=20260718a">
+    <link rel="stylesheet" href="./styles.css?v=20260727a">
   </head>
   <body>
     <div class="app-shell" id="top">
@@ -121,6 +121,10 @@
             <span>主站版本</span>
             <strong id="portalLevel">--</strong>
           </div>
+          <a class="account-status-link" href="./auth/login.html" data-portal-auth>
+            <span aria-hidden="true">☾</span>
+            <div><small data-portal-auth-meta>微光帳號</small><strong data-portal-auth-label>登入／註冊</strong></div>
+          </a>
           <a
             class="follow-button"
             href="https://www.facebook.com/TSY.Microglow"
@@ -457,5 +461,8 @@
       </span>
     </div>
     <script src="./scripts/portal-records.js?v=20260718a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="./scripts/microglow-auth.js?v=20260727a"></script>
+    <script src="./scripts/portal-auth.js?v=20260727a"></script>
   </body>
 </html>
