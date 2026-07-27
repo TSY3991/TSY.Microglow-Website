@@ -136,6 +136,10 @@
           ...(emailRedirectTo ? { emailRedirectTo } : {})
         }
       }),
+    signInAnonymously: ({ captchaToken } = {}) =>
+      client.auth.signInAnonymously({
+        options: captchaToken ? { captchaToken } : undefined
+      }),
     signOut: () => client.auth.signOut({ scope: "local" }),
     exchangeCodeForSession: (code) => client.auth.exchangeCodeForSession(code),
     isAnonymousUser,
