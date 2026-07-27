@@ -20,6 +20,7 @@
   let widgetId = null;
   let pendingToken = null;
   let tokenResolvers = [];
+  let isUpgradeFlow = false;
 
   function setStatus(message, tone) {
     status.textContent = message;
@@ -86,8 +87,16 @@
       tab.setAttribute("aria-selected", String(selected));
     });
     passwordInput.autocomplete = mode === "login" ? "current-password" : "new-password";
-    submitButton.textContent = mode === "login" ? "登入並繼續" : "建立會員帳號";
-    setStatus(mode === "login" ? "輸入正式會員帳號。" : "建立帳號後將使用同一個會員 UID。");
+    if (isUpgradeFlow && mode === "signup") {
+      submitButton.textContent = "升級為正式會員";
+      setStatus("設定 Email 與密碼後，好友、房間與配對紀錄會保留在這個帳號。");
+    } else if (isUpgradeFlow && mode === "login") {
+      submitButton.textContent = "登入並繼續";
+      setStatus("登入其他既有正式帳號會切換身分，目前訪客紀錄不會轉移。", "warning");
+    } else {
+      submitButton.textContent = mode === "login" ? "登入並繼續" : "建立會員帳號";
+      setStatus(mode === "login" ? "輸入正式會員帳號。" : "建立帳號後將使用同一個會員 UID。");
+    }
   }
 
   function showSignedSession(session) {
@@ -117,7 +126,8 @@
     }
 
     if (auth.isAnonymousUser(session.user)) {
-      setStatus("目前是匿名訪客。登入正式帳號會切換身分，既有試玩紀錄暫不轉移。", "warning");
+      isUpgradeFlow = true;
+      selectMode("signup");
       return;
     }
 
@@ -134,12 +144,25 @@
       return;
     }
 
+    const upgrading = isUpgradeFlow && mode === "signup";
     setBusy(true);
-    setStatus(mode === "login" ? "正在登入…" : "正在建立帳號…");
+    setStatus(upgrading ? "正在升級帳號…" : mode === "login" ? "正在登入…" : "正在建立帳號…");
 
     try {
-      const captchaToken = await getCaptchaToken();
       const callbackUrl = new URL("./callback.html", window.location.href).href;
+
+      if (upgrading) {
+        const result = await auth.client.auth.updateUser(
+          { email, password },
+          { emailRedirectTo: callbackUrl }
+        );
+        if (result.error) throw result.error;
+        setStatus("帳號升級成功，好友與房間紀錄已保留，正在返回原服務…", "success");
+        window.setTimeout(() => window.location.replace(returnTo), 350);
+        return;
+      }
+
+      const captchaToken = await getCaptchaToken();
       const result = mode === "login"
         ? await auth.signIn({ email, password, captchaToken })
         : await auth.signUp({ email, password, captchaToken, emailRedirectTo: callbackUrl });

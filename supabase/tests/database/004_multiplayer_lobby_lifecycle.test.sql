@@ -46,9 +46,9 @@ select is(
        'leave_game_room',
        'touch_room_presence'
      )
-     and pg_get_functiondef(p.oid) like '%private.require_user_id()%'),
+     and pg_get_functiondef(p.oid) like '%private.require_authenticated_user()%'),
   4::bigint,
-  'all lobby lifecycle RPCs use the permanent-user guard'
+  'all lobby lifecycle RPCs use the authenticated (guest-eligible) guard'
 );
 select is(
   (select count(*)
@@ -329,15 +329,13 @@ select set_config(
   true
 );
 set local request.jwt.claim.sub = '82000000-0000-4000-8000-000000000005';
-select throws_ok(
+select lives_ok(
   format(
     'select public.respond_room_invite(%L::uuid,false,%L::uuid)',
     (select value from lifecycle_state where key = 'decline_invite'),
     '82100000-0000-4000-8000-000000000015'
   ),
-  '42501',
-  'Permanent account required',
-  'anonymous JWT cannot answer formal room invites'
+  'anonymous JWT can answer room invites (guest multiplayer access)'
 );
 reset role;
 

@@ -1,7 +1,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 set local search_path = public, extensions;
-select plan(34);
+select plan(35);
 
 select has_table('public', 'guest_play_sessions', 'guest sessions table exists');
 select has_table('public', 'guest_play_events', 'guest events table exists');
@@ -31,8 +31,8 @@ select is(
    where schemaname = 'public'
      and permissive = 'RESTRICTIVE'
      and policyname like '%_permanent_gate'),
-  18::bigint,
-  'all member-only public tables have restrictive permanent-user gates'
+  12::bigint,
+  'remaining member-only public tables still have restrictive permanent-user gates (six were relaxed for guest multiplayer access)'
 );
 select ok(
   not has_function_privilege('anon', 'public.start_guest_play_session(text,uuid,integer)', 'execute'),
@@ -47,14 +47,24 @@ select is(
    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public'
      and p.proname in (
-       'send_friend_invite','respond_friend_invite','create_game_room','join_game_room',
-       'set_room_ready','invite_friend_to_room','enqueue_match','set_match_connection',
-       'start_game_match','business_empire_action','create_radar_product',
-       'record_radar_price','upsert_radar_watchlist'
+       'send_friend_invite','set_match_connection','business_empire_action',
+       'create_radar_product','record_radar_price','upsert_radar_watchlist'
      )
      and pg_get_functiondef(p.oid) like '%private.require_user_id()%'),
-  13::bigint,
-  'all existing public member/admin RPCs use the hardened shared guard'
+  6::bigint,
+  'permanent-member-only RPCs still use the hardened shared guard'
+);
+select is(
+  (select count(*)
+   from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+   where n.nspname = 'public'
+     and p.proname in (
+       'respond_friend_invite','create_game_room','join_game_room',
+       'set_room_ready','invite_friend_to_room','enqueue_match','start_game_match'
+     )
+     and pg_get_functiondef(p.oid) like '%private.require_authenticated_user()%'),
+  7::bigint,
+  'guest-eligible room/queue/friend-response RPCs use the lighter authenticated guard'
 );
 
 insert into auth.users (id, email, raw_user_meta_data, is_anonymous) values
@@ -105,17 +115,13 @@ select throws_ok(
   'Permanent account required',
   'anonymous JWT cannot send friend invites'
 );
-select throws_ok(
+select lives_ok(
   $$select public.create_game_room('microglow-business-empire','double-ring-city','private',2::smallint,'81200000-0000-4000-8000-000000000002')$$,
-  '42501',
-  'Permanent account required',
-  'anonymous JWT cannot create formal game rooms'
+  'anonymous JWT can create a friend room (guest multiplayer access)'
 );
-select throws_ok(
+select lives_ok(
   $$select public.enqueue_match('microglow-business-empire','double-ring-city','81200000-0000-4000-8000-000000000003')$$,
-  '42501',
-  'Permanent account required',
-  'anonymous JWT cannot enter formal matchmaking'
+  'anonymous JWT can enter matchmaking (guest multiplayer access)'
 );
 select throws_ok(
   $$select public.upsert_radar_watchlist('39910000-0000-4000-8000-000000000001',99)$$,
@@ -130,13 +136,13 @@ select results_eq(
 );
 select results_eq(
   $$select count(*) from public.friend_invites$$,
-  array[0::bigint],
-  'anonymous JWT cannot read friend invites even as a participant'
+  array[1::bigint],
+  'anonymous JWT can read its own friend invites (guest multiplayer access)'
 );
 select results_eq(
   $$select count(*) from public.game_rooms$$,
-  array[0::bigint],
-  'anonymous JWT cannot read public formal rooms'
+  array[2::bigint],
+  'anonymous JWT can read public formal rooms (guest multiplayer access)'
 );
 select results_eq(
   $$select count(*) from public.player_records$$,
