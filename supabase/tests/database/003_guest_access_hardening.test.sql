@@ -31,8 +31,8 @@ select is(
    where schemaname = 'public'
      and permissive = 'RESTRICTIVE'
      and policyname like '%_permanent_gate'),
-  12::bigint,
-  'remaining member-only public tables still have restrictive permanent-user gates (six were relaxed for guest multiplayer access)'
+  7::bigint,
+  'remaining member-only public tables still have restrictive permanent-user gates after guest lobby/gameplay access relaxations'
 );
 select ok(
   not has_function_privilege('anon', 'public.start_guest_play_session(text,uuid,integer)', 'execute'),
@@ -47,11 +47,11 @@ select is(
    from pg_proc p join pg_namespace n on n.oid = p.pronamespace
    where n.nspname = 'public'
      and p.proname in (
-       'send_friend_invite','set_match_connection','business_empire_action',
+       'send_friend_invite','set_match_connection',
        'create_radar_product','record_radar_price','upsert_radar_watchlist'
      )
      and pg_get_functiondef(p.oid) like '%private.require_user_id()%'),
-  6::bigint,
+  5::bigint,
   'permanent-member-only RPCs still use the hardened shared guard'
 );
 select is(
@@ -60,11 +60,12 @@ select is(
    where n.nspname = 'public'
      and p.proname in (
        'respond_friend_invite','create_game_room','join_game_room',
-       'set_room_ready','invite_friend_to_room','enqueue_match','start_game_match'
+       'set_room_ready','invite_friend_to_room','enqueue_match','start_game_match',
+       'business_empire_action'
      )
      and pg_get_functiondef(p.oid) like '%private.require_authenticated_user()%'),
-  7::bigint,
-  'guest-eligible room/queue/friend-response RPCs use the lighter authenticated guard'
+  8::bigint,
+  'guest-eligible room/queue/friend/gameplay RPCs use the lighter authenticated guard'
 );
 
 insert into auth.users (id, email, raw_user_meta_data, is_anonymous) values
