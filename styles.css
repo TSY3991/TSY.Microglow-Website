@@ -93,7 +93,7 @@ p {
   bottom: 16px;
   z-index: 5;
   display: inline-grid;
-  grid-template-columns: repeat(2, minmax(0, auto));
+  grid-template-columns: minmax(0, auto);
   gap: 6px;
   padding: 6px;
   border: 1px solid rgba(32, 42, 40, 0.1);
