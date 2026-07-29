@@ -526,9 +526,8 @@
   const ONLINE_KEY = "tsyMicroglowPortal.onlineSessions.v1";
   const ACTIVE_WINDOW_MS = 20000;
   const visitorEl = document.querySelector("#siteVisitorCount");
-  const onlineEl = document.querySelector("#siteOnlineCount");
 
-  if (!visitorEl || !onlineEl) return;
+  if (!visitorEl) return;
 
   function createId() {
     if (window.crypto?.randomUUID) return window.crypto.randomUUID();
@@ -591,7 +590,6 @@
     );
 
     visitorEl.textContent = String(Math.max(visitorIds.size, 1));
-    onlineEl.textContent = String(Math.max(Object.keys(sessions).length, 1));
   }
 
   function removeTab() {

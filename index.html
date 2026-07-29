@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#0f766e">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co"
     >
     <meta property="og:title" content="TSY 微光創作室｜TSY.Microglow">
     <meta property="og:description" content="TSY 微光創作室（TSY.Microglow）的工具、測驗網站與作品主入口。">
@@ -455,21 +455,22 @@
     </nav>
     <div
       class="site-counter"
-      aria-label="本機網站使用統計"
-      title="本機瀏覽器統計；非全站即時人數"
+      aria-label="網站使用統計"
+      title="線上人數為全站即時統計；本機訪客為本機瀏覽器估計值，非全站數字"
     >
       <span>
         <small>本機訪客</small>
         <strong id="siteVisitorCount">--</strong>
       </span>
       <span>
-        <small>本機在線</small>
+        <small>線上人數</small>
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
-    <script src="./scripts/portal-records.js?v=20260718a"></script>
+    <script src="./scripts/portal-records.js?v=20260729a"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="./scripts/microglow-auth.js?v=20260728b"></script>
     <script src="./scripts/portal-auth.js?v=20260727a"></script>
+    <script src="./scripts/portal-presence.js?v=20260729a"></script>
   </body>
 </html>
