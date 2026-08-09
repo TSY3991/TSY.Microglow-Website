@@ -35,10 +35,10 @@
       category: "utility",
       categoryLabel: "實用工具",
       title: "微光工具箱",
-      description: "集中放置微光創作室的實用小工具，包含隨身硬碟同步備份工具等可下載的桌面程式與網頁工具。",
+      description: "集中放置微光創作室的實用小工具，包含 PriceRadar 價格雷達、隨身硬碟同步備份與舊車機 MP3／MP4 轉檔工具。",
       url: "https://tsy3991.github.io/TSY.Microglow-Tools/",
       cta: "進入工具箱",
-      keywords: "工具箱 實用工具 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 Windows 桌面工具 下載 安裝 免安裝",
+      keywords: "工具箱 實用工具 價格雷達 PriceRadar 條碼 比價 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 車機 音樂 音訊 影片 MP3 MP4 轉檔 FFmpeg Windows 桌面工具 下載 安裝 免安裝",
       tags: ["工具箱", "桌面工具", "持續新增"],
       featured: false,
       record: false
