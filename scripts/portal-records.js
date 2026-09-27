@@ -35,10 +35,10 @@
       category: "utility",
       categoryLabel: "實用工具",
       title: "微光工具箱",
-      description: "集中放置微光創作室的實用小工具，包含 PhotoConverter 照片轉檔、PriceRadar 價格雷達、隨身硬碟同步備份與舊車機 MP3／MP4 轉檔工具。",
+      description: "集中放置微光創作室的實用小工具，包含 PhotoConverter 照片轉檔、通用媒體轉檔、PriceRadar 價格雷達與隨身硬碟同步備份工具。",
       url: "https://tsy3991.github.io/TSY.Microglow-Tools/",
       cta: "進入工具箱",
-      keywords: "工具箱 實用工具 照片 圖片 PhotoConverter HEIC HEIF JPG JPEG PNG WebP AVIF TIFF BMP GIF ICO PDF 批次轉檔 價格雷達 PriceRadar 條碼 比價 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 車機 音樂 音訊 影片 MP3 MP4 轉檔 FFmpeg Windows 桌面工具 下載 安裝 免安裝",
+      keywords: "工具箱 實用工具 照片 圖片 PhotoConverter HEIC HEIF JPG JPEG PNG WebP AVIF TIFF BMP GIF ICO PDF 批次轉檔 價格雷達 PriceRadar 條碼 比價 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 媒體 車機 音樂 音訊 影片 MP3 MP4 MKV AVI MOV TS FLV WebM WMV MPG 3GP 轉檔 FFmpeg Real-ESRGAN AI 畫質放大 Windows 桌面工具 下載 安裝 免安裝",
       tags: ["工具箱", "桌面工具", "持續新增"],
       featured: false,
       record: false
