@@ -723,7 +723,7 @@ p {
   font-weight: 900;
 }
 
-.hero-news h1 {
+.hero-news h2 {
   margin: 0;
   color: var(--ink);
   font-size: 1.78rem;
@@ -2142,7 +2142,7 @@ h1 strong {
     padding: 0;
   }
 
-  .hero-news h1 {
+  .hero-news h2 {
     font-size: 1.36rem;
   }
 
@@ -2391,4 +2391,15 @@ h1 strong {
   .mobile-dock strong {
     display: none;
   }
+}
+
+.seo-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

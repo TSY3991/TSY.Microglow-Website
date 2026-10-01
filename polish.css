@@ -41,7 +41,7 @@ p,
   font-variant-numeric: tabular-nums;
 }
 
-.hero-news h1 {
+.hero-news h2 {
   font-size: clamp(1.78rem, 1.4rem + 1vw, 2.3rem);
   letter-spacing: -0.01em;
 }
