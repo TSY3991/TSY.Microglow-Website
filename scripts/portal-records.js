@@ -199,17 +199,11 @@
     return Object.values(launches).reduce((total, value) => total + (Number(value) || 0), 0);
   }
 
-  function computeXp(progress, sessions) {
+  function computeXpBreakdown(progress, sessions) {
     const gameStats = readJson(GAME_STATS_KEY, {});
     const gamePlays = Object.values(gameStats?.games || {}).reduce((total, game) => {
       return total + (Number(game?.plays) || 0);
     }, 0);
-    const visitXp = Math.min(progress.visitedDays.length * 5, 100);
-    const searchXp = Math.min(progress.searches * 2, 50);
-    const filterXp = Math.min(progress.filters * 2, 50);
-    const launchXp = Math.min(sumLaunches(progress.launches) * 10, 200);
-    const quizXp = Math.min(sessions.length * 20, 300);
-    const gameXp = Math.min(gamePlays * 10, 200);
     const bestAccuracy = sessions.reduce((best, session) => {
       const score = Number(session?.score) || 0;
       const total = Number(session?.total || session?.answered) || 0;
@@ -217,8 +211,22 @@
       return Math.max(best, accuracy);
     }, 0);
     const milestoneXp = bestAccuracy >= 90 ? 50 : bestAccuracy >= 80 ? 30 : bestAccuracy >= 60 ? 15 : 0;
+    const launches = sumLaunches(progress.launches);
+    const items = [
+      { label: "初始經驗", hint: "加入微光探索者", xp: 20, max: 20 },
+      { label: "每日造訪", hint: `${progress.visitedDays.length} 天・每天 +5`, xp: Math.min(progress.visitedDays.length * 5, 100), max: 100 },
+      { label: "搜尋工具", hint: `${progress.searches} 次・每次 +2`, xp: Math.min(progress.searches * 2, 50), max: 50 },
+      { label: "分類篩選", hint: `${progress.filters} 次・每次 +2`, xp: Math.min(progress.filters * 2, 50), max: 50 },
+      { label: "開啟工具", hint: `${launches} 次・每次 +10`, xp: Math.min(launches * 10, 200), max: 200 },
+      { label: "完成測驗", hint: `${sessions.length} 場・每場 +20`, xp: Math.min(sessions.length * 20, 300), max: 300 },
+      { label: "遊玩遊戲", hint: `${gamePlays} 次・每次 +10`, xp: Math.min(gamePlays * 10, 200), max: 200 },
+      { label: "測驗最佳正確率", hint: `最佳 ${bestAccuracy}%・60/80/90% 分級`, xp: milestoneXp, max: 50 }
+    ];
+    return { items, total: items.reduce((sum, item) => sum + item.xp, 0) };
+  }
 
-    return 20 + visitXp + searchXp + filterXp + launchXp + quizXp + gameXp + milestoneXp;
+  function computeXp(progress, sessions) {
+    return computeXpBreakdown(progress, sessions).total;
   }
 
   function levelFromXp(xp) {
@@ -264,6 +272,59 @@
       if (track) track.setAttribute("aria-label", `完成進度 ${missionCurrent} / ${missionTotal}`);
     }
     if (missionScoreEl) missionScoreEl.textContent = `${missionCurrent} / ${missionTotal}`;
+  }
+
+  function setupExplorerPanel() {
+    const trigger = document.querySelector("#explorerTrigger");
+    const dialog = document.querySelector("#explorerDialog");
+    if (!trigger || !dialog || typeof dialog.showModal !== "function") return;
+    const body = dialog.querySelector("[data-explorer-body]");
+
+    function render() {
+      const progress = readProgress();
+      const { items, total } = computeXpBreakdown(progress, readQuizSessions());
+      const level = levelFromXp(total);
+      const toNext = level >= 10 ? 0 : level * 100 - total;
+      const title = dialog.querySelector("[data-explorer-title]");
+      const summary = dialog.querySelector("[data-explorer-summary]");
+      title.textContent = `微光探索者 Lv.${level}`;
+      summary.textContent = level >= 10
+        ? `${total} XP・已達最高等級`
+        : `${total} XP・距離 Lv.${level + 1} 還差 ${toNext} XP`;
+      body.textContent = "";
+      items.forEach((item) => {
+        const row = document.createElement("li");
+        const name = document.createElement("span");
+        name.className = "xp-row-name";
+        name.textContent = item.label;
+        const hint = document.createElement("small");
+        hint.textContent = item.hint;
+        name.appendChild(hint);
+        const value = document.createElement("strong");
+        value.textContent = `${item.xp} / ${item.max}`;
+        const track = document.createElement("div");
+        track.className = "xp-row-track";
+        const fill = document.createElement("i");
+        fill.style.width = `${Math.round((item.xp / item.max) * 100)}%`;
+        track.appendChild(fill);
+        row.append(name, value, track);
+        body.appendChild(row);
+      });
+    }
+
+    trigger.addEventListener("click", () => {
+      render();
+      dialog.showModal();
+      trigger.setAttribute("aria-expanded", "true");
+    });
+    dialog.addEventListener("close", () => {
+      trigger.setAttribute("aria-expanded", "false");
+      trigger.focus();
+    });
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.querySelector("[data-explorer-close]").addEventListener("click", () => dialog.close());
   }
 
   function setupFilters() {
@@ -428,6 +489,7 @@
   renderTools();
   markVisit();
   setupFilters();
+  setupExplorerPanel();
   setupNewsNavigation();
   setupNewsToggle();
   document.querySelectorAll("[data-tool-launch]").forEach((link) => {

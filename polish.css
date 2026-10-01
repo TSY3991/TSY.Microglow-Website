@@ -1,0 +1,831 @@
+/* Motion & polish layer. Uses only the existing palette tokens from styles.css. */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html {
+  scrollbar-color: rgba(14, 143, 136, 0.35) transparent;
+  scrollbar-width: thin;
+  color-scheme: light;
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--teal-soft);
+}
+
+/* ---------- Typography ---------- */
+
+h1,
+h2,
+h3,
+.banner-copy strong {
+  text-wrap: balance;
+}
+
+p,
+.news-item p,
+.tool-copy span,
+.feedback-copy p {
+  text-wrap: pretty;
+}
+
+.top-stat strong,
+.metric-card strong,
+.mission-score strong,
+.news-item time,
+.site-counter strong,
+.explorer-status strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.hero-news h1 {
+  font-size: clamp(1.78rem, 1.4rem + 1vw, 2.3rem);
+  letter-spacing: -0.01em;
+}
+
+.news-heading span::before {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  content: "";
+  animation: livePulse 2.4s ease-in-out infinite;
+}
+
+/* ---------- Accessibility ---------- */
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  color: #ffffff;
+  background: var(--teal-dark);
+  font-weight: 900;
+  box-shadow: var(--shadow);
+  transform: translateY(-180%);
+  transition: transform 260ms var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  outline: 3px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 2px;
+}
+
+body :is(a, button, [tabindex]):focus-visible {
+  outline: 3px solid rgba(14, 143, 136, 0.6) !important;
+  outline-offset: 3px;
+}
+
+.search-box:focus-within {
+  border-color: rgba(14, 143, 136, 0.45);
+  box-shadow: 0 0 0 4px rgba(14, 143, 136, 0.14), 0 10px 22px rgba(42, 47, 45, 0.06);
+}
+
+main:focus {
+  outline: none;
+}
+
+/* ---------- Entrance choreography (CSS only, no flash) ---------- */
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes bannerIn {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    scale: 0.965;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    translate: -18px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes dockIn {
+  from {
+    opacity: 0;
+    translate: 0 120%;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes charIn {
+  from {
+    opacity: 0;
+    translate: 0 0.55em;
+    rotate: 7deg;
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 0deg;
+    filter: blur(0);
+  }
+}
+
+.brand,
+.explorer-status {
+  animation: slideInLeft 0.8s var(--ease-out) backwards;
+}
+
+.explorer-status {
+  animation-delay: 0.55s;
+}
+
+.nav-item {
+  animation: slideInLeft 0.7s var(--ease-out) backwards;
+  animation-delay: calc(var(--s, 0) * 110ms + var(--i, 0) * 45ms + 120ms);
+}
+
+.nav-section:nth-child(2) {
+  --s: 1;
+}
+
+.nav-section:nth-child(3) {
+  --s: 2;
+}
+
+.nav-section > :nth-child(3) {
+  --i: 1;
+}
+
+.nav-section > :nth-child(4) {
+  --i: 2;
+}
+
+.nav-section > :nth-child(5) {
+  --i: 3;
+}
+
+.nav-section > :nth-child(6) {
+  --i: 4;
+}
+
+.topbar > * {
+  animation: riseIn 0.8s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms + 150ms);
+}
+
+.topbar > :nth-child(2) {
+  --i: 1;
+}
+
+.topbar > :nth-child(3) {
+  --i: 2;
+}
+
+.topbar > :nth-child(4) {
+  --i: 3;
+}
+
+.topbar > :nth-child(5) {
+  --i: 4;
+}
+
+.news-heading {
+  animation: riseIn 0.8s var(--ease-out) 0.3s backwards;
+}
+
+.news-item {
+  animation: riseIn 0.8s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms + 400ms);
+}
+
+.news-item:nth-child(2) {
+  --i: 1;
+}
+
+.news-item:nth-child(3) {
+  --i: 2;
+}
+
+.news-item:nth-child(4) {
+  --i: 3;
+}
+
+.news-item:nth-child(n + 5) {
+  --i: 0;
+  animation-delay: 0ms;
+}
+
+.news-toggle {
+  animation: riseIn 0.8s var(--ease-out) 0.75s backwards;
+}
+
+.hero-banner {
+  animation: bannerIn 1s var(--ease-out) 0.35s backwards;
+}
+
+.mobile-dock {
+  animation: dockIn 0.9s var(--ease-out) 0.5s backwards;
+}
+
+.banner-copy strong .char {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: inherit;
+  animation: charIn 0.9s var(--ease-spring) backwards;
+  animation-delay: calc(0.75s + var(--ci, 0) * 55ms);
+}
+
+.banner-copy span:not(.char) {
+  animation: riseIn 0.9s var(--ease-out) 1.25s backwards;
+}
+
+/* ---------- Scroll reveal (class added by JS only below the fold) ---------- */
+
+.reveal {
+  opacity: 0;
+  translate: 0 28px;
+  transition:
+    opacity 0.9s var(--ease-out) var(--d, 0ms),
+    translate 0.9s var(--ease-out) var(--d, 0ms),
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* ---------- Cards: lift + pointer spotlight ---------- */
+
+.tool-card,
+.metric-card,
+.mission-card,
+.recommend-card,
+.news-item,
+.top-stat,
+.feedback-panel {
+  isolation: isolate;
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out),
+    background-color 0.35s var(--ease-out);
+}
+
+.metric-card,
+.mission-card,
+.recommend-card,
+.top-stat,
+.feedback-panel {
+  position: relative;
+}
+
+.tool-card::before,
+.metric-card::before,
+.mission-card::before,
+.recommend-card::before,
+.news-item::before,
+.top-stat::before,
+.feedback-panel::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      380px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.85),
+      transparent 62%
+    ),
+    radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(14, 143, 136, 0.07),
+      transparent 70%
+    );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  content: "";
+  pointer-events: none;
+}
+
+.tool-card:hover::before,
+.metric-card:hover::before,
+.mission-card:hover::before,
+.recommend-card:hover::before,
+.news-item:hover::before,
+.top-stat:hover::before,
+.feedback-panel:hover::before {
+  opacity: 1;
+}
+
+.tool-card:hover,
+.metric-card:hover,
+.mission-card:hover,
+.recommend-card:hover,
+.top-stat:hover {
+  border-color: rgba(14, 143, 136, 0.28);
+  box-shadow: 0 22px 44px rgba(42, 47, 45, 0.13);
+  transform: translateY(-3px);
+}
+
+.news-item:hover {
+  border-color: rgba(14, 143, 136, 0.3);
+  box-shadow: 0 16px 32px rgba(42, 47, 45, 0.1);
+  transform: translateY(-2px);
+}
+
+.tool-card:hover .tool-visual {
+  border-color: rgba(14, 143, 136, 0.3);
+}
+
+/* ---------- Hero banner: idle motion + pointer parallax ---------- */
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+@keyframes floatTilt {
+  0%,
+  100% {
+    transform: rotate(-10deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-5deg) translateY(-10px);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(8deg);
+  }
+}
+
+@keyframes beacon {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 180, 50, 0.55);
+  }
+  60% {
+    box-shadow: 0 0 0 10px rgba(245, 180, 50, 0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes gridDrift {
+  to {
+    background-position: 42px 42px, 42px 42px;
+  }
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes tick {
+  0% {
+    transform: translateY(-5px) scale(1.18);
+    opacity: 0.4;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.hero-banner::before {
+  animation: gridDrift 14s linear infinite;
+}
+
+.robot {
+  animation: floatY 5.5s ease-in-out infinite;
+  translate: calc(var(--px, 0) * -16px) calc(var(--py, 0) * -9px);
+  transition: translate 0.6s var(--ease-out);
+}
+
+.robot::after {
+  animation: beacon 2.2s ease-out infinite;
+}
+
+.robot-head::before {
+  animation: blink 5s ease-in-out infinite;
+}
+
+.check-token {
+  animation: floatTilt 6.5s ease-in-out infinite;
+  translate: calc(var(--px, 0) * 12px) calc(var(--py, 0) * 8px);
+  transition: translate 0.6s var(--ease-out);
+}
+
+.star-token {
+  animation: twinkle 4.2s ease-in-out infinite;
+  translate: calc(var(--px, 0) * 22px) calc(var(--py, 0) * 12px);
+  transition: translate 0.6s var(--ease-out);
+}
+
+.sky-island {
+  animation: floatY 7.5s ease-in-out infinite reverse;
+  translate: calc(var(--px, 0) * 8px) calc(var(--py, 0) * 5px);
+  transition: translate 0.6s var(--ease-out);
+}
+
+.banner-copy {
+  translate: calc(var(--px, 0) * 6px) calc(var(--py, 0) * 4px);
+  transition: translate 0.6s var(--ease-out);
+}
+
+/* ---------- Buttons ---------- */
+
+.follow-button,
+.launch-button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    filter 180ms ease,
+    translate 0.35s var(--ease-out);
+}
+
+.account-status-link {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    translate 0.35s var(--ease-out);
+}
+
+.feedback-button {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    translate 0.35s var(--ease-out);
+}
+
+.arrow-symbol {
+  transition: translate 0.35s var(--ease-out);
+}
+
+.launch-button:hover .arrow-symbol,
+.launch-button:focus-visible .arrow-symbol {
+  translate: 6px 0;
+}
+
+.feedback-button:hover {
+  box-shadow: 0 16px 30px rgba(14, 143, 136, 0.3);
+  transform: translateY(-2px);
+}
+
+.feedback-secondary {
+  transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+.feedback-secondary:hover {
+  border-color: rgba(14, 143, 136, 0.4);
+  background: rgba(255, 253, 248, 0.95);
+  transform: translateY(-2px);
+}
+
+.news-toggle {
+  transition: background-color 0.25s ease, transform 0.25s var(--ease-out);
+}
+
+.news-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.category-tabs button:active,
+.news-toggle:active {
+  transform: scale(0.97);
+}
+
+/* ---------- Progress, counters ---------- */
+
+.xp-track span,
+.progress-track span {
+  transition: width 1.3s var(--ease-out);
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--green));
+  transform: scaleX(var(--p, 0));
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.site-counter small::before {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  content: "";
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+.site-counter strong.tick {
+  animation: tick 0.5s var(--ease-out);
+}
+
+/* ---------- Tool grid ---------- */
+
+.tool-card .tool-visual .signal {
+  animation: livePulse 3.6s ease-in-out infinite;
+}
+
+.tool-card .tool-visual .signal-two {
+  animation-delay: 0.9s;
+}
+
+.tool-card:hover .antenna {
+  animation: floatY 2.4s ease-in-out infinite;
+}
+
+.tool-empty {
+  animation: riseIn 0.6s var(--ease-out) backwards;
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .scroll-progress {
+    display: none;
+  }
+}
+
+@media (hover: none) {
+  .tool-card:hover,
+  .metric-card:hover,
+  .mission-card:hover,
+  .recommend-card:hover,
+  .top-stat:hover,
+  .news-item:hover {
+    box-shadow: inherit;
+    transform: none;
+  }
+}
+
+/* ---------- Explorer status button + XP dialog ---------- */
+
+.explorer-status {
+  position: relative;
+  transition:
+    transform 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out),
+    border-color 0.35s var(--ease-out);
+}
+
+.explorer-status:hover {
+  border-color: rgba(14, 143, 136, 0.3);
+  box-shadow: 0 18px 36px rgba(42, 47, 45, 0.12);
+  transform: translateY(-2px);
+}
+
+.explorer-status:active {
+  transform: scale(0.985);
+}
+
+.explorer-status .mascot {
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.explorer-status:hover .mascot {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+.explorer-status .explorer-hint {
+  margin-top: 6px;
+  color: var(--teal-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  opacity: 0.8;
+}
+
+.explorer-dialog {
+  width: min(480px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--panel);
+  box-shadow: 0 32px 80px rgba(8, 37, 40, 0.28);
+}
+
+.explorer-dialog[open] {
+  animation: dialogIn 0.45s var(--ease-out);
+}
+
+.explorer-dialog::backdrop {
+  background: rgba(8, 37, 40, 0.42);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    translate: 0 18px;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes growX {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.explorer-dialog-head {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 20px 14px;
+  background: var(--panel-soft);
+  border-bottom: 1px solid var(--line);
+}
+
+.explorer-dialog-head .mascot {
+  width: 72px;
+  height: 72px;
+}
+
+.explorer-dialog-head h2 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+}
+
+.explorer-dialog-head p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.explorer-close {
+  align-self: start;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink-soft);
+  background: var(--panel);
+  font: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.3s var(--ease-out);
+}
+
+.explorer-close:hover {
+  background: var(--teal-soft);
+  transform: rotate(90deg);
+}
+
+.xp-rows {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 18px 20px 6px;
+  list-style: none;
+}
+
+.xp-rows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 12px;
+  align-items: baseline;
+}
+
+.xp-row-name {
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+.xp-row-name small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.xp-rows li > strong {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.xp-row-track {
+  grid-column: 1 / -1;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(32, 42, 40, 0.09);
+}
+
+.xp-row-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--teal), var(--green));
+  transform-origin: left center;
+  animation: growX 0.9s var(--ease-out) backwards;
+}
+
+.explorer-note {
+  margin: 0;
+  padding: 10px 20px 18px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+@media (pointer: coarse) {
+  .news-toggle {
+    min-height: 44px;
+  }
+}

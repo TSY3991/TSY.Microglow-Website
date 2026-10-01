@@ -427,6 +427,19 @@ p {
   filter: drop-shadow(0 8px 12px rgba(85, 72, 52, 0.16));
 }
 
+.explorer-status {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.explorer-info {
+  display: block;
+  min-width: 0;
+}
+
 .explorer-status strong,
 .explorer-status span {
   display: block;

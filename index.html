@@ -18,12 +18,21 @@
     <meta property="og:url" content="https://tsy3991.github.io/TSY.Microglow-Website/">
     <meta property="og:image" content="https://tsy3991.github.io/TSY.Microglow-Website/assets/logo-mark.png">
     <meta property="og:locale" content="zh_TW">
+    <meta property="og:site_name" content="TSY 微光創作室">
+    <meta property="og:image:alt" content="TSY 微光創作室標誌">
     <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="TSY 微光創作室｜TSY.Microglow">
+    <meta name="twitter:description" content="TSY 微光創作室（TSY.Microglow）的工具、測驗網站與作品主入口。">
+    <meta name="twitter:image" content="https://tsy3991.github.io/TSY.Microglow-Website/assets/logo-mark.png">
+    <link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/">
+    <link rel="apple-touch-icon" href="./assets/logo-mark.png">
     <title>TSY 微光創作室｜TSY.Microglow</title>
     <link rel="icon" href="./assets/logo-mark.png" type="image/png">
-    <link rel="stylesheet" href="./styles.css?v=20260729a">
+    <link rel="stylesheet" href="./styles.css?v=20261001a">
+    <link rel="stylesheet" href="./polish.css?v=20261001c">
   </head>
   <body>
+    <a class="skip-link" href="#main-content">跳到主要內容</a>
     <div class="app-shell" id="top">
       <aside class="side-panel" aria-label="主導覽">
         <a class="brand" href="./" aria-label="TSY 微光創作室首頁">
@@ -55,11 +64,11 @@
               <span class="nav-symbol gamepad-symbol" aria-hidden="true"></span>
               <span>小遊戲</span>
             </a>
-            <span class="nav-item muted" role="link" tabindex="0" aria-disabled="true" title="準備中">
+            <span class="nav-item muted" title="準備中">
               <span class="nav-symbol doc-symbol" aria-hidden="true"></span>
               <span>學習工具</span>
             </span>
-            <span class="nav-item muted" role="link" tabindex="0" aria-disabled="true" title="準備中">
+            <span class="nav-item muted" title="準備中">
               <span class="nav-symbol compass-symbol" aria-hidden="true"></span>
               <span>創作工具</span>
             </span>
@@ -71,11 +80,11 @@
 
           <section class="nav-section" aria-labelledby="nav-record">
             <h2 id="nav-record">創作與紀錄</h2>
-            <span class="nav-item muted" role="link" tabindex="0" aria-disabled="true" title="準備中">
+            <span class="nav-item muted" title="準備中">
               <span class="nav-symbol book-symbol" aria-hidden="true"></span>
               <span>學習紀錄</span>
             </span>
-            <span class="nav-item muted" role="link" tabindex="0" aria-disabled="true" title="準備中">
+            <span class="nav-item muted" title="準備中">
               <span class="nav-symbol star-symbol" aria-hidden="true"></span>
               <span>我的作品</span>
             </span>
@@ -94,17 +103,18 @@
           </section>
         </nav>
 
-        <div class="explorer-status" aria-label="微光探索者狀態">
+        <button class="explorer-status" id="explorerTrigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="微光探索者狀態，開啟經驗值明細">
           <img class="mascot" src="./assets/explorer-mascot.png" alt="" aria-hidden="true">
-          <div>
+          <span class="explorer-info">
             <strong id="explorerRank">微光探索者</strong>
             <span id="explorerMeta">探索・學習・創造</span>
-            <div class="xp-track" aria-label="探索者經驗值"><span id="explorerXpBar"></span></div>
-          </div>
-        </div>
+            <span class="xp-track" aria-hidden="true"><span id="explorerXpBar"></span></span>
+            <small class="explorer-hint">點擊查看經驗值明細</small>
+          </span>
+        </button>
       </aside>
 
-      <main class="dashboard">
+      <main class="dashboard" id="main-content" tabindex="-1">
         <header class="topbar" aria-label="網站狀態">
           <div class="top-stat">
             <span class="stat-icon flame-icon" aria-hidden="true"></span>
@@ -487,6 +497,18 @@
         </section>
       </main>
     </div>
+    <dialog class="explorer-dialog" id="explorerDialog" aria-labelledby="explorerDialogTitle">
+      <div class="explorer-dialog-head">
+        <img class="mascot" src="./assets/explorer-mascot.png" alt="" aria-hidden="true">
+        <div>
+          <h2 id="explorerDialogTitle" data-explorer-title>微光探索者</h2>
+          <p data-explorer-summary></p>
+        </div>
+        <button type="button" class="explorer-close" data-explorer-close aria-label="關閉">×</button>
+      </div>
+      <ul class="xp-rows" data-explorer-body></ul>
+      <p class="explorer-note">經驗值只記錄在這台裝置的瀏覽器中，每項有上限；等級上限為 Lv.10。</p>
+    </dialog>
     <nav class="mobile-dock" aria-label="手機快速導覽">
       <a class="active" href="#top" data-filter-trigger="all" data-nav-role="home" aria-current="page">
         <span class="nav-symbol home-symbol" aria-hidden="true"></span>
@@ -519,7 +541,8 @@
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
-    <script src="./scripts/portal-records.js?v=20260927a"></script>
+    <script src="./scripts/portal-records.js?v=20261001a"></script>
+    <script src="./scripts/portal-motion.js?v=20261001a" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="./scripts/microglow-auth.js?v=20260728b"></script>
     <script src="./scripts/portal-auth.js?v=20260727a"></script>
