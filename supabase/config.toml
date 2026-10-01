@@ -85,6 +85,22 @@ double_confirm_changes = true
 enable_confirmations = false
 secure_password_change = true
 
+[auth.email.template.confirmation]
+subject = "【TSY 微光創作室】請確認你的 Email"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.email_change]
+subject = "【TSY 微光創作室】請確認新的 Email"
+content_path = "./supabase/templates/email_change.html"
+
+[auth.email.template.recovery]
+subject = "【TSY 微光創作室】重設密碼"
+content_path = "./supabase/templates/recovery.html"
+
+[auth.email.template.reauthentication]
+subject = "【TSY 微光創作室】身分驗證碼"
+content_path = "./supabase/templates/reauthentication.html"
+
 [edge_runtime]
 enabled = true
 policy = "per_worker"

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>重設你的密碼</title></head>
+<body style="margin:0;padding:0;background:#f8f4ec;font-family:'Microsoft JhengHei','PingFang TC','Noto Sans TC',Arial,sans-serif;color:#082528">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8f4ec"><tr><td align="center" style="padding:32px 16px">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#fffdf8;border-radius:20px;border-top:6px solid #0e8f88">
+<tr><td align="center" style="padding:28px 32px 8px"><img src="https://tsy3991.github.io/TSY.Microglow-Website/assets/logo-mark.png" width="96" alt="TSY 微光創作室" style="display:block;border:0"></td></tr>
+<tr><td align="center" style="padding:0 32px 4px;font-size:15px;font-weight:700;color:#07635e;letter-spacing:1px">TSY 微光創作室　TSY.Microglow</td></tr>
+<tr><td style="padding:20px 32px 28px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td style="padding:0 0 12px;font-size:22px;font-weight:700;color:#082528">重設你的密碼</td></tr>
+<tr><td style="padding:0 0 20px;font-size:15px;line-height:1.8;color:#324447">我們收到重設 {{ .Email }} 這個帳號密碼的要求。請點擊下方按鈕設定新密碼，連結有效時間有限。</td></tr>
+<tr><td align="center" style="padding:8px 0 24px">
+<a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0e8f88;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 32px;border-radius:999px">重設密碼</a>
+</td></tr>
+<tr><td style="padding:0 0 20px;font-size:13px;line-height:1.7;color:#324447">按鈕無法點擊時，請複製下方連結貼到瀏覽器：<br><a href="{{ .ConfirmationURL }}" style="color:#07635e;word-break:break-all">{{ .ConfirmationURL }}</a></td></tr>
+<tr><td style="padding:16px 0 0;border-top:1px solid #e9e2d3;font-size:12.5px;line-height:1.8;color:#5b6b6e">如果你沒有提出這項要求，請忽略這封信，你的密碼不會被更動。<br>這封信由 TSY 微光創作室（<a href="https://tsy3991.github.io/TSY.Microglow-Website/" style="color:#07635e">https://tsy3991.github.io/TSY.Microglow-Website/</a>）的會員系統自動寄出，請勿直接回覆。</td></tr>
+</table></td></tr></table></td></tr></table></body></html>
