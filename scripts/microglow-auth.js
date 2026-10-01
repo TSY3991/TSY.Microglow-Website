@@ -7,7 +7,7 @@
   const STORAGE_KEY = `sb-${PROJECT_REF}-auth-token`;
   const RETURN_TO_KEY = "microglow-auth-return-to-v1";
   const PRODUCTION_ORIGIN = "https://tsy3991.github.io";
-  const PRODUCTION_PATHS = ["/TSY.Microglow-Website/", "/TSY.Microglow-Games/"];
+  const PRODUCTION_PATHS = ["/TSY.Microglow-Website/", "/TSY.Microglow-Games/", "/TSY.Microglow-Tools/"];
 
   function isLocalHost(hostname) {
     return hostname === "localhost" || hostname === "127.0.0.1";
@@ -98,6 +98,12 @@
       user?.app_metadata?.provider === "anonymous" ||
       user?.user_metadata?.is_anonymous
     );
+  }
+
+  if (window.top !== window.self && /\/auth\//.test(window.location.pathname)) {
+    document.documentElement.hidden = true;
+    try { window.top.location.href = window.location.href; } catch (_) { /* cross-origin parent: stay hidden */ }
+    return;
   }
 
   if (!window.supabase || typeof window.supabase.createClient !== "function") {

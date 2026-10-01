@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://tsy3991.github.io/TSY.Microglow-Website/sitemap.xml

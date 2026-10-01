@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co"
     >
     <meta name="robots" content="noindex">
     <meta name="theme-color" content="#0e8f88">
@@ -24,8 +24,8 @@
       </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="../scripts/microglow-auth.js?v=20260728b"></script>
+    <script src="../scripts/vendor/supabase-js-2.117.2.umd.js"></script>
+    <script src="../scripts/microglow-auth.js?v=20261001a"></script>
     <script src="../scripts/auth-callback.js?v=20260726a"></script>
   </body>
 </html>

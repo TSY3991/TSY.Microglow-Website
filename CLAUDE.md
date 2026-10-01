@@ -45,6 +45,15 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - 公開「已知問題與修復進度」：直接改 `private.portal_known_issues`（`status` 為 `reported`／`investigating`／`fixed`，`is_public=false` 可隱藏），不需重新部署網站。
 - 測試資料請用 `[TEST]` 開頭，測完用 SQL 刪除，不要留在正式表。
 
+## 資安強化（2026-10 檢視後）
+
+- `supabase-js` 改為自行託管：`scripts/vendor/supabase-js-2.117.2.umd.js`（升版步驟見同資料夾 README.txt），三個頁面的 CSP `script-src` 已不再允許 jsDelivr；登入頁仍需 `challenges.cloudflare.com`（Turnstile）。
+- CSP 補了 `base-uri`、`form-action`、`object-src`；`index.html`／`callback.html` 已移除 `style-src 'unsafe-inline'`（登入頁因 Turnstile 保留），新增內嵌 `style=` 屬性或 `<style>` 會被擋，改用 CSS class。
+- `microglow-auth.js` 在 `/auth/` 頁被 iframe 嵌入時會隱藏並跳出（meta CSP 無法設 `frame-ancestors`）。
+- migration `20260722002100_security_hardening.sql`：`report_client_error` 伺服器端限流（全站 500／小時、單一使用者 30／小時，超量靜默丟棄）、`portal_activity` 停止寫入、移除 storage 匿名列舉、`private` 全表啟用 RLS。
+- 已刪除 `robots.txt`（子路徑下搜尋引擎不讀）；sitemap 請直接到 Google Search Console 提交。
+- 線上人數 presence key 改為「每瀏覽器一個」；presence 本身無法防偽造，只影響顯示。
+
 ## 延伸閱讀
 
 - 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`

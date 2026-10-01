@@ -10,9 +10,21 @@
     return;
   }
 
+  // One key per browser (not per tab) so several open tabs count as one visitor.
+  const PRESENCE_KEY_STORAGE = "tsyMicroglowPortal.presenceKey.v1";
+
   function createPresenceKey() {
-    if (window.crypto?.randomUUID) return window.crypto.randomUUID();
-    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const fresh = window.crypto?.randomUUID
+      ? window.crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    try {
+      const saved = window.localStorage.getItem(PRESENCE_KEY_STORAGE);
+      if (saved && /^[\w-]{8,64}$/.test(saved)) return saved;
+      window.localStorage.setItem(PRESENCE_KEY_STORAGE, fresh);
+    } catch (_) {
+      // Storage blocked: fall back to a per-tab key.
+    }
+    return fresh;
   }
 
   const channel = client.channel("portal-online", {

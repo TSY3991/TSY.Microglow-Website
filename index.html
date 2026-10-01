@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#0e8f88">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co"
     >
     <meta property="og:title" content="TSY 微光創作室｜TSY.Microglow">
     <meta property="og:description" content="TSY 微光創作室（TSY.Microglow）主入口：測驗練習、小遊戲、實用工具一站開啟，並提供最新更新公告與問題回報。">
@@ -569,10 +569,10 @@
     </div>
     <script src="./scripts/portal-records.js?v=20261001a"></script>
     <script src="./scripts/portal-motion.js?v=20261001a" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-    <script src="./scripts/microglow-auth.js?v=20260728b"></script>
+    <script src="./scripts/vendor/supabase-js-2.117.2.umd.js"></script>
+    <script src="./scripts/microglow-auth.js?v=20261001a"></script>
     <script src="./scripts/portal-auth.js?v=20260727a"></script>
-    <script src="./scripts/portal-presence.js?v=20260729a"></script>
+    <script src="./scripts/portal-presence.js?v=20261001a"></script>
     <script src="./scripts/portal-feedback.js?v=20261001b"></script>
   </body>
 </html>
