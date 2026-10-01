@@ -829,3 +829,73 @@ main:focus {
     min-height: 44px;
   }
 }
+
+/* ---------- Print ---------- */
+
+@media print {
+  .side-panel,
+  .mobile-dock,
+  .site-counter,
+  .scroll-progress,
+  .skip-link {
+    display: none !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    translate: none !important;
+  }
+
+  .app-shell {
+    display: block;
+  }
+}
+
+/* ---------- Explorer entry on narrow layouts ---------- */
+
+@media (max-width: 980px) {
+  .explorer-status {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    z-index: 3;
+    display: grid;
+    width: auto;
+    grid-template-columns: 44px auto;
+    gap: 8px;
+    padding: 6px 12px 6px 6px;
+    border-radius: 999px;
+  }
+
+  .explorer-status .mascot {
+    width: 44px;
+    height: 44px;
+  }
+
+  .explorer-status #explorerMeta,
+  .explorer-status .xp-track,
+  .explorer-status .explorer-hint {
+    display: none;
+  }
+
+  .explorer-status strong {
+    margin: 0;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .explorer-status {
+    grid-template-columns: 44px;
+    padding: 4px;
+  }
+
+  .explorer-status .explorer-info {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
