@@ -36,6 +36,15 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - 發現「檢視／看看／評估」類需求時只分析回報，不要順手改；使用者明確說「修」才動手（使用者的全域規則，這個專案也適用）。
 - push 前想清楚是不是該跟其他進行中的工作（例如另一個視窗/Codex 正在改的檔案）一起 bundle，不要各自零散 push，除非確認不衝突。
 
+## 站內問題回報（2026-10 上線）
+
+- 前端：`index.html` 的 `#feedback` 區塊 + `scripts/portal-feedback.js`，匿名可送，聯絡方式選填；不再導向 GitHub Issues（Issues 只留給擁有者自己用）。
+- 後端：migration `20260722002000_portal_feedback.sql`。回報存 `private.portal_feedback`（前端無法直接讀寫），已知問題存 `private.portal_known_issues`；前端只能呼叫 `submit_portal_feedback`、`list_portal_known_issues` 兩個 RPC。
+- 防濫用：描述 5–2000 字、其他欄位 200 字上限；同內容 1 小時內去重；全站每小時 40 筆、登入者每小時 5 筆；前端 honeypot + 同瀏覽器 60 秒冷卻。
+- 看回報：Supabase SQL editor 或 `npx supabase db query --linked "select ... from private.portal_feedback order by created_at desc"`（本機沒有全域 `supabase` 指令，要用 `npx`）。
+- 公開「已知問題與修復進度」：直接改 `private.portal_known_issues`（`status` 為 `reported`／`investigating`／`fixed`，`is_public=false` 可隱藏），不需重新部署網站。
+- 測試資料請用 `[TEST]` 開頭，測完用 SQL 刪除，不要留在正式表。
+
 ## 延伸閱讀
 
 - 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`

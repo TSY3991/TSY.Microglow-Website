@@ -909,7 +909,7 @@ main:focus {
   color: var(--ink);
   background: rgba(255, 253, 248, 0.9);
   font: inherit;
-  font-size: 0.94rem;
+  font-size: 1rem;
   font-weight: 700;
 }
 .feedback-field textarea { resize: vertical; line-height: 1.5; }
