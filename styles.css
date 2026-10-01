@@ -260,37 +260,6 @@ p {
   transform: translateX(2px);
 }
 
-.nav-item.muted {
-  cursor: not-allowed;
-  color: rgba(50, 68, 71, 0.82);
-  background: rgba(255, 253, 248, 0.34);
-}
-
-.nav-item.muted::after {
-  display: inline-flex;
-  min-height: 24px;
-  align-items: center;
-  margin-left: auto;
-  padding: 0 8px;
-  border-radius: 999px;
-  color: var(--teal-dark);
-  background: rgba(14, 143, 136, 0.11);
-  font-size: 0.72rem;
-  font-weight: 950;
-  content: "準備中";
-}
-
-.nav-item.muted:hover,
-.nav-item.muted:focus-visible {
-  border-color: rgba(32, 42, 40, 0.08);
-  outline: 2px solid rgba(14, 143, 136, 0.12);
-  outline-offset: 2px;
-  color: rgba(50, 68, 71, 0.74);
-  background: rgba(255, 253, 248, 0.46);
-  transform: none;
-  box-shadow: none;
-}
-
 .nav-symbol,
 .stat-icon,
 .metric-icon,
@@ -1853,15 +1822,7 @@ h1 strong {
   line-height: 1.55;
 }
 
-.feedback-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: end;
-}
-
-.feedback-button,
-.feedback-secondary {
+.feedback-button {
   display: inline-flex;
   min-height: 46px;
   align-items: center;
@@ -1886,13 +1847,6 @@ h1 strong {
   width: 24px;
   height: 24px;
   place-items: center;
-}
-
-.feedback-secondary {
-  padding: 0 14px;
-  color: var(--teal-dark);
-  border: 1px solid rgba(14, 143, 136, 0.18);
-  background: rgba(255, 253, 248, 0.7);
 }
 
 @container (max-width: 760px) {
@@ -2013,10 +1967,6 @@ h1 strong {
   .recommend-grid,
   .feedback-panel {
     grid-template-columns: 1fr;
-  }
-
-  .feedback-actions {
-    justify-content: start;
   }
 
   .primary-tool {
@@ -2389,13 +2339,7 @@ h1 strong {
     padding: 16px;
   }
 
-  .feedback-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  .feedback-button,
-  .feedback-secondary {
+  .feedback-button {
     width: 100%;
   }
 

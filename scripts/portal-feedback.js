@@ -51,7 +51,9 @@
       return;
     }
     const description = form.elements.description.value.trim();
+    form.elements.description.removeAttribute("aria-invalid");
     if (description.length < 5) {
+      form.elements.description.setAttribute("aria-invalid", "true");
       setStatus(ERROR_TEXT.description_too_short, "error");
       form.elements.description.focus();
       return;
