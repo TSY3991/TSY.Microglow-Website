@@ -423,7 +423,7 @@ main:focus {
 
 @keyframes gridDrift {
   to {
-    background-position: 42px 42px, 42px 42px;
+    transform: translate3d(42px, 42px, 0);
   }
 }
 
@@ -451,7 +451,9 @@ main:focus {
 }
 
 .hero-banner::before {
+  inset: -42px 0 0 -42px;
   animation: gridDrift 14s linear infinite;
+  will-change: transform;
 }
 
 .robot {
@@ -594,6 +596,101 @@ main:focus {
 
 .tool-empty {
   animation: riseIn 0.6s var(--ease-out) backwards;
+}
+
+/* ---------- Pause idle loops when off-screen / tab hidden (class set by portal-motion.js) ---------- */
+
+.hero-banner.is-offscreen,
+.hero-banner.is-offscreen *,
+.hero-banner.is-offscreen::before,
+.hero-banner.is-offscreen::after,
+.hero-banner.is-offscreen *::before,
+.hero-banner.is-offscreen *::after,
+html.is-tab-hidden *,
+html.is-tab-hidden *::before,
+html.is-tab-hidden *::after {
+  animation-play-state: paused !important;
+}
+
+.hero-banner.is-offscreen::before {
+  will-change: auto;
+}
+
+/* ---------- Lighter per-character entrance on small screens (no blur filter) ---------- */
+
+@keyframes charInLite {
+  from {
+    opacity: 0;
+    translate: 0 0.55em;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .banner-copy strong .char {
+    animation-name: charInLite;
+    animation-duration: 0.7s;
+  }
+}
+
+/* ---------- Press feedback ---------- */
+
+.launch-button,
+.follow-button,
+.feedback-button,
+.account-status-link,
+.nav-item,
+.mobile-dock a {
+  transition-property: translate, scale, transform, filter, background, border-color, color, box-shadow;
+}
+
+.launch-button:active,
+.follow-button:active,
+.feedback-button:active,
+.account-status-link:active,
+.nav-item:active,
+.mobile-dock a:active {
+  scale: 0.96;
+  transition-duration: 90ms;
+}
+
+/* ---------- Nav: section currently in view (non-filter links only) ---------- */
+
+.nav-item.in-view:not(.active),
+.mobile-dock a.in-view:not(.active) {
+  color: var(--teal-dark);
+  border-color: rgba(14, 143, 136, 0.22);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ---------- Skeleton (loading placeholder lines) ---------- */
+
+@keyframes skeletonSheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.known-issue-empty.is-loading {
+  position: relative;
+  overflow: hidden;
+  color: transparent;
+  min-height: 44px;
+  user-select: none;
+}
+
+.known-issue-empty.is-loading::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  content: "";
+  animation: skeletonSheen 1.4s ease-in-out infinite;
 }
 
 /* ---------- Reduced motion ---------- */

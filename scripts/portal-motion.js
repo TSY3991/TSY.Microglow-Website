@@ -119,15 +119,15 @@
       if (!Number.isFinite(end) || end <= 0) return;
       const start = performance.now();
       const duration = 1100;
+      let written = original;
       (function frame(now) {
+        // Someone else (e.g. record sync) updated the text mid-animation: let it win.
+        if (el.textContent !== written) return;
         const t = Math.min(1, (now - start) / duration);
         const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-        el.textContent = `${prefix}${Math.round(end * eased)}${suffix}`;
-        if (t < 1) {
-          requestAnimationFrame(frame);
-        } else {
-          el.textContent = original;
-        }
+        written = t === 1 ? original : `${prefix}${Math.round(end * eased)}${suffix}`;
+        el.textContent = written;
+        if (t < 1) requestAnimationFrame(frame);
       })(start);
     }
 
@@ -241,6 +241,42 @@
     }, { passive: true });
   }
 
+  function setupIdlePause() {
+    const root = document.documentElement;
+    const sync = () => root.classList.toggle("is-tab-hidden", document.hidden);
+    document.addEventListener("visibilitychange", sync);
+    sync();
+    const banner = document.querySelector(".hero-banner");
+    if (banner && "IntersectionObserver" in window) {
+      new IntersectionObserver((entries) => {
+        entries.forEach((entry) => banner.classList.toggle("is-offscreen", !entry.isIntersecting));
+      }).observe(banner);
+    }
+  }
+
+  function setupSectionNav() {
+    if (!("IntersectionObserver" in window)) return;
+    const links = Array.from(document.querySelectorAll(".nav-item, .mobile-dock a"))
+      .filter((a) => !a.hasAttribute("data-filter-trigger") && a.getAttribute("href")?.startsWith("#"));
+    const map = new Map();
+    links.forEach((a) => {
+      const id = a.getAttribute("href").slice(1);
+      if (!id || id === "top") return;
+      const target = document.getElementById(id);
+      const section = target && (target.closest("section") || target);
+      if (!section) return;
+      if (!map.has(section)) map.set(section, []);
+      map.get(section).push(a);
+    });
+    if (!map.size) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        (map.get(entry.target) || []).forEach((a) => a.classList.toggle("in-view", entry.isIntersecting));
+      });
+    }, { rootMargin: "-35% 0px -45% 0px" });
+    map.forEach((_, section) => observer.observe(section));
+  }
+
   splitBannerHeadline();
   setupScrollProgress();
   setupReveal();
@@ -248,4 +284,6 @@
   setupProgressBars();
   setupOnlineTick();
   setupPointerEffects();
+  setupIdlePause();
+  setupSectionNav();
 })();
