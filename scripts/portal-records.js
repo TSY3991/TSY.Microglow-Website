@@ -35,10 +35,10 @@
       category: "creative",
       categoryLabel: "創作工具",
       title: "微光創作工具大廳",
-      description: "集中放置微光創作室的創作工具，第一個工具「AI創意生圖工具」提供宮廟海報、節慶祝福與活動視覺模板。",
+      description: "集中放置微光創作室的創作工具，第一個工具「AI圖片創作工具」提供宮廟海報、節慶祝福與活動視覺模板。",
       url: "https://tsy3991.github.io/TSY.Microglow-Creative/",
       cta: "進入創作工具",
-      keywords: "創作工具 AI創意生圖工具 AI 圖片 生圖 宮廟海報 節慶祝福 活動視覺 模板 ChatGPT Gemini",
+      keywords: "創作工具 AI圖片創作工具 AI 圖片 生圖 宮廟海報 節慶祝福 活動視覺 模板 ChatGPT Gemini",
       tags: ["圖片創作", "Prompt 模板", "持續新增"],
       featured: false,
       record: false
