@@ -95,19 +95,19 @@ verify_enabled = true
 email_sent = 30
 
 [auth.email.template.confirmation]
-subject = "【TSY 微光創作室】會員 Email 確認"
+subject = "【TSY.Microglow】會員 Email 確認"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.email_change]
-subject = "【TSY 微光創作室】會員 Email 變更確認"
+subject = "【TSY.Microglow】會員 Email 變更確認"
 content_path = "./supabase/templates/email_change.html"
 
 [auth.email.template.recovery]
-subject = "【TSY 微光創作室】會員密碼重設"
+subject = "【TSY.Microglow】會員密碼重設"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.reauthentication]
-subject = "【TSY 微光創作室】會員身分驗證碼"
+subject = "【TSY.Microglow】會員身分驗證碼"
 content_path = "./supabase/templates/reauthentication.html"
 
 [edge_runtime]
