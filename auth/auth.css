@@ -71,7 +71,7 @@ input {
 .auth-brand {
   background:
     linear-gradient(rgba(4, 19, 21, 0.3), rgba(4, 19, 21, 0.88)),
-    url("../assets/explorer-mascot.png") right bottom / min(62%, 360px) auto no-repeat,
+    url("../assets/explorer-mascot.webp") right bottom / min(62%, 360px) auto no-repeat,
     linear-gradient(145deg, #123c3d, #0a2024);
 }
 

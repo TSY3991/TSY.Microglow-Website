@@ -12,6 +12,7 @@
     if (!headline || headline.dataset.split) return;
     const text = headline.textContent.trim();
     headline.dataset.split = "true";
+    headline.setAttribute("role", "img");
     headline.setAttribute("aria-label", text);
     headline.textContent = "";
     Array.from(text).forEach((char, index) => {

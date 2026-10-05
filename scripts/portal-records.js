@@ -402,7 +402,12 @@
     if (missionProgressBarEl) {
       missionProgressBarEl.style.width = `${Math.round((missionCurrent / missionTotal) * 100)}%`;
       const track = missionProgressBarEl.parentElement;
-      if (track) track.setAttribute("aria-label", `完成進度 ${missionCurrent} / ${missionTotal}`);
+      if (track) {
+        track.setAttribute("aria-label", "完成進度");
+        track.setAttribute("aria-valuemax", String(missionTotal));
+        track.setAttribute("aria-valuenow", String(missionCurrent));
+        track.setAttribute("aria-valuetext", `${missionCurrent} / ${missionTotal}`);
+      }
     }
     if (missionScoreEl) missionScoreEl.textContent = `${missionCurrent} / ${missionTotal}`;
   }

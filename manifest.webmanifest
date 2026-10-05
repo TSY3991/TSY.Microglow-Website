@@ -1,0 +1,17 @@
+{
+  "name": "TSY 微光創作室",
+  "short_name": "微光創作室",
+  "description": "TSY.Microglow 主入口：測驗練習、小遊戲、創作與實用工具。",
+  "lang": "zh-Hant",
+  "id": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f4ec",
+  "theme_color": "#0e8f88",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

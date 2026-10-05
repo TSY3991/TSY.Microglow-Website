@@ -28,6 +28,7 @@
     <meta name="twitter:image" content="https://tsy3991.github.io/TSY.Microglow-Website/assets/og-image.png">
     <link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/">
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+    <link rel="manifest" href="./manifest.webmanifest">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -67,9 +68,9 @@
     <a class="skip-link" href="#main-content">跳到主要內容</a>
     <div class="app-shell" id="top">
       <aside class="side-panel" aria-label="主導覽">
-        <a class="brand" href="./" aria-label="TSY 微光創作室首頁">
+        <a class="brand" href="./" aria-label="TSY 微光創作室 TSY.Microglow 首頁">
           <span class="brand-mark" aria-hidden="true">
-            <img class="brand-logo" src="./assets/logo-mark.png" alt="" width="256" height="241" decoding="async">
+            <img class="brand-logo" src="./assets/logo-mark.webp" alt="" width="256" height="241" decoding="async">
           </span>
           <span class="brand-copy">
             <strong>TSY 微光創作室</strong>
@@ -123,8 +124,8 @@
           </section>
         </nav>
 
-        <button class="explorer-status" id="explorerTrigger" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="微光探索者狀態，開啟經驗值明細">
-          <img class="mascot" src="./assets/explorer-mascot.png" alt="" aria-hidden="true" width="256" height="256" decoding="async">
+        <button class="explorer-status" id="explorerTrigger" type="button" aria-haspopup="dialog" aria-expanded="false">
+          <img class="mascot" src="./assets/explorer-mascot.webp" alt="" aria-hidden="true" width="256" height="256" decoding="async">
           <span class="explorer-info">
             <strong id="explorerRank">微光探索者</strong>
             <span id="explorerMeta">探索・學習・創造</span>
@@ -446,7 +447,7 @@
             <div class="mission-copy">
               <p>本週任務</p>
               <strong>整理工具入口，讓作品集中展示</strong>
-              <div class="progress-track" aria-label="完成進度">
+              <div class="progress-track" role="progressbar" aria-label="完成進度" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
                 <span id="missionProgressBar"></span>
               </div>
             </div>
@@ -571,7 +572,7 @@
     </div>
     <dialog class="explorer-dialog" id="explorerDialog" aria-labelledby="explorerDialogTitle">
       <div class="explorer-dialog-head">
-        <img class="mascot" src="./assets/explorer-mascot.png" alt="" aria-hidden="true" width="256" height="256" decoding="async" loading="lazy">
+        <img class="mascot" src="./assets/explorer-mascot.webp" alt="" aria-hidden="true" width="256" height="256" decoding="async" loading="lazy">
         <div>
           <h2 id="explorerDialogTitle" data-explorer-title>微光探索者</h2>
           <p data-explorer-summary></p>
@@ -617,13 +618,14 @@
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
-    <script src="./scripts/portal-records.js?v=20261004b"></script>
-    <script src="./scripts/portal-motion.js?v=20261002b" defer></script>
-    <script src="./scripts/vendor/supabase-js-2.117.2.umd.js"></script>
-    <script src="./scripts/microglow-auth.js?v=20261001a"></script>
-    <script src="./scripts/portal-auth.js?v=20260727a"></script>
-    <script src="./scripts/portal-progress-sync.js?v=20261005a"></script>
-    <script src="./scripts/portal-presence.js?v=20261001a"></script>
-    <script src="./scripts/portal-feedback.js?v=20261001b"></script>
+    <script src="./scripts/portal-records.js?v=20261005a" defer></script>
+    <script src="./scripts/portal-motion.js?v=20261005a" defer></script>
+    <script src="./scripts/vendor/supabase-js-2.117.2.umd.js" defer></script>
+    <script src="./scripts/microglow-auth.js?v=20261001a" defer></script>
+    <script src="./scripts/portal-auth.js?v=20260727a" defer></script>
+    <script src="./scripts/portal-progress-sync.js?v=20261005a" defer></script>
+    <script src="./scripts/portal-presence.js?v=20261001a" defer></script>
+    <script src="./scripts/pwa-register.js?v=20261005a" defer></script>
+    <script src="./scripts/portal-feedback.js?v=20261001b" defer></script>
   </body>
 </html>
