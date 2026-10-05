@@ -347,6 +347,9 @@ input {
   line-height: 1.6;
 }
 
+.auth-form label[hidden],
+.reset-intro[hidden],
+.reset-back[hidden],
 .auth-hint[hidden],
 .auth-link[hidden],
 .auth-form[hidden],

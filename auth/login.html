@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#0e8f88">
     <title>會員登入｜TSY.Microglow</title>
     <link rel="icon" href="../assets/favicon.png?v=20261001a" type="image/png">
-    <link rel="stylesheet" href="./auth.css?v=20261005a">
+    <link rel="stylesheet" href="./auth.css?v=20261005b">
   </head>
   <body>
     <main class="auth-shell">
@@ -38,6 +38,10 @@
           </div>
 
           <form class="auth-form" data-auth-form novalidate>
+            <div class="reset-intro" data-reset-intro hidden>
+              <strong class="auth-subtitle">重設密碼</strong>
+              <p class="auth-hint">輸入註冊時使用的 Email，我們會寄一封重設密碼的連結給你。</p>
+            </div>
             <label>
               <span>Email</span>
               <input type="email" autocomplete="email" inputmode="email" placeholder="name@example.com" required data-auth-email>
@@ -50,6 +54,7 @@
             <button class="auth-link" type="button" data-auth-forgot>忘記密碼？</button>
             <div class="turnstile-slot" data-turnstile-widget aria-label="安全驗證"></div>
             <button class="auth-primary" type="submit" data-auth-submit>登入並繼續</button>
+            <button class="auth-link reset-back" type="button" data-auth-reset-back hidden>← 返回登入</button>
             <p class="auth-status" data-auth-status aria-live="polite">正在檢查帳號狀態…</p>
           </form>
 
@@ -96,6 +101,6 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="../scripts/microglow-auth.js?v=20261005a"></script>
     <script src="../scripts/password-policy.js?v=20261005a"></script>
-    <script src="../scripts/auth-login.js?v=20261005a"></script>
+    <script src="../scripts/auth-login.js?v=20261005b"></script>
   </body>
 </html>

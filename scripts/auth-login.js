@@ -19,6 +19,9 @@
   const policy = window.MicroglowPasswordPolicy;
   const forgotButton = document.querySelector("[data-auth-forgot]");
   const pwHint = document.querySelector("[data-auth-pw-hint]");
+  const resetIntro = document.querySelector("[data-reset-intro]");
+  const resetBack = document.querySelector("[data-auth-reset-back]");
+  const passwordLabel = passwordInput.closest("label");
   const mfaForm = document.querySelector("[data-mfa-form]");
   const mfaCodeInput = document.querySelector("[data-mfa-code]");
   const mfaStatus = document.querySelector("[data-mfa-status]");
@@ -99,6 +102,19 @@
 
   function selectMode(nextMode) {
     mode = nextMode;
+    const resetting = mode === "reset";
+    document.querySelector(".auth-tabs").hidden = resetting;
+    passwordLabel.hidden = resetting;
+    if (resetIntro) resetIntro.hidden = !resetting;
+    if (resetBack) resetBack.hidden = !resetting;
+    if (resetting) {
+      forgotButton.hidden = true;
+      if (pwHint) pwHint.hidden = true;
+      submitButton.textContent = "寄送重設連結";
+      setStatus("");
+      emailInput.focus();
+      return;
+    }
     tabs.forEach((tab) => {
       const selected = tab.dataset.authTab === mode;
       tab.classList.toggle("is-active", selected);
@@ -270,7 +286,7 @@
   async function handleForgot() {
     const email = emailInput.value.trim();
     if (!email || !emailInput.checkValidity()) {
-      setStatus("請先在上方輸入註冊時使用的 Email，再按「忘記密碼」。", "error");
+      setStatus("請輸入有效的 Email。", "error");
       return;
     }
     setBusy(true);
@@ -331,6 +347,11 @@
     event.preventDefault();
     const email = emailInput.value.trim();
     const password = passwordInput.value;
+
+    if (mode === "reset") {
+      await handleForgot();
+      return;
+    }
 
     if (!emailInput.checkValidity() || !password) {
       setStatus("請輸入有效 Email 與密碼。", "error");
@@ -402,7 +423,8 @@
   continueLink.href = returnTo;
   tabs.forEach((tab) => tab.addEventListener("click", () => selectMode(tab.dataset.authTab)));
   form.addEventListener("submit", handleSubmit);
-  forgotButton?.addEventListener("click", handleForgot);
+  forgotButton?.addEventListener("click", () => selectMode("reset"));
+  resetBack?.addEventListener("click", () => selectMode("login"));
   mfaForm?.addEventListener("submit", handleMfaSubmit);
   mfaCancel?.addEventListener("click", async () => {
     await auth.signOut();
