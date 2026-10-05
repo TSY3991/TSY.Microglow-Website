@@ -12,6 +12,7 @@
   const recoveryMfa = document.querySelector("[data-recovery-mfa]");
   const recoverySubmit = document.querySelector("[data-recovery-submit]");
   let recoveryEvent = false;
+  const OTP_TYPES = ["signup", "recovery", "email_change"];
   const portalFallback = auth?.getPortalBaseUrl() || new URL("../", window.location.href).href;
 
   function showError(message) {
@@ -88,6 +89,8 @@
     const params = new URLSearchParams(window.location.search);
     const errorDescription = params.get("error_description");
     const code = params.get("code");
+    const tokenHash = params.get("token_hash");
+    const otpType = params.get("type");
 
     if (errorDescription) {
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -96,9 +99,16 @@
     }
 
     try {
-      if (code) {
+      let recovering = false;
+      if (tokenHash && OTP_TYPES.includes(otpType)) {
+        // Email 連結走 token_hash：不依賴發起註冊的瀏覽器，換裝置開信也能完成
+        const { error } = await auth.client.auth.verifyOtp({ token_hash: tokenHash, type: otpType });
+        if (error) throw error;
+        recovering = otpType === "recovery";
+      } else if (code) {
         const { error } = await auth.exchangeCodeForSession(code);
         if (error) throw error;
+        recovering = recoveryEvent;
       }
 
       window.history.replaceState({}, document.title, window.location.pathname);
@@ -107,7 +117,7 @@
       if (error) throw error;
       if (!data?.session) throw new Error("找不到有效登入 session，請重新登入。");
 
-      if (code && recoveryEvent) {
+      if (recovering) {
         await showRecoveryForm();
         return;
       }

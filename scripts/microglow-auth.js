@@ -7,7 +7,7 @@
   const STORAGE_KEY = `sb-${PROJECT_REF}-auth-token`;
   const RETURN_TO_KEY = "microglow-auth-return-to-v1";
   const PRODUCTION_ORIGIN = "https://tsy3991.github.io";
-  const PRODUCTION_PATHS = ["/TSY.Microglow-Website/", "/TSY.Microglow-Games/", "/TSY.Microglow-Tools/"];
+  const PRODUCTION_PATHS = ["/TSY.Microglow-Website/", "/TSY.Microglow-Games/", "/TSY.Microglow-Tools/", "/TSY.Microglow-Creative/"];
 
   function isLocalHost(hostname) {
     return hostname === "localhost" || hostname === "127.0.0.1";

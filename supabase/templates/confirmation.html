@@ -9,8 +9,8 @@
 <tr><td style="padding:0 0 12px;font-size:22px;font-weight:700;color:#082528">確認你的 Email</td></tr>
 <tr><td style="padding:0 0 20px;font-size:15px;line-height:1.8;color:#324447">你好，<br>有人使用這個 Email（{{ .Email }}）在 TSY 微光創作室註冊會員。請點擊下方按鈕完成註冊。</td></tr>
 <tr><td align="center" style="padding:8px 0 24px">
-<a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0e8f88;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 32px;border-radius:999px">確認 Email 並完成註冊</a>
+<a href="{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=signup" style="display:inline-block;background:#0e8f88;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 32px;border-radius:999px">確認 Email 並完成註冊</a>
 </td></tr>
-<tr><td style="padding:0 0 20px;font-size:13px;line-height:1.7;color:#324447">按鈕無法點擊時，請複製下方連結貼到瀏覽器：<br><a href="{{ .ConfirmationURL }}" style="color:#07635e;word-break:break-all">{{ .ConfirmationURL }}</a></td></tr>
+<tr><td style="padding:0 0 20px;font-size:13px;line-height:1.7;color:#324447">按鈕無法點擊時，請複製下方連結貼到瀏覽器：<br><a href="{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=signup" style="color:#07635e;word-break:break-all">{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=signup</a></td></tr>
 <tr><td style="padding:16px 0 0;border-top:1px solid #e9e2d3;font-size:12.5px;line-height:1.8;color:#5b6b6e">如果這不是你本人操作，請直接忽略這封信，不會有任何帳號被建立或啟用。<br>這封信由 TSY 微光創作室（<a href="https://tsy3991.github.io/TSY.Microglow-Website/" style="color:#07635e">https://tsy3991.github.io/TSY.Microglow-Website/</a>）的會員系統自動寄出，請勿直接回覆。</td></tr>
 </table></td></tr></table></td></tr></table></body></html>

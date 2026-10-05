@@ -1,6 +1,6 @@
 // 入口網站 service worker：導覽請求「網路優先、離線退回快取」，靜態資源「先用快取、背景更新」。
 // 登入／回呼頁（/auth/）與跨網域請求（Supabase 等）一律不經過快取。
-const CACHE = "microglow-portal-v1";
+const CACHE = "microglow-portal-v2";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -27,13 +27,14 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (response.ok) {
+          // 只快取不帶查詢字串的導覽，避免 ?utm=… 讓快取項目無限增生
+          if (response.ok && url.search === "") {
             const copy = response.clone();
             caches.open(CACHE).then((cache) => cache.put(request, copy));
           }
           return response;
         })
-        .catch(() => caches.match(request).then((hit) => hit || caches.match("./")))
+        .catch(() => caches.match(request, { ignoreSearch: true }).then((hit) => hit || caches.match("./")))
     );
     return;
   }

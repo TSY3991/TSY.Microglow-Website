@@ -9,8 +9,8 @@
 <tr><td style="padding:0 0 12px;font-size:22px;font-weight:700;color:#082528">確認新的 Email 地址</td></tr>
 <tr><td style="padding:0 0 20px;font-size:15px;line-height:1.8;color:#324447">你的 TSY 微光創作室帳號正在將 Email 由 {{ .Email }} 變更（或綁定）為 {{ .NewEmail }}。請點擊下方按鈕確認這項變更。</td></tr>
 <tr><td align="center" style="padding:8px 0 24px">
-<a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#0e8f88;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 32px;border-radius:999px">確認 Email 變更</a>
+<a href="{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=email_change" style="display:inline-block;background:#0e8f88;color:#ffffff;text-decoration:none;font-weight:700;font-size:16px;padding:14px 32px;border-radius:999px">確認 Email 變更</a>
 </td></tr>
-<tr><td style="padding:0 0 20px;font-size:13px;line-height:1.7;color:#324447">按鈕無法點擊時，請複製下方連結貼到瀏覽器：<br><a href="{{ .ConfirmationURL }}" style="color:#07635e;word-break:break-all">{{ .ConfirmationURL }}</a></td></tr>
+<tr><td style="padding:0 0 20px;font-size:13px;line-height:1.7;color:#324447">按鈕無法點擊時，請複製下方連結貼到瀏覽器：<br><a href="{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=email_change" style="color:#07635e;word-break:break-all">{{ .SiteURL }}auth/callback.html?token_hash={{ .TokenHash }}&amp;type=email_change</a></td></tr>
 <tr><td style="padding:16px 0 0;border-top:1px solid #e9e2d3;font-size:12.5px;line-height:1.8;color:#5b6b6e">如果這不是你本人操作，請忽略這封信，並建議儘快更改密碼。<br>這封信由 TSY 微光創作室（<a href="https://tsy3991.github.io/TSY.Microglow-Website/" style="color:#07635e">https://tsy3991.github.io/TSY.Microglow-Website/</a>）的會員系統自動寄出，請勿直接回覆。</td></tr>
 </table></td></tr></table></td></tr></table></body></html>
