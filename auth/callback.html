@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co https://api.pwnedpasswords.com"
     >
     <meta name="robots" content="noindex">
     <meta name="theme-color" content="#0e8f88">
     <title>登入確認｜TSY.Microglow</title>
     <link rel="icon" href="../assets/favicon.png?v=20261001a" type="image/png">
-    <link rel="stylesheet" href="./auth.css?v=20260726a">
+    <link rel="stylesheet" href="./auth.css?v=20261005a">
   </head>
   <body>
     <main class="callback-shell">
@@ -21,11 +21,27 @@
         <h1 id="callback-title">正在確認登入</h1>
         <span data-callback-status aria-live="polite">請稍候，不要關閉此頁面。</span>
         <a class="auth-primary" href="../" data-callback-link hidden>返回入口網站</a>
+        <form class="auth-form recovery-form" data-recovery-form hidden novalidate>
+          <label>
+            <span>新密碼（至少 12 個字元）</span>
+            <input type="password" autocomplete="new-password" minlength="12" maxlength="128" required data-recovery-password>
+          </label>
+          <label>
+            <span>再輸入一次新密碼</span>
+            <input type="password" autocomplete="new-password" minlength="12" maxlength="128" required data-recovery-confirm>
+          </label>
+          <label data-recovery-mfa-label hidden>
+            <span>兩步驟驗證代碼（6 位數）</span>
+            <input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" data-recovery-mfa>
+          </label>
+          <button class="auth-primary" type="submit" data-recovery-submit>設定新密碼</button>
+        </form>
       </section>
     </main>
 
     <script src="../scripts/vendor/supabase-js-2.117.2.umd.js"></script>
-    <script src="../scripts/microglow-auth.js?v=20261001a"></script>
-    <script src="../scripts/auth-callback.js?v=20260726a"></script>
+    <script src="../scripts/microglow-auth.js?v=20261005a"></script>
+    <script src="../scripts/password-policy.js?v=20261005a"></script>
+    <script src="../scripts/auth-callback.js?v=20261005a"></script>
   </body>
 </html>

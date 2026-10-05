@@ -339,3 +339,72 @@ input {
     padding: 32px 22px;
   }
 }
+
+.auth-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.auth-hint[hidden],
+.auth-link[hidden],
+.auth-form[hidden],
+.mfa-box [hidden] {
+  display: none;
+}
+
+.auth-link {
+  justify-self: end;
+  padding: 0;
+  border: 0;
+  color: var(--teal);
+  background: transparent;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.auth-subtitle {
+  display: block;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.mfa-box,
+.mfa-enroll {
+  display: grid;
+  gap: 10px;
+}
+
+.mfa-box {
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.mfa-qr {
+  width: 180px;
+  height: 180px;
+  justify-self: center;
+  padding: 8px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.mfa-input {
+  min-height: 48px;
+  padding: 0 15px;
+  border: 1px solid rgba(157, 183, 180, 0.25);
+  border-radius: 12px;
+  color: var(--ink);
+  background: rgba(1, 11, 13, 0.72);
+  text-align: center;
+  letter-spacing: 0.3em;
+}
+
+.mfa-box code {
+  word-break: break-all;
+  color: var(--gold);
+}

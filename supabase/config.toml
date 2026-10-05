@@ -20,8 +20,8 @@ major_version = 17
 enabled = false
 port = 55229
 pool_mode = "transaction"
-default_pool_size = 20
-max_client_conn = 100
+default_pool_size = 15
+max_client_conn = 200
 
 [db.migrations]
 enabled = true
@@ -45,7 +45,7 @@ port = 55224
 
 [storage]
 enabled = true
-file_size_limit = "5MiB"
+file_size_limit = "50MiB"
 
 [storage.buckets.avatars]
 public = true
@@ -77,13 +77,22 @@ enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10
 enable_signup = true
 enable_anonymous_sign_ins = true
-minimum_password_length = 8
+minimum_password_length = 12
 
 [auth.email]
 enable_signup = true
 double_confirm_changes = true
-enable_confirmations = false
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
 secure_password_change = true
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.rate_limit]
+email_sent = 30
 
 [auth.email.template.confirmation]
 subject = "【TSY 微光創作室】請確認你的 Email"

@@ -54,6 +54,14 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - 已刪除 `robots.txt`（子路徑下搜尋引擎不讀）；sitemap 請直接到 Google Search Console 提交。
 - 線上人數 presence key 改為「每瀏覽器一個」；presence 本身無法防偽造，只影響顯示。
 
+## 帳號安全與進度同步（2026-10-05）
+
+- 密碼規則：至少 12 字元、最多 128、不限組合（NIST 800-63B-4）。註冊／升級／重設時由 `scripts/password-policy.js` 檢查：本機常見弱密碼清單 + HIBP k-anonymity（只送 SHA-1 前 5 碼到 `api.pwnedpasswords.com`，查詢失敗不擋人）。登入不重驗強度，舊帳號仍可登入。`login.html`／`callback.html` 的 CSP `connect-src` 已加該網域。伺服器端 `minimum_password_length = 12` 在 `supabase/config.toml`。
+- 忘記密碼：`login.html` 的「忘記密碼？」→ `resetPasswordForEmail`（redirectTo = `auth/callback.html`，固定回應訊息不洩漏帳號是否存在）→ `auth-callback.js` 靠 `PASSWORD_RECOVERY` 事件顯示新密碼表單；帳號有 TOTP 時要求輸入驗證碼（updateUser 需 AAL2）。
+- 兩步驟驗證（TOTP，選用）：登入頁已登入面板可啟用／停用；密碼登入後若 `nextLevel=aal2` 會顯示驗證碼表單。注意密碼通過後、驗證碼通過前 session 是 aal1，其他服務若要強制 MFA 需自行檢查 AAL。
+- Email 驗證：遠端 `enable_confirmations=true`；`config.toml` 已與遠端對齊（SMTP、captcha 因含密鑰，**不宣告在 toml**，遠端值不受 push 影響）。**不要對真實 repo 跑 `config pull`**（讀不到 SMTP 密碼）；push 前先 `npx supabase config diff` 確認差異只有預期項目。
+- 探索者經驗雲端同步：`scripts/portal-progress-sync.js`（只對非匿名會員）呼叫 RPC `sync_portal_progress`（migration `20261005000100_portal_progress.sql`，資料在 `private.portal_progress`）。本機與雲端取聯集／最大值，進度只增不減；只有載入入口網站時才同步（遊戲／工具頁單獨遊玩的紀錄，下次開入口網站才會上傳）。
+
 ## 延伸閱讀
 
 - 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`

@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co; frame-src https://challenges.cloudflare.com"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co https://api.pwnedpasswords.com; frame-src https://challenges.cloudflare.com"
     >
     <meta name="description" content="TSY.Microglow 共用會員登入中心。">
     <meta name="robots" content="noindex">
     <meta name="theme-color" content="#0e8f88">
     <title>會員登入｜TSY.Microglow</title>
     <link rel="icon" href="../assets/favicon.png?v=20261001a" type="image/png">
-    <link rel="stylesheet" href="./auth.css?v=20260726a">
+    <link rel="stylesheet" href="./auth.css?v=20261005a">
   </head>
   <body>
     <main class="auth-shell">
@@ -44,11 +44,24 @@
             </label>
             <label>
               <span>密碼</span>
-              <input type="password" autocomplete="current-password" minlength="8" placeholder="至少 8 個字元" required data-auth-password>
+              <input type="password" autocomplete="current-password" minlength="12" maxlength="128" placeholder="至少 12 個字元" aria-describedby="pw-hint" required data-auth-password>
             </label>
+            <p class="auth-hint" id="pw-hint" data-auth-pw-hint hidden>密碼至少 12 個字元，不限組合；建議用幾個不相關的詞串成一句，並避免使用常見或曾外洩的密碼。</p>
+            <button class="auth-link" type="button" data-auth-forgot>忘記密碼？</button>
             <div class="turnstile-slot" data-turnstile-widget aria-label="安全驗證"></div>
             <button class="auth-primary" type="submit" data-auth-submit>登入並繼續</button>
             <p class="auth-status" data-auth-status aria-live="polite">正在檢查帳號狀態…</p>
+          </form>
+
+          <form class="auth-form" data-mfa-form hidden novalidate>
+            <strong class="auth-subtitle">兩步驟驗證</strong>
+            <label>
+              <span>驗證器 App 的 6 位數代碼</span>
+              <input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" required data-mfa-code>
+            </label>
+            <button class="auth-primary" type="submit" data-mfa-submit>驗證並繼續</button>
+            <button class="auth-secondary" type="button" data-mfa-cancel>取消並登出</button>
+            <p class="auth-status" data-mfa-status aria-live="polite"></p>
           </form>
 
           <section class="signed-panel" data-signed-panel hidden>
@@ -56,6 +69,21 @@
             <strong data-signed-label>微光會員</strong>
             <p>此裝置已建立正式會員 session，可以直接返回原服務。</p>
             <a class="auth-primary" href="../" data-auth-continue>繼續前往</a>
+            <div class="mfa-box">
+              <strong class="auth-subtitle">兩步驟驗證（選用）</strong>
+              <p class="auth-hint" data-mfa-state>檢查中…</p>
+              <button class="auth-secondary" type="button" data-mfa-enroll hidden>啟用兩步驟驗證</button>
+              <div class="mfa-enroll" data-mfa-enroll-panel hidden>
+                <p class="auth-hint">用驗證器 App（Google Authenticator、Microsoft Authenticator、Authy 等）掃描 QR Code，再輸入 App 顯示的 6 位數代碼。</p>
+                <img class="mfa-qr" alt="兩步驟驗證 QR Code" data-mfa-qr>
+                <p class="auth-hint">無法掃描時，手動輸入金鑰：<code data-mfa-secret></code></p>
+                <input class="mfa-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 位數代碼" data-mfa-enroll-code>
+                <button class="auth-primary" type="button" data-mfa-enroll-confirm>確認啟用</button>
+                <button class="auth-secondary" type="button" data-mfa-enroll-cancel>取消</button>
+              </div>
+              <button class="auth-secondary" type="button" data-mfa-disable hidden>停用兩步驟驗證</button>
+              <p class="auth-status" data-mfa-box-status aria-live="polite"></p>
+            </div>
             <button class="auth-secondary" type="button" data-auth-signout>登出此裝置</button>
           </section>
 
@@ -66,7 +94,8 @@
 
     <script src="../scripts/vendor/supabase-js-2.117.2.umd.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-    <script src="../scripts/microglow-auth.js?v=20261001a"></script>
-    <script src="../scripts/auth-login.js?v=20260728a"></script>
+    <script src="../scripts/microglow-auth.js?v=20261005a"></script>
+    <script src="../scripts/password-policy.js?v=20261005a"></script>
+    <script src="../scripts/auth-login.js?v=20261005a"></script>
   </body>
 </html>
