@@ -103,7 +103,7 @@ subject = "【TSY 微光創作室】請確認新的 Email"
 content_path = "./supabase/templates/email_change.html"
 
 [auth.email.template.recovery]
-subject = "【TSY 微光創作室】重設密碼"
+subject = "【TSY 微光創作室】會員密碼重設"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.reauthentication]
