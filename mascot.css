@@ -1,0 +1,80 @@
+.mascot-companion {
+  position: fixed;
+  right: 24px;
+  bottom: 64px;
+  z-index: 9;
+  width: 128px;
+  contain: layout;
+  text-align: center;
+}
+
+.mascot-companion[hidden],
+.mascot-companion [hidden],
+.mascot-restore[hidden] { display: none; }
+
+.mascot-character {
+  display: block;
+  width: 128px;
+  height: 128px;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mascot-character img,
+.mascot-character canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 5px rgba(42, 47, 45, 0.12));
+}
+
+.mascot-menu,
+.mascot-restore,
+.mascot-controls button {
+  min-height: 44px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--teal-dark);
+  background: var(--panel);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mascot-menu { box-shadow: 0 4px 12px rgba(42, 47, 45, 0.08); }
+.mascot-menu:hover,
+.mascot-controls button:hover { background: var(--teal-soft); }
+.mascot-companion button:focus-visible,
+.mascot-restore:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+.mascot-controls {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: 220px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  box-shadow: 0 10px 30px rgba(42, 47, 45, 0.12);
+}
+
+.mascot-controls p { margin: 0 0 10px; color: var(--ink); font-size: 0.8rem; }
+.mascot-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.mascot-controls .mascot-hide { width: 100%; margin-top: 8px; }
+.mascot-restore { position: fixed; right: 18px; bottom: 76px; z-index: 9; }
+.mascot-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+@media (max-width: 680px) {
+  .mascot-companion { right: 16px; bottom: 104px; width: 100px; }
+  .mascot-character { width: 100px; height: 100px; }
+  .mascot-menu { padding: 6px 10px; font-size: 0.72rem; }
+  .mascot-restore { bottom: 110px; }
+}
