@@ -1,0 +1,235 @@
+/* 深色模式：只在 <html data-theme="dark"> 時生效（由 scripts/theme-init.js 依偏好／系統設定決定）。
+   token 沿用登入頁（auth/auth.css）同一個深青黑色系；styles.css／polish.css 內寫死的淺色值在此逐一覆蓋。 */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0b1819;
+  --panel: #112326;
+  --panel-soft: #0e1e20;
+  --ink: #eaf4f2;
+  --ink-soft: #c3d5d2;
+  --muted: #93aaa7;
+  --line: rgba(190, 225, 220, 0.14);
+  --teal: #3fd0c2;
+  --teal-dark: #0e8f88;
+  --teal-soft: #12383a;
+  --sky: #5fcbe8;
+  --sky-deep: #5fcbe8;
+  --gold: #f5b432;
+  --gold-soft: #3a2e12;
+  --coral: #ff8577;
+  --red: #ff7070;
+  --purple: #b58bf0;
+  --green: #4cd08c;
+  --blue: #6ea4f5;
+  --shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+  --soft-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  --dk-glass: rgba(17, 35, 38, 0.82);
+  --dk-glass-strong: rgba(17, 35, 38, 0.92);
+  --dk-glass-soft: rgba(17, 35, 38, 0.7);
+}
+
+/* ---------- 背景與面板 ---------- */
+
+:root[data-theme="dark"] body {
+  background:
+    linear-gradient(90deg, rgba(190, 225, 220, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(190, 225, 220, 0.045) 1px, transparent 1px),
+    linear-gradient(120deg, #0b1819 0%, #0d1c1d 46%, #0b1819 100%);
+  background-size: 42px 42px, 42px 42px, auto;
+}
+
+:root[data-theme="dark"] body::before {
+  background: rgba(11, 24, 25, 0.7);
+  border-right-color: var(--line);
+  box-shadow: 10px 0 34px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="dark"] .side-panel,
+:root[data-theme="dark"] .site-counter { background: var(--dk-glass); border-color: var(--line); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); }
+:root[data-theme="dark"] .mobile-dock { background: var(--dk-glass-strong); border-color: var(--line); }
+:root[data-theme="dark"] .site-counter span { background: rgba(190, 225, 220, 0.08); }
+
+:root[data-theme="dark"] .explorer-status,
+:root[data-theme="dark"] .search-box,
+:root[data-theme="dark"] .news-item,
+:root[data-theme="dark"] .category-tabs button,
+:root[data-theme="dark"] .tool-empty,
+:root[data-theme="dark"] .tool-record,
+:root[data-theme="dark"] .known-issue,
+:root[data-theme="dark"] .known-issue-empty { background: var(--dk-glass-soft); }
+
+:root[data-theme="dark"] .feedback-panel {
+  background:
+    linear-gradient(135deg, rgba(18, 56, 58, 0.55), rgba(58, 46, 18, 0.35)),
+    var(--dk-glass);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="dark"] .feedback-field input,
+:root[data-theme="dark"] .feedback-field textarea { background: var(--panel-soft); border-color: rgba(63, 208, 194, 0.28); }
+
+:root[data-theme="dark"] .primary-tool {
+  background:
+    linear-gradient(90deg, rgba(17, 35, 38, 0.96) 0 20%, rgba(17, 35, 38, 0.7) 20% 100%),
+    linear-gradient(135deg, #112326 0%, #0f2124 64%, #13262a 100%);
+}
+
+:root[data-theme="dark"] .tool-visual {
+  background:
+    linear-gradient(180deg, rgba(63, 208, 194, 0.12), rgba(17, 35, 38, 0.72)),
+    #0e1e20;
+}
+
+:root[data-theme="dark"] .nav-item:not(.muted):hover,
+:root[data-theme="dark"] .nav-item:not(.muted):focus-visible { background: rgba(190, 225, 220, 0.08); }
+:root[data-theme="dark"] .progress-track { background: rgba(190, 225, 220, 0.14); }
+
+/* 滑鼠光斑（polish.css）：淺色用白光，深色改成淺青光 */
+:root[data-theme="dark"] .mission-card::before,
+:root[data-theme="dark"] .recommend-card::before,
+:root[data-theme="dark"] .news-item::before,
+:root[data-theme="dark"] .top-stat::before,
+:root[data-theme="dark"] .feedback-panel::before {
+  background:
+    radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(190, 225, 220, 0.08), transparent 62%),
+    radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(63, 208, 194, 0.1), transparent 70%);
+}
+
+:root[data-theme="dark"] .known-issue-empty.is-loading::after {
+  background: linear-gradient(90deg, transparent, rgba(190, 225, 220, 0.12), transparent);
+}
+
+/* ---------- 文字：teal-dark 在深底對比不足，文字改用 --teal；實心填色維持 teal-dark ---------- */
+
+:root[data-theme="dark"] .site-counter strong,
+:root[data-theme="dark"] .news-heading span,
+:root[data-theme="dark"] .news-toggle,
+:root[data-theme="dark"] .news-item:has(.news-link:hover) .news-link,
+:root[data-theme="dark"] h1 strong,
+:root[data-theme="dark"] .feature-tags strong:nth-child(1),
+:root[data-theme="dark"] .tool-record strong,
+:root[data-theme="dark"] .soon-label,
+:root[data-theme="dark"] .feedback-kicker,
+:root[data-theme="dark"] .mobile-dock a.active,
+:root[data-theme="dark"] .mobile-dock a.in-view:not(.active),
+:root[data-theme="dark"] .explorer-status .explorer-hint,
+:root[data-theme="dark"] .feedback-status[data-tone="ok"],
+:root[data-theme="dark"] .issue-badge { color: var(--teal); }
+
+:root[data-theme="dark"] .feedback-status[data-tone="error"] { color: var(--coral); }
+:root[data-theme="dark"] .issue-badge { background: rgba(63, 208, 194, 0.16); }
+:root[data-theme="dark"] .issue-badge[data-status="fixed"] { color: #062a28; background: var(--teal); }
+
+/* 白字按鈕：漸層終點在深色模式變成亮青，白字會看不清，改成較深的青 */
+:root[data-theme="dark"] .category-tabs .active,
+:root[data-theme="dark"] .launch-button,
+:root[data-theme="dark"] .feedback-button { background: linear-gradient(135deg, #0e8f88, #0a7a74); }
+:root[data-theme="dark"] .category-tabs .active { border-color: #0e8f88; }
+
+:root[data-theme="dark"] .nav-item.active {
+  border-color: rgba(63, 208, 194, 0.2);
+  background: linear-gradient(135deg, rgba(14, 143, 136, 0.9), rgba(10, 122, 116, 0.86));
+}
+
+:root[data-theme="dark"] .mobile-dock a.active {
+  border-color: rgba(63, 208, 194, 0.22);
+  background: linear-gradient(180deg, rgba(18, 56, 58, 0.9), rgba(58, 46, 18, 0.5));
+}
+:root[data-theme="dark"] .mobile-dock a.in-view:not(.active) { background: rgba(190, 225, 220, 0.06); }
+
+/* ---------- 淺色小圖示底色／標籤底色 → 深色版 ---------- */
+
+:root[data-theme="dark"] .flame-icon,
+:root[data-theme="dark"] .mission-badge,
+:root[data-theme="dark"] .pencil-icon { background: rgba(255, 133, 119, 0.18); }
+:root[data-theme="dark"] .trophy-icon,
+:root[data-theme="dark"] .news-item time,
+:root[data-theme="dark"] .feature-tags strong:nth-child(3) { background: var(--gold-soft); }
+:root[data-theme="dark"] .game-icon,
+:root[data-theme="dark"] .sheet-icon,
+:root[data-theme="dark"] .bot-icon,
+:root[data-theme="dark"] .tool-copy p,
+:root[data-theme="dark"] .feature-tags strong:nth-child(2) { background: rgba(110, 164, 245, 0.18); }
+:root[data-theme="dark"] .badge-icon,
+:root[data-theme="dark"] .feature-tags strong:nth-child(4) { background: rgba(181, 139, 240, 0.18); }
+:root[data-theme="dark"] .mission-score span,
+:root[data-theme="dark"] .corner-ribbon::before { background: var(--panel-soft); }
+
+:root[data-theme="dark"] .account-status-link.is-guest { background: linear-gradient(135deg, #f5c85a, #f5b432); }
+
+/* ---------- 主題切換按鈕（topbar 內，外觀比照 .top-stat） ---------- */
+
+.theme-toggle {
+  display: grid;
+  grid-template-columns: 42px auto;
+  column-gap: 10px;
+  align-items: center;
+  min-height: 66px;
+  padding: 10px 14px;
+  border: 1px solid rgba(32, 42, 40, 0.085);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: rgba(255, 253, 248, 0.76);
+  box-shadow: 0 10px 22px rgba(42, 47, 45, 0.06);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.theme-toggle b {
+  display: grid;
+  grid-row: 1 / span 2;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--teal-dark);
+  background: var(--teal-soft);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.theme-toggle small {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.theme-toggle strong {
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+:root[data-theme="dark"] .top-stat,
+:root[data-theme="dark"] .metric-card,
+:root[data-theme="dark"] .mission-card,
+:root[data-theme="dark"] .recommend-card,
+:root[data-theme="dark"] .theme-toggle {
+  border-color: var(--line);
+  background: var(--dk-glass-soft);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="dark"] .theme-toggle b { color: var(--teal); }
+
+/* 探索者經驗值對話框 */
+:root[data-theme="dark"] .explorer-dialog { box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6); }
+:root[data-theme="dark"] .explorer-dialog::backdrop { background: rgba(3, 10, 11, 0.62); }
+:root[data-theme="dark"] .xp-row-track { background: rgba(190, 225, 220, 0.14); }
+
+/* 手機：外觀按鈕與帳號卡並排，追蹤 FB 獨佔下一列 */
+@media (max-width: 680px) {
+  .topbar > .follow-button { order: 1; }
+}
+
+@media (max-width: 380px) {
+  .topbar > .theme-toggle { grid-column: 1 / -1; }
+}
