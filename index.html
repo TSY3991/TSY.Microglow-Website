@@ -63,7 +63,7 @@
     <link rel="icon" href="./assets/favicon.png?v=20261001a" type="image/png">
     <link rel="stylesheet" href="./styles.css?v=20261006d">
     <link rel="stylesheet" href="./polish.css?v=20261006b">
-    <link rel="stylesheet" href="./mascot.css?v=20261006a">
+    <link rel="stylesheet" href="./mascot.css?v=20261007a">
   </head>
   <body>
     <a class="skip-link" href="#main-content">跳到主要內容</a>
@@ -619,26 +619,28 @@
         <strong id="siteOnlineCount">--</strong>
       </span>
     </div>
-    <aside class="mascot-companion" id="mascotCompanion" aria-label="微光創作室吉祥物" hidden>
+    <aside class="mascot-companion" id="mascotCompanion" aria-label="微光・小曜，微光創作室吉祥物" hidden>
       <div class="mascot-controls" id="mascotControls" hidden>
-        <p>微光創作室的探索夥伴</p>
+        <p>微光・小曜｜陪你探索的小光芒</p>
         <div class="mascot-actions" aria-label="吉祥物動作">
           <button type="button" data-mascot-action="blink">眨眼擺尾</button>
           <button type="button" data-mascot-action="wave">揮揮手</button>
           <button type="button" data-mascot-action="walk">走一走</button>
           <button type="button" id="mascotPause" aria-pressed="false">暫停動畫</button>
+          <button type="button" id="mascotRoam" aria-pressed="true">自由散步：開啟</button>
+          <button type="button" id="mascotHome">回到角落</button>
         </div>
-        <button type="button" class="mascot-hide" id="mascotHide">收起吉祥物</button>
+        <button type="button" class="mascot-hide" id="mascotHide">讓小曜休息</button>
       </div>
-      <button type="button" class="mascot-character" id="mascotGreet" aria-label="點一下，讓微光吉祥物揮手">
+      <button type="button" class="mascot-character" id="mascotGreet" aria-label="點小曜揮手，或拖曳小曜移動位置" title="點一下揮手，也可以拖曳小曜">
         <img src="./assets/explorer-mascot.webp" width="256" height="256" alt="" aria-hidden="true" id="mascotFallback">
         <canvas width="256" height="256" id="mascotCanvas" aria-hidden="true" hidden></canvas>
       </button>
-      <button type="button" class="mascot-menu" id="mascotMenu" aria-controls="mascotControls" aria-expanded="false">吉祥物動作</button>
+      <button type="button" class="mascot-menu" id="mascotMenu" aria-controls="mascotControls" aria-expanded="false">微光・小曜</button>
       <span class="mascot-status" id="mascotStatus" role="status" aria-live="polite"></span>
     </aside>
-    <button type="button" class="mascot-restore" id="mascotRestore" hidden>顯示吉祥物</button>
-    <script src="./scripts/portal-mascot.js?v=20261006b" defer></script>
+    <button type="button" class="mascot-restore" id="mascotRestore" hidden>叫小曜回來</button>
+    <script src="./scripts/portal-mascot.js?v=20261007a" defer></script>
     <script src="./scripts/portal-records.js?v=20261005a" defer></script>
     <script src="./scripts/portal-motion.js?v=20261005a" defer></script>
     <script src="./scripts/vendor/supabase-js-2.117.2.umd.js" defer></script>

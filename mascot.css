@@ -12,6 +12,10 @@
 .mascot-companion [hidden],
 .mascot-restore[hidden] { display: none; }
 
+.mascot-companion.is-roaming { left: 0; top: 0; right: auto; bottom: auto; }
+.mascot-companion.is-roaming .mascot-controls { right: auto; bottom: auto; max-height: calc(100dvh - 16px); overflow-y: auto; }
+.mascot-companion.is-dragging .mascot-character { cursor: grabbing; }
+
 .mascot-character {
   display: block;
   width: 128px;
@@ -20,8 +24,8 @@
   border: 0;
   border-radius: 24px;
   background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
+  cursor: grab;
+  touch-action: none;
 }
 
 .mascot-character img,
