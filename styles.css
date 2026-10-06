@@ -117,7 +117,7 @@ p {
 
 .site-counter small {
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -660,7 +660,7 @@ p {
 .account-status-link small {
   overflow: hidden;
   color: rgba(6, 62, 57, 0.7);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-overflow: ellipsis;
@@ -1354,7 +1354,7 @@ h1 strong {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0 14px 0 18px;
   color: #9a9a95;
 }
@@ -1362,6 +1362,7 @@ h1 strong {
 .search-box input {
   width: 100%;
   min-width: 0;
+  min-height: 44px;
   border: 0;
   outline: none;
   color: var(--ink);
@@ -2072,7 +2073,7 @@ h1 strong {
   }
 
   .mobile-dock strong {
-    font-size: 0.74rem;
+    font-size: 0.75rem;
     line-height: 1;
   }
 
@@ -2379,6 +2380,12 @@ h1 strong {
   }
 }
 
+@media (max-width: 380px) {
+  .account-status-link {
+    grid-column: 1 / -1;
+  }
+}
+
 @media (max-width: 360px) {
   .mobile-dock {
     gap: 4px;
@@ -2388,7 +2395,7 @@ h1 strong {
   .mobile-dock a {
     min-height: 48px;
     padding: 0;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
   }
 
   .mobile-dock strong {

@@ -46,9 +46,10 @@ input {
 
 .auth-back {
   position: fixed;
-  top: 20px;
-  left: 24px;
+  top: 10px;
+  left: 12px;
   z-index: 2;
+  padding: 10px 12px;
   color: #d9f9f4;
   font-weight: 800;
   text-decoration: none;
@@ -362,7 +363,8 @@ input {
 
 .auth-link {
   justify-self: end;
-  padding: 0;
+  padding: 13px 6px;
+  margin: -13px -6px;
   border: 0;
   color: var(--teal);
   background: transparent;
@@ -422,16 +424,16 @@ input {
 }
 
 .pw-field input {
-  padding-right: 50px;
+  padding-right: 54px;
 }
 
 .pw-eye {
   position: absolute;
   top: 50%;
-  right: 6px;
+  right: 4px;
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   padding: 0;
   border: 0;
