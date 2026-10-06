@@ -43,6 +43,7 @@ html {
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   overflow-x: hidden;
   background:
@@ -85,6 +86,7 @@ p {
   display: grid;
   grid-template-columns: 296px minmax(0, 1fr);
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .site-counter {
@@ -138,6 +140,7 @@ p {
   grid-template-rows: auto 1fr auto;
   gap: 22px;
   height: 100vh;
+  height: 100dvh;
   padding: 34px 20px 24px;
 }
 

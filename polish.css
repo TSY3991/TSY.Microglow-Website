@@ -763,8 +763,10 @@ html.is-tab-hidden *::after {
 .explorer-dialog {
   width: min(480px, calc(100vw - 32px));
   max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
   padding: 0;
   overflow: auto;
+  overscroll-behavior: contain;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   color: var(--ink);
@@ -808,6 +810,9 @@ html.is-tab-hidden *::after {
 }
 
 .explorer-dialog-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: grid;
   grid-template-columns: 72px minmax(0, 1fr) auto;
   align-items: center;

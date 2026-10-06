@@ -21,6 +21,7 @@ body {
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   color: var(--ink);
   background:
     radial-gradient(circle at 18% 18%, rgba(54, 215, 196, 0.18), transparent 30%),
@@ -38,6 +39,7 @@ input {
 .callback-shell {
   display: grid;
   min-height: 100vh;
+  min-height: 100dvh;
   place-items: center;
   padding: 28px;
 }
@@ -163,6 +165,7 @@ input {
 
 .auth-form input {
   min-height: 52px;
+  font-size: 1rem;
   padding: 0 15px;
   border: 1px solid rgba(157, 183, 180, 0.25);
   border-radius: 12px;
