@@ -15,9 +15,10 @@
   const greet = document.querySelector("#mascotGreet");
   const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const sheets = {
-    idle: { cols: 3, count: 6 },
+    idle: { cols: 4, count: 16, frameMs: 150 },
+    blink: { cols: 3, count: 3 },
     wave: { cols: 4, count: 16, frameMs: 65 },
-    walk: { cols: 4, count: 16, frameMs: 65 }
+    walk: { cols: 4, count: 16 }
   };
   let ready = false;
   let paused = motionPreference.matches;
@@ -34,6 +35,9 @@
   let drag = null;
   let suppressClickUntil = 0;
   let lastFrame = "";
+  let facingLeft = false;
+  let heading = -2.65;
+  const blinkFrames = [0, 1, 2, 1, 0];
 
   function bounds() {
     const bottomSpace = window.innerWidth <= 680 ? 88 : 20;
@@ -66,17 +70,24 @@
   function goHome() {
     const b = bounds();
     point = { x: Math.max(b.minX, b.maxX - 16), y: Math.max(b.minY, b.maxY - 32) };
+    heading = -2.65;
+    facingLeft = false;
     position();
     setAction("idle", false);
   }
 
   function chooseDestination() {
     const b = bounds();
-    const target = { x: b.minX + Math.random() * (b.maxX - b.minX), y: b.minY + Math.random() * (b.maxY - b.minY) };
-    const dx = target.x - point.x, dy = target.y - point.y;
-    const length = Math.hypot(dx, dy);
-    const ratio = Math.min(1, (window.innerWidth <= 680 ? 180 : 280) / Math.max(1, length));
-    return { x: point.x + dx * ratio, y: point.y + dy * ratio };
+    const distance = window.innerWidth <= 680 ? 80 + Math.random() * 80 : 120 + Math.random() * 120;
+    let angle = heading + (Math.random() - 0.5) * 1.2;
+    let x = point.x + Math.cos(angle) * distance;
+    let y = point.y + Math.sin(angle) * distance;
+    if (x < b.minX || x > b.maxX) angle = Math.PI - angle;
+    if (y < b.minY || y > b.maxY) angle = -angle;
+    x = clamp(point.x + Math.cos(angle) * distance, b.minX, b.maxX);
+    y = clamp(point.y + Math.sin(angle) * distance, b.minY, b.maxY);
+    heading = angle;
+    return { x, y };
   }
 
   function pageBusy() {
@@ -96,6 +107,7 @@
       Math.floor(frame / sheet.cols) * 256, 256, 256, 0, 0, 256, 256);
     context.restore();
     companion.dataset.frame = `${name}:${frame}`;
+    companion.dataset.facing = mirror ? "left" : "right";
   }
 
   function setAction(next, announce) {
@@ -107,9 +119,10 @@
     if (next === "walk") {
       walkStart = { ...point };
       walkTarget = chooseDestination();
+      if (Math.abs(walkTarget.x - walkStart.x) > 1) facingLeft = walkTarget.x < walkStart.x;
     }
     if (announce) status.textContent = { blink: "眨眼，輕輕擺尾", wave: "向你揮揮手", walk: "出發探索！", idle: "休息一下" }[next];
-    draw(next === "blink" ? "idle" : next, 0, next === "walk" && walkTarget.x < walkStart.x);
+    draw(next, 0, facingLeft);
   }
 
   function stop() {
@@ -125,23 +138,30 @@
     if (action === "walk" && pageBusy()) { start(); return; }
     elapsed += delta;
     if (action === "walk") {
-      const duration = Math.max(1000, Math.hypot(walkTarget.x - walkStart.x, walkTarget.y - walkStart.y) / 0.052);
-      const progress = Math.min(1, elapsed / duration);
+      const distance = Math.hypot(walkTarget.x - walkStart.x, walkTarget.y - walkStart.y);
+      const duration = Math.max(1200, distance / 0.052 + 450);
+      const ramp = Math.min(450, duration / 4);
+      const t = Math.min(elapsed, duration);
+      const denominator = 2 * ramp * (duration - ramp);
+      const progress = t < ramp ? t * t / denominator : t > duration - ramp
+        ? 1 - (duration - t) * (duration - t) / denominator
+        : (t - ramp / 2) / (duration - ramp);
       point = { x: walkStart.x + (walkTarget.x - walkStart.x) * progress, y: walkStart.y + (walkTarget.y - walkStart.y) * progress };
       position();
-      draw("walk", Math.floor(elapsed / sheets.walk.frameMs) % sheets.walk.count, walkTarget.x < walkStart.x);
+      // Tie each step to distance so feet slow down with the body at both ends.
+      const cycles = Math.max(1, Math.round(distance / 54));
+      draw("walk", Math.floor(progress * cycles * sheets.walk.count) % sheets.walk.count, facingLeft);
       if (elapsed >= duration) setAction(Math.random() < 0.35 ? "wave" : "idle", false);
     } else if (action === "wave") {
-      draw("wave", Math.floor(elapsed / sheets.wave.frameMs) % sheets.wave.count, false);
+      draw("wave", Math.floor(elapsed / sheets.wave.frameMs) % sheets.wave.count, facingLeft);
       if (elapsed >= sheets.wave.frameMs * sheets.wave.count) setAction("idle", false);
     } else if (action === "blink") {
-      draw("idle", Math.min(5, Math.floor(elapsed / 140)), false);
-      if (elapsed >= 840) setAction("idle", false);
+      draw("blink", blinkFrames[Math.min(4, Math.floor(elapsed / 70))], facingLeft);
+      if (elapsed >= 350) setAction("idle", false);
     } else {
-      // Hold open eyes between occasional blinks; tail motion uses authored frames.
-      const cycle = elapsed % 5200;
-      const frame = cycle < 4200 ? [0, 5, 4, 5][Math.floor(cycle / 1050)] : Math.min(5, Math.floor((cycle - 4200) / 160));
-      draw("idle", frame, false);
+      const cycle = elapsed % 6350;
+      if (cycle >= 6000) draw("blink", blinkFrames[Math.min(4, Math.floor((cycle - 6000) / 70))], facingLeft);
+      else draw("idle", Math.floor(elapsed / sheets.idle.frameMs) % sheets.idle.count, facingLeft);
       if (!pageBusy() && !companion.matches(":hover")) idleTime += delta;
       if (roaming && idleTime >= nextWalk && !pageBusy() && !companion.matches(":hover")) setAction("walk", false);
     }
@@ -164,7 +184,7 @@
     // Explicit actions remain still when the OS requests reduced motion.
     if (motionPreference.matches) {
       setAction(next, false);
-      draw(next === "blink" ? "idle" : next, next === "blink" ? 2 : 1, false);
+      draw(next, next === "blink" ? 2 : 1, facingLeft);
       status.textContent = "已依系統設定減少動態，顯示動作定格。";
       return;
     }
@@ -255,7 +275,7 @@
 
   Promise.all(Object.entries(sheets).map(async ([name, sheet]) => {
     const image = new Image();
-    image.src = `./assets/mascot/${name}.webp?v=20261006b`;
+    image.src = `./assets/mascot/${name}.webp?v=20261007b`;
     await image.decode();
     if (image.width !== sheet.cols * 256 || image.height !== Math.ceil(sheet.count / sheet.cols) * 256) throw new Error("Unexpected mascot sheet geometry");
     sheet.image = image;
