@@ -411,3 +411,61 @@ input {
   word-break: break-all;
   color: var(--gold);
 }
+
+/* 密碼欄位：眼睛按鈕與錯誤紅框 */
+.pw-field {
+  position: relative;
+  display: grid;
+}
+
+.pw-field input {
+  padding-right: 50px;
+}
+
+.pw-eye {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  color: #9db7b4;
+  background: transparent;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.pw-eye:hover,
+.pw-eye[aria-pressed="true"] {
+  color: var(--teal);
+}
+
+.pw-eye:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+}
+
+.pw-eye svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.auth-form input[aria-invalid="true"] {
+  border-color: #ff6b7d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 125, 0.16);
+}
+
+.auth-status[data-tone="error"],
+[data-callback-status][data-tone="error"] {
+  color: #ff7d8d;
+  font-weight: 800;
+}

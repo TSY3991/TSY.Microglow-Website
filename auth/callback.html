@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#0e8f88">
     <title>登入確認｜TSY.Microglow</title>
     <link rel="icon" href="../assets/favicon.png?v=20261001a" type="image/png">
-    <link rel="stylesheet" href="./auth.css?v=20261005b">
+    <link rel="stylesheet" href="./auth.css?v=20261006a">
   </head>
   <body>
     <main class="callback-shell">
@@ -23,7 +23,7 @@
         <a class="auth-primary" href="../" data-callback-link hidden>返回入口網站</a>
         <form class="auth-form recovery-form" data-recovery-form hidden novalidate>
           <label>
-            <span>新密碼（至少 12 個字元）</span>
+            <span>新密碼（12 字元以上，含英文大小寫與特殊符號）</span>
             <input type="password" autocomplete="new-password" minlength="12" maxlength="128" required data-recovery-password>
           </label>
           <label>
@@ -41,7 +41,8 @@
 
     <script src="../scripts/vendor/supabase-js-2.117.2.umd.js"></script>
     <script src="../scripts/microglow-auth.js?v=20261005b"></script>
-    <script src="../scripts/password-policy.js?v=20261005a"></script>
-    <script src="../scripts/auth-callback.js?v=20261005b"></script>
+    <script src="../scripts/password-policy.js?v=20261006a"></script>
+    <script src="../scripts/password-eye.js?v=20261006a"></script>
+    <script src="../scripts/auth-callback.js?v=20261006a"></script>
   </body>
 </html>

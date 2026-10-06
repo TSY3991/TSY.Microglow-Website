@@ -31,6 +31,9 @@
   function validateLocal(password, email) {
     if (password.length < MIN_LENGTH) return `密碼至少需要 ${MIN_LENGTH} 個字元。`;
     if (password.length > MAX_LENGTH) return `密碼最多 ${MAX_LENGTH} 個字元。`;
+    if (!/[a-z]/.test(password)) return "密碼需包含至少一個英文小寫字母（a–z）。";
+    if (!/[A-Z]/.test(password)) return "密碼需包含至少一個英文大寫字母（A–Z）。";
+    if (!/[^A-Za-z0-9\s]/.test(password)) return "密碼需包含至少一個特殊符號（例如 ! @ # $ % & *）。";
     const lower = password.toLowerCase();
     if (COMMON.includes(lower) || allSameOrSequence(password)) {
       return "這個密碼太常見，請改用較難猜的組合（建議用 4 個以上不相關的詞串成一句）。";

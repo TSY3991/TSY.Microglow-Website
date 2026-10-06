@@ -46,6 +46,14 @@
   function setStatus(message, tone) {
     status.textContent = message;
     status.dataset.tone = tone || "info";
+    if (tone !== "error") passwordInput.removeAttribute("aria-invalid");
+  }
+
+  function friendlyAuthError(error, fallback) {
+    const text = String(error?.message || "");
+    if (/invalid login credentials/i.test(text)) return "帳號或密碼錯誤，請再試一次（忘記密碼可點「忘記密碼？」）。";
+    if (/email not confirmed/i.test(text)) return "此 Email 尚未完成驗證，請先到信箱點擊確認信。";
+    return text || fallback;
   }
 
   function setBusy(busy) {
@@ -366,6 +374,8 @@
       setBusy(false);
       if (problem) {
         setStatus(problem, "error");
+        passwordInput.setAttribute("aria-invalid", "true");
+        passwordInput.focus();
         return;
       }
     }
@@ -408,7 +418,11 @@
       setStatus("登入成功，正在返回原服務…", "success");
       window.setTimeout(() => window.location.replace(returnTo), 350);
     } catch (error) {
-      setStatus(error?.message || "登入失敗，請稍後再試。", "error");
+      setStatus(friendlyAuthError(error, "登入失敗，請稍後再試。"), "error");
+      if (mode === "login" && /invalid login credentials/i.test(String(error?.message || ""))) {
+        passwordInput.setAttribute("aria-invalid", "true");
+        passwordInput.select();
+      }
     } finally {
       setBusy(false);
     }

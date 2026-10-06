@@ -17,6 +17,7 @@
 
   function showError(message) {
     status.textContent = message;
+    status.dataset.tone = "error";
     link.hidden = false;
     link.href = portalFallback;
     link.textContent = "返回入口網站";
@@ -34,7 +35,7 @@
   async function showRecoveryForm() {
     document.querySelector("#callback-title").textContent = "設定新密碼";
     document.querySelector(".callback-spinner").hidden = true;
-    status.textContent = "請設定新密碼（至少 12 個字元，不可使用常見或曾外洩的密碼）。";
+    status.textContent = "請設定新密碼（至少 12 個字元，需含英文大寫、小寫與特殊符號，不可使用常見或曾外洩的密碼）。";
     recoveryForm.hidden = false;
     try {
       const { data } = await auth.client.auth.mfa.getAuthenticatorAssuranceLevel();
@@ -46,9 +47,12 @@
       const password = recoveryPassword.value;
       if (password !== recoveryConfirm.value) {
         status.textContent = "兩次輸入的密碼不一致。";
+        status.dataset.tone = "error";
+        recoveryConfirm.setAttribute("aria-invalid", "true");
         return;
       }
       recoverySubmit.disabled = true;
+      status.dataset.tone = "info";
       try {
         const { data: sessionData } = await auth.getSession();
         const problem = policy ? await policy.validate(password, sessionData?.session?.user?.email) : null;
@@ -71,6 +75,8 @@
         finish("密碼已更新，正在返回原服務…");
       } catch (error) {
         status.textContent = error?.message || "設定新密碼失敗，請重試。";
+        status.dataset.tone = "error";
+        recoveryPassword.setAttribute("aria-invalid", "true");
         recoverySubmit.disabled = false;
       }
     });

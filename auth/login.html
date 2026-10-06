@@ -12,7 +12,7 @@
     <meta name="theme-color" content="#0e8f88">
     <title>會員登入｜TSY.Microglow</title>
     <link rel="icon" href="../assets/favicon.png?v=20261001a" type="image/png">
-    <link rel="stylesheet" href="./auth.css?v=20261005b">
+    <link rel="stylesheet" href="./auth.css?v=20261006a">
   </head>
   <body>
     <main class="auth-shell">
@@ -48,9 +48,9 @@
             </label>
             <label>
               <span>密碼</span>
-              <input type="password" autocomplete="current-password" minlength="12" maxlength="128" placeholder="至少 12 個字元" aria-describedby="pw-hint" required data-auth-password>
+              <input type="password" autocomplete="current-password" minlength="12" maxlength="128" placeholder="12 字元以上，含大小寫與符號" aria-describedby="pw-hint" required data-auth-password>
             </label>
-            <p class="auth-hint" id="pw-hint" data-auth-pw-hint hidden>密碼至少 12 個字元，不限組合；建議用幾個不相關的詞串成一句，並避免使用常見或曾外洩的密碼。</p>
+            <p class="auth-hint" id="pw-hint" data-auth-pw-hint hidden>密碼至少 12 個字元，且需同時包含英文大寫、小寫與特殊符號（例如 ! @ # $ %）；請避免使用常見或曾外洩的密碼。</p>
             <button class="auth-link" type="button" data-auth-forgot>忘記密碼？</button>
             <div class="turnstile-slot" data-turnstile-widget role="group" aria-label="安全驗證"></div>
             <button class="auth-primary" type="submit" data-auth-submit>登入並繼續</button>
@@ -100,7 +100,8 @@
     <script src="../scripts/vendor/supabase-js-2.117.2.umd.js"></script>
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     <script src="../scripts/microglow-auth.js?v=20261005b"></script>
-    <script src="../scripts/password-policy.js?v=20261005a"></script>
-    <script src="../scripts/auth-login.js?v=20261005b"></script>
+    <script src="../scripts/password-policy.js?v=20261006a"></script>
+    <script src="../scripts/password-eye.js?v=20261006a"></script>
+    <script src="../scripts/auth-login.js?v=20261006a"></script>
   </body>
 </html>
