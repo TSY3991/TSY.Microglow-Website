@@ -48,7 +48,7 @@
       category: "utility",
       categoryLabel: "實用工具",
       title: "微光工具箱",
-      description: "集中放置微光創作室的實用小工具，包含 PhotoConverter 照片轉檔、通用媒體轉檔、PriceRadar 價格雷達與隨身硬碟同步備份工具。",
+      description: "集中放置微光創作室的實用小工具，包含 PhotoConverter 照片轉檔、通用媒體轉檔、PDF 工坊、PriceRadar 價格雷達與隨身硬碟同步備份工具。",
       url: "https://tsy3991.github.io/TSY.Microglow-Tools/",
       cta: "進入工具箱",
       keywords: "工具箱 實用工具 照片 圖片 PhotoConverter HEIC HEIF JPG JPEG PNG WebP AVIF TIFF BMP GIF ICO PDF 批次轉檔 價格雷達 PriceRadar 條碼 比價 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 媒體 車機 音樂 音訊 影片 MP3 MP4 MKV AVI MOV TS FLV WebM WMV MPG 3GP 1080p 720p 480p 自動解析度 裝置相容 轉檔 FFmpeg Real-ESRGAN AI 畫質放大 Windows 桌面工具 下載 安裝 免安裝",
@@ -90,6 +90,18 @@
       cta: "前往下載",
       keywords: "PortableBackupTool 備份 隨身硬碟 USB 行動硬碟 同步 保守同步 鏡像同步 資料夾 Windows 安裝 免安裝",
       tags: ["資料備份", "自動同步", "桌面工具"],
+      record: false
+    },
+    {
+      id: "pdf-workshop",
+      category: "utility",
+      categoryLabel: "實用工具",
+      title: "PDF 工坊",
+      description: "離線 PDF 小工具：整理頁面、合併、拆分、浮水印、圖片與 PDF 互轉、加解密共 17 項功能，檔案只在你的電腦上處理，輸出一律另存新檔。",
+      url: "https://tsy3991.github.io/TSY.Microglow-Tools/tools/pdf-workshop/",
+      cta: "前往下載",
+      keywords: "PDF 工坊 PDF工坊 PdfWorkshop PDF 合併 PDF 拆分 PDF 轉圖片 圖片轉 PDF 浮水印 頁碼 裁剪 壓縮 加密 解除密碼 離線 Windows 安裝 免安裝",
+      tags: ["Windows 桌面工具", "PDF", "離線"],
       record: false
     },
     {
