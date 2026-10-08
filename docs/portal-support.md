@@ -4,7 +4,7 @@
 
 - 位置：工具推薦後、問題回報前；入口為 #support。
 - 正式連結：https://buymeacoffee.com/tsy.microglow 。已用瀏覽器確認頁名與微光簡介。
-- 按鈕：「請TSY喝杯咖啡」，沿用入口網站青綠色、圓角與陰影；咖啡杯 PNG 取自使用者提供的 bmcbrand 素材。
+- 按鈕：「請TSY喝杯咖啡」，採奶油色底、金色細框與青綠色文字；咖啡杯改用簡潔 SVG 線條圖示，首頁與視窗內按鈕一致。
 - 首頁按鈕先開啟原生 dialog 贊助說明視窗；視窗內的正式連結才開啟新分頁，設定 noopener noreferrer。
 - 未載入外部 button/widget 腳本，未修改 CSP。右下角保留小曜及使用統計。
 - 付款由 Buy Me a Coffee 頁面處理；本次未執行付款。

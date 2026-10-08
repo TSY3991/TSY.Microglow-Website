@@ -823,10 +823,6 @@ p {
   font-size: 0.98rem;
   line-height: 1.28;
   overflow-wrap: anywhere;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .news-item p {
@@ -836,10 +832,6 @@ p {
   font-weight: 700;
   line-height: 1.42;
   overflow-wrap: anywhere;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
 }
 
 h1 {

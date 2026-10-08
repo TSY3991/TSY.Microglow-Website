@@ -30,9 +30,11 @@
   font-weight: 800;
 }
 .support-pending { border: 1px dashed var(--line); color: var(--ink-soft); background: var(--panel); }
-.support-donate { gap: 10px; border: 1px solid var(--teal-dark); font-family: inherit; cursor: pointer; color: var(--panel); background: var(--teal-dark); text-decoration: none; box-shadow: 0 4px 12px rgba(32, 42, 40, 0.12); transition: background 160ms ease, box-shadow 160ms ease; }
-.support-donate img { display: block; flex: 0 0 auto; width: 20px; height: 29px; }
-.support-donate:hover { background: var(--teal); box-shadow: 0 6px 16px rgba(32, 42, 40, 0.16); }
+.support-donate { gap: 10px; padding: 10px 16px; border: 1px solid #e4c382; border-radius: 16px; font-family: inherit; cursor: pointer; color: var(--teal-dark); background: #fff8e8; text-decoration: none; box-shadow: 0 3px 0 rgba(176, 133, 49, 0.12); transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
+.support-coffee-icon { display: inline-grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 11px; color: var(--teal-dark); background: var(--gold-soft); }
+.support-coffee-icon svg { display: block; width: 23px; height: 23px; }
+.support-donate:hover { background: var(--gold-soft); border-color: #cda356; box-shadow: 0 4px 10px rgba(176, 133, 49, 0.16); }
+.support-donate:active { box-shadow: none; }
 .support-donate:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
 .support-note { margin: 10px 0 0; color: var(--ink-soft); font-size: 0.78rem; line-height: 1.6; overflow-wrap: anywhere; }
 .support-dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 0; border: 1px solid var(--line); border-radius: 24px; background: var(--panel); color: var(--ink); box-shadow: 0 24px 80px rgba(32, 42, 40, 0.24); overflow-y: auto; }
@@ -41,7 +43,8 @@
 .support-dialog-close { position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: transparent; color: var(--ink); font: inherit; font-size: 32px; cursor: pointer; }
 .support-dialog-close:hover { background: var(--gold-soft); }
 .support-dialog-close:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-.support-dialog-coffee { display: block; margin: 0 auto 24px; }
+.support-dialog-coffee { display: grid; width: 64px; height: 64px; border-radius: 22px; margin: 0 auto 20px; }
+.support-dialog-coffee svg { width: 36px; height: 36px; }
 .support-dialog h2 { margin: 0 0 20px; font-size: 1.5rem; line-height: 1.4; }
 .support-dialog-content p { color: var(--ink-soft); line-height: 1.8; }
 .support-dialog-link { width: 100%; margin-top: 24px; }
