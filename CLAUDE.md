@@ -62,6 +62,14 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - Email 驗證：遠端 `enable_confirmations=true`；`config.toml` 已與遠端對齊（SMTP、captcha 因含密鑰，**不宣告在 toml**，遠端值不受 push 影響）。**不要對真實 repo 跑 `config pull`**（讀不到 SMTP 密碼）；push 前先 `npx supabase config diff` 確認差異只有預期項目。
 - 探索者經驗雲端同步：`scripts/portal-progress-sync.js`（只對非匿名會員）呼叫 RPC `sync_portal_progress`（migration `20261005000100_portal_progress.sql`，資料在 `private.portal_progress`）。本機與雲端取聯集／最大值，進度只增不減；只有載入入口網站時才同步（遊戲／工具頁單獨遊玩的紀錄，下次開入口網站才會上傳）。
 
+## SEO 與分享預覽（2026-10-08 檢視後）
+
+- 外部 SEO 掃描工具（如 open-seo-advisor-skill）對本站的「缺 sitemap.xml／robots.txt」是**誤報**：三個 repo 都是 `tsy3991.github.io/<repo>/` 子路徑專案站，搜尋引擎只讀網域根目錄的 robots.txt，子路徑下放了也無效。sitemap 請到 Google Search Console 提交。主站有 `sitemap.xml`（目前只含首頁）；Tools／Games 沒有，這是已知且可接受的。`login.html` 的 noindex 是刻意設計。
+- Tools repo 的頁面（首頁與 `tools/*/index.html`）已補 og:*、twitter:card、canonical；OG 圖是 `assets/og-image.png`（1200x630，與主站同圖），網址 `https://tsy3991.github.io/TSY.Microglow-Tools/assets/og-image.png`。**新增工具頁時要照同一組 meta 補上**，canonical 用該頁完整網址。
+- PriceRadar 頁是 React 殼（`<div id="root">`），meta 補丁只打在建置產物上，重新建置會被覆蓋，需在原始碼模板裡補。
+- Games repo 的 7 個頁面已由 Codex 補上 og／canonical 與分享圖（`d1b4be2`，2026-10-10 線上驗證）；Games UI／版面工作一律走 Codex。
+- 這類工具只借用檢查項目，不安裝進專案；掃描請在隔離環境跑、用完刪除。
+
 ## 延伸閱讀
 
 - 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`
