@@ -45,6 +45,7 @@
 
 - 工具卡片只改 `scripts/portal-records.js` 的 `tools[]` 資料陣列，不要手寫 HTML。
 - 改了 `portal-records.js`、`styles.css`、`support.css` 等有 `?v=` 的檔案，`index.html` 引用處的 `?v=YYYYMMDDx` 要同步往後加一碼。版本號以 `HEAD` 的實際值為準，改之前先看一眼，不要憑文件記憶。
+- Tools 各工具頁的 `download.js?v=`、`shared/*.css?v=` 等同樣要在內容變更時升版（2026-10-11 曾因改了 `download.js` 沒升 `?v=`，造成手機仍顯示舊的「發布於」）。**每次 push 前，檢查所有被修改的 js／css／圖片，其引用處的 `?v=` 是否已一起升。**
 - Tools repo（`TSY3991/TSY.Microglow-Tools`，分支 `main`）：大廳卡片的 `data-updated-at` 是手動設定、用於排序，工具上新版時改成當天日期。各工具 `tools/<name>/download.js` 會抓 `releases/latest`，版本與日期是動態的，不用改。
 - 工具發新版的動作：(a) 核對 icon 與介面快照（見下方「icon 與介面快照」）；(b) Tools 卡片 `data-updated-at`；(c) 主站新聞一則；(d) 確認主站 `tools[]` 是否需要更新。
 - **順序**：先確認 Tools 的素材已發布且線上正常，再發布 Website 新聞。
