@@ -2,6 +2,10 @@
 # Remote project linking is intentionally not stored here.
 project_id = "microglow-platform"
 
+# Database scheduler supplies a private token; browser requests cannot send mail.
+[functions.feedback-notify]
+verify_jwt = false
+
 [api]
 enabled = true
 port = 55221

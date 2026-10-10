@@ -1,0 +1,22 @@
+微光 Bug 回報自動通知
+
+使用者照常在網站按「送出回報」。回報先存入資料庫，再由後端自動寄通知到 後端 secret 指定的官方信箱，不需要使用者自己寄 email。
+
+通知會包含問題描述、頁面、裝置，以及回報者選填的聯絡方式。新回報預計在下一次每分鐘的排程寄出；失敗會重試，回報資料仍保留。
+
+2026-10-08：後端與排程已正式啟用，測試郵件已被 Gmail 寄信服務接受；是否進入收件匣仍待你確認。
+
+你需用官方 Gmail 啟用兩步驟驗證，建立「微光 Bug 通知」應用程式密碼，並將它放到 Supabase 的 Edge Functions Secrets，名稱為 FEEDBACK_GMAIL_APP_PASSWORD。
+請不要把密碼貼到聊天或網站程式碼。
+
+收件信箱請由你自行在 Supabase Edge Functions Secrets 設定，名稱為 FEEDBACK_NOTIFY_RECIPIENT，值填官方 Gmail 完整信箱。這是遠端設定值，不是網站程式碼；信箱不要寫入文件或 Git。缺少或格式錯誤時回應 503，不會使用預設信箱。
+
+本次只整理本機 B 批測試與文件，沒有重新部署、設定遠端 secret、套用 migration 或 push。下方部署資訊是先前操作紀錄；其他環境仍需由你自行設定收件人 secret。
+
+2026-10-10：經使用者確認，已設定 FEEDBACK_NOTIFY_RECIPIENT 並部署新版 feedback-notify（ACTIVE v4）。線上未帶 token 的 POST 回應 401、GET 回應 405；既有每分鐘排程保持啟用。未重跑 migration 或排程 SQL，也未另寄測試信，本次 SMTP 寄送與收件匣尚未重新驗證。B 批已 commit、尚未 push。
+信箱已存於 Supabase Edge Functions Secrets 的 FEEDBACK_NOTIFY_RECIPIENT，同時作為寄件及收件帳號；既有密碼與 token 保留。
+未設定信箱或格式不合時，不會領取回報或寄信。
+
+新版函式已部署；不要重跑資料庫 migration 或排程。
+先前測試的收件狀態仍待確認：請確認主旨為「[微光 Bug 回報 #2] 通知功能測試」的郵件是否收到。
+完整部署步驟與檢查方式見 feedback-notifications.md。
