@@ -70,6 +70,10 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - Games repo 的 7 個頁面已由 Codex 補上 og／canonical 與分享圖（`d1b4be2`，2026-10-10 線上驗證）；Games UI／版面工作一律走 Codex。
 - 這類工具只借用檢查項目，不安裝進專案；掃描請在隔離環境跑、用完刪除。
 
+## Claude／Codex 共用的更新流程
+
+入口網站更新、新聞格式、工具上架、`?v=` 升版、工作樹有對方變更時如何只提交自己的差異、push 規則，統一寫在 `docs/update-workflow.md`（Codex 也讀這份）。動 `index.html` 或準備 push 前先讀；規則有變更只改那一份，這裡不重複。
+
 ## 延伸閱讀
 
 - 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`
