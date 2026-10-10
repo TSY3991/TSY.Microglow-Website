@@ -30,10 +30,9 @@
   font-weight: 800;
 }
 .support-pending { border: 1px dashed var(--line); color: var(--ink-soft); background: var(--panel); }
-.support-donate { gap: 10px; padding: 10px 16px; border: 1px solid #e4c382; border-radius: 16px; font-family: inherit; cursor: pointer; color: var(--teal-dark); background: #fff8e8; text-decoration: none; box-shadow: 0 3px 0 rgba(176, 133, 49, 0.12); transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
-.support-coffee-icon { display: inline-grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border-radius: 11px; color: var(--teal-dark); background: var(--gold-soft); }
-.support-coffee-icon svg { display: block; width: 23px; height: 23px; }
-.support-donate:hover { background: var(--gold-soft); border-color: #cda356; box-shadow: 0 4px 10px rgba(176, 133, 49, 0.16); }
+.support-donate { gap: 10px; padding: 10px 16px; border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 16px; font-family: inherit; cursor: pointer; color: var(--teal-dark); background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(223, 243, 238, 0.34)); -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); text-decoration: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 6px 18px rgba(7, 99, 94, 0.1); transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease; }
+.support-coffee-icon { display: inline-grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; font-size: 25px; line-height: 1; }
+.support-donate:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(223, 243, 238, 0.55)); border-color: rgba(14, 143, 136, 0.25); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 22px rgba(7, 99, 94, 0.15); }
 .support-donate:active { box-shadow: none; }
 .support-donate:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
 .support-note { margin: 10px 0 0; color: var(--ink-soft); font-size: 0.78rem; line-height: 1.6; overflow-wrap: anywhere; }
@@ -44,7 +43,7 @@
 .support-dialog-close:hover { background: var(--gold-soft); }
 .support-dialog-close:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 .support-dialog-coffee { display: grid; width: 64px; height: 64px; border-radius: 22px; margin: 0 auto 20px; }
-.support-dialog-coffee svg { width: 36px; height: 36px; }
+.support-dialog-coffee { font-size: 46px; }
 .support-dialog h2 { margin: 0 0 20px; font-size: 1.5rem; line-height: 1.4; }
 .support-dialog-content p { color: var(--ink-soft); line-height: 1.8; }
 .support-dialog-link { width: 100%; margin-top: 24px; }
