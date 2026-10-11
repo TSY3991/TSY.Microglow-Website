@@ -97,7 +97,7 @@
       category: "utility",
       categoryLabel: "實用工具",
       title: "PDF 工坊",
-      description: "離線 PDF 小工具：整理頁面、合併、拆分、浮水印、圖片與 PDF 互轉、加解密共 17 項功能，檔案只在你的電腦上處理，輸出一律另存新檔。",
+      description: "離線 PDF 小工具：整理頁面、合併、拆分、浮水印、圖片與 PDF 互轉、加解密共 20 項功能，檔案只在你的電腦上處理，輸出一律另存新檔。",
       url: "https://tsy3991.github.io/TSY.Microglow-Tools/tools/pdf-workshop/",
       cta: "前往下載",
       keywords: "PDF 工坊 PDF工坊 PdfWorkshop PDF 合併 PDF 拆分 PDF 轉圖片 圖片轉 PDF 浮水印 頁碼 裁剪 壓縮 加密 解除密碼 離線 Windows 安裝 免安裝",
