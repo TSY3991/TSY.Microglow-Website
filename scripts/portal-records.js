@@ -2,6 +2,7 @@
   const STATS_KEY = "amateurRadioQuiz.stats.v1";
   const GAME_STATS_KEY = "tsyMicroglowPortal.gameStats.v1";
   const PROGRESS_KEY = "tsyMicroglowPortal.progress.v1";
+  const CLOUD_COUNTS_KEY = "tsyMicroglowPortal.cloudCounts.v1";
   const tools = [
     {
       id: "amateur-radio-quiz",
@@ -357,6 +358,7 @@
     }, 0);
     const milestoneXp = bestAccuracy >= 90 ? 50 : bestAccuracy >= 80 ? 30 : bestAccuracy >= 60 ? 15 : 0;
     const launches = sumLaunches(progress.launches);
+    const priceReports = Math.max(0, Math.floor(Number(readJson(CLOUD_COUNTS_KEY, {})?.priceReports) || 0));
     const items = [
       { label: "初始經驗", hint: "加入微光探索者", xp: 20, max: 20 },
       { label: "每日造訪", hint: `${progress.visitedDays.length} 天・每天 +5`, xp: Math.min(progress.visitedDays.length * 5, 100), max: 100 },
@@ -365,6 +367,7 @@
       { label: "開啟工具", hint: `${launches} 次・每次 +10`, xp: Math.min(launches * 10, 200), max: 200 },
       { label: "完成測驗", hint: `${sessions.length} 場・每場 +20`, xp: Math.min(sessions.length * 20, 300), max: 300 },
       { label: "遊玩遊戲", hint: `${gamePlays} 次・每次 +10`, xp: Math.min(gamePlays * 10, 200), max: 200 },
+      { label: "回報價格", hint: `${priceReports} 次・每次 +10（會員）`, xp: Math.min(priceReports * 10, 200), max: 200 },
       { label: "測驗最佳正確率", hint: `最佳 ${bestAccuracy}%・60/80/90% 分級`, xp: milestoneXp, max: 50 }
     ];
     return { items, total: items.reduce((sum, item) => sum + item.xp, 0) };
@@ -653,7 +656,7 @@
     if (!document.hidden) updateProgressUi();
   });
   window.addEventListener("storage", (event) => {
-    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY || event.key === PROGRESS_KEY) updateProgressUi();
+    if (event.key === STATS_KEY || event.key === GAME_STATS_KEY || event.key === PROGRESS_KEY || event.key === CLOUD_COUNTS_KEY) updateProgressUi();
   });
 })();
 

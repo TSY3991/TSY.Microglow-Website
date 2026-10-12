@@ -61,6 +61,7 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 - 兩步驟驗證（TOTP，選用）：登入頁已登入面板可啟用／停用；密碼登入後若 `nextLevel=aal2` 會顯示驗證碼表單。注意密碼通過後、驗證碼通過前 session 是 aal1，其他服務若要強制 MFA 需自行檢查 AAL。
 - Email 驗證：遠端 `enable_confirmations=true`；`config.toml` 已與遠端對齊（SMTP、captcha 因含密鑰，**不宣告在 toml**，遠端值不受 push 影響）。**不要對真實 repo 跑 `config pull`**（讀不到 SMTP 密碼）；push 前先 `npx supabase config diff` 確認差異只有預期項目。
 - 探索者經驗雲端同步：`scripts/portal-progress-sync.js`（只對非匿名會員）呼叫 RPC `sync_portal_progress`（migration `20261005000100_portal_progress.sql`，資料在 `private.portal_progress`）。本機與雲端取聯集／最大值，進度只增不減；只有載入入口網站時才同步（遊戲／工具頁單獨遊玩的紀錄，下次開入口網站才會上傳）。
+- 價格雷達回報計入探索者經驗（2026-10-12）：RPC `get_portal_price_report_count`（migration `20261012000100`）只回傳會員自己在 `public.portal_activity` 的價格回報筆數（匿名回 0）；`portal-progress-sync.js` 每次同步取得後存 localStorage `tsyMicroglowPortal.cloudCounts.v1`，`portal-records.js` 的 XP 明細「回報價格」每次 +10、上限 200。價格雷達端寫入由它自己的 Edge Function 經 `price_radar.log_portal_activity` 完成。
 
 ## SEO 與分享預覽（2026-10-08 檢視後）
 

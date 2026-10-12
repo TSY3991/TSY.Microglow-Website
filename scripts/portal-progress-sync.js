@@ -9,6 +9,7 @@
   const PROGRESS_KEY = "tsyMicroglowPortal.progress.v1";
   const STATS_KEY = "amateurRadioQuiz.stats.v1";
   const GAME_STATS_KEY = "tsyMicroglowPortal.gameStats.v1";
+  const CLOUD_COUNTS_KEY = "tsyMicroglowPortal.cloudCounts.v1";
   const MIN_GAP_MS = 10000;
   const INTERVAL_MS = 120000;
 
@@ -120,6 +121,18 @@
     });
   }
 
+  // 價格雷達回報次數：由伺服器計算（只回傳自己的筆數），存本機供 XP 明細顯示。
+  async function refreshPriceReports() {
+    const { data, error } = await auth.client.rpc("get_portal_price_report_count");
+    if (error || !data?.ok) return;
+    const count = Math.max(0, Math.floor(Number(data.count) || 0));
+    const stored = readJson(CLOUD_COUNTS_KEY, {});
+    if (Number(stored?.priceReports) === count) return;
+    if (writeJson(CLOUD_COUNTS_KEY, { ...(isObject(stored) ? stored : {}), priceReports: count })) {
+      window.dispatchEvent(new StorageEvent("storage", { key: CLOUD_COUNTS_KEY }));
+    }
+  }
+
   async function sync(force) {
     if (running) return;
     if (!force && Date.now() - lastRunAt < MIN_GAP_MS) return;
@@ -136,6 +149,8 @@
         activeUserId = user.id;
         lastSentHash = "";
       }
+
+      await refreshPriceReports().catch(() => {});
 
       const payload = buildPayload();
       const hash = JSON.stringify(payload);
