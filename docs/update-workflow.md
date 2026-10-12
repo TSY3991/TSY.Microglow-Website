@@ -64,7 +64,8 @@ Tools 站的工具卡片與下載頁使用各工具正式 icon 和實際介面�
 ### 品牌 LOGO 素材（2026-10-12 換新版，文字為「TSY.MICROGLOW STUDIO」）
 
 - **圓形版**（四角透明）：瀏覽器分頁 icon（`assets/favicon.png`）、深色底的版面（登入頁 `logo-circle.webp`）、信件 LOGO（`email-logo-3.png`，檔名沿用，信件範本才不用重新部署）。
-- **方形版**（不透明白底）：`apple-touch-icon.png`、PWA 的 `icon-192/512.png` 與 `icon-maskable-512.png`（maskable 內縮到 80% 安全區）、Price Radar 的 `icons/`。
+- **方形版**（不透明白底）：`apple-touch-icon.png`、PWA 的 `icon-192/512.png` 與 `icon-maskable-512.png`（maskable 內縮到 80% 安全區）。
+- **例外：各工具自己的產品 icon 不換成微光 LOGO**。Price Radar 的 `tools/price-radar/icons/` 是使用者 2026-10-11 選定的「雷達＋價格標籤」icon A（原始碼在使用者另外管理的 Price Radar 專案資料夾內，路徑向使用者確認），換站台 LOGO 時不要動它（2026-10-12 曾誤換，已還原）。
 - **透明去背版**（淺色底專用，已裁到內容範圍）：`logo-mark.png/.webp`、`logo-transparent.png`、`og-image.png` 內的 LOGO。
 - 換 LOGO 時三個 repo（Website／Tools／Games）要一起換，所有引用處的 `?v=` 同步升版；OG 圖的網址也要加 `?v=`，社群平台才會重抓。
 
