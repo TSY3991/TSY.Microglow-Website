@@ -94,3 +94,32 @@ Tools 站的工具卡片與下載頁使用各工具正式 icon 和實際介面�
 - GitHub Pages 對 HTML 設 `Cache-Control: max-age=600`，push 後最多約 10 分鐘才全面生效，是正常現象。
 - 驗證用 `get_page_text`／`read_page`／網路請求，不要卡在截圖；在 Git-Bash 用 `curl | grep` 比對中文可能悄悄失敗，改為存檔後用 `node` 讀取。
 - 檢查項目：新聞是否在最上面、`?v=` 是否為新值、Tools 卡片日期。
+
+## 8. 工具發佈守則（2026-10-12 起，各工具視窗與 Codex 都要遵守）
+
+起因：2026-10-12 檢視發現 .NET 發行檔內嵌本機建置路徑（PDB 路徑）。CarMedia、備份工具、PhotoConverter、PdfWorkshop 已修並重發；以下為之後每次發佈都要守的規則。
+
+### 8.1 發行檔不得洩漏本機資訊
+
+- .NET 專案發佈設定：`DebugType=none`、`DebugSymbols=false`、`EnableSourceLink=false`、`DeterministicSourcePaths=true`、`PathMap=$(MSBuildProjectDirectory)=/_/`。Electron（MoneyFlow）：`electron-builder.yml` 的 `files` 用白名單，排除 `**/*.map`。
+- **發佈前必掃**：對安裝檔、免安裝 zip、解開後的程式檔，搜尋 `C:\Users`、使用者名稱、專案資料夾名、磁碟代號路徑；`EnableCompressionInSingleFile` 的單檔要先解開 bundle 再掃。
+- 第三方殘留（`D:\a\_work`、`D:\repos\empira`、`D:\a\PdfPig`、`D:\repos\xmp-core-dotnet` 等）無法移除，屬正常，不算洩漏。
+- Release 說明與 CHANGELOG 用中性措辭，不提路徑、PDB、SourceLink；公開 repo 不得出現本機路徑、組織名、私人信箱、密鑰。
+
+### 8.2 資產命名（Tools 站 `download.js` 依檔名分類）
+
+- 安裝檔：副檔名 `.exe` 且檔名含 `setup`；免安裝：`.zip` 且檔名含 `portable`；ARM64 檔名含 `arm64`；雜湊檔檔名含 `sha256`。改命名前先確認 `classifyAsset()` 仍能辨識。
+
+### 8.3 發佈流程與回報
+
+1. commit／push／建立 Release 都要使用者在該工具視窗明確同意。
+2. 發佈後用 `gh release view` 核對 tag、發佈時間、非 draft／非 prerelease、資產清單與 SHA256（與本機一致）。
+3. **回報入口網站視窗**（Website session）：tag、Release 網址、資產與 SHA256、介面／icon 是否有變、一段**白話**差異說明（使用者看得懂，不寫內部實作）。
+4. 工具視窗**不要自己改** Tools 與 Website 的卡片日期與最新消息，由 Website 視窗統一處理（順序：先 Tools，確認上線，再 Website 新聞；各自 push 前要使用者同意）。
+5. 該工具的公開下載 repo README（若有版本號敘述）要同步更新。
+
+### 8.4 檔案與驗證
+
+- 含中文的 `.ps1` 用 UTF-8 **with BOM**（PowerShell 5.1 才不會解析失敗）、LF；其他設定檔、JSON、SKILL.md 用 UTF-8 無 BOM、LF。
+- 修復後三段回歸：原功能正常、新防護擋得住、防護不誤擋；測試產生的暫存資料夾與 log 結束後清除並回報。
+- 改檔前先備份到 `~/.claude/backups/<日期>/`。
