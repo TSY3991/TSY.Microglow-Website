@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createHandler, processQueue, makeMessage } from "./core.mjs";
+import { createHandler, processQueue, makeMessage, safeEqual } from "./core.mjs";
 
 const RECIPIENT = "test@example.invalid";
 
@@ -74,4 +74,26 @@ for (const recipient of [undefined, "", "invalid", "a@example.com,b@example.com"
 
 test("changing trusted recipient also changes the notification destination", () => {
   assert.equal(makeMessage(report, "other@example.com", "other@example.com").to, "other@example.com");
+});
+
+test("safeEqual matches only identical tokens", () => {
+  assert.equal(safeEqual("test-only-token", "test-only-token"), true);
+  assert.equal(safeEqual("test-only-token", "test-only-tokeX"), false); // same length, last char differs
+  assert.equal(safeEqual("Xest-only-token", "test-only-token"), false); // same length, first char differs
+  assert.equal(safeEqual("test-only", "test-only-token"), false); // prefix
+  assert.equal(safeEqual("test-only-token-extra", "test-only-token"), false); // longer
+  assert.equal(safeEqual("", "test-only-token"), false);
+  assert.equal(safeEqual("", ""), true);
+  assert.equal(safeEqual("權杖-ab", "權杖-ab"), true);
+  assert.equal(safeEqual("權杖-ab", "權杖-ac"), false);
+});
+
+test("wrong, empty or near-miss worker tokens are rejected before any processing", async () => {
+  let called = false;
+  const handler = createHandler({ token: "test-only-token", recipient: RECIPIENT, process: async () => { called = true; } });
+  for (const value of ["test-only-tokeX", "test-only-toke", "test-only-token-x", "", "null"]) {
+    const response = await handler(new Request("https://example.com", { method: "POST", headers: { "x-feedback-notify-token": value } }));
+    assert.equal(response.status, 401, "token: " + JSON.stringify(value));
+  }
+  assert.equal(called, false);
 });

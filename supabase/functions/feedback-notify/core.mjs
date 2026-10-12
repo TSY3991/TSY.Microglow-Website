@@ -2,6 +2,17 @@ export function isValidRecipient(recipient) {
   return typeof recipient === "string" && /^[^\s@<>,;]+@[^\s@<>,;]+\.[^\s@<>,;]+$/.test(recipient);
 }
 
+// Constant-time comparison: always walks the longer input, so response time does not reveal how much of the token matched.
+export function safeEqual(a, b) {
+  const encoder = new TextEncoder();
+  const x = encoder.encode(String(a));
+  const y = encoder.encode(String(b));
+  let diff = x.length ^ y.length;
+  const length = Math.max(x.length, y.length);
+  for (let i = 0; i < length; i++) diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
+  return diff === 0;
+}
+
 export function makeMessage(report, sender, recipient) {
   if (!isValidRecipient(recipient)) throw new Error("notification_recipient_not_configured");
   return {
@@ -48,7 +59,7 @@ export function createHandler({ token, recipient, process }) {
   return async (request) => {
     if (request.method !== "POST") return new Response(null, { status: 405 });
     if (!token) return new Response(null, { status: 503 });
-    if (request.headers.get("x-feedback-notify-token") !== token) {
+    if (!safeEqual(request.headers.get("x-feedback-notify-token") ?? "", token)) {
       return new Response(null, { status: 401 });
     }
     if (!isValidRecipient(recipient)) return new Response(null, { status: 503 });
