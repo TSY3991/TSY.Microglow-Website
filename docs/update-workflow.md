@@ -61,6 +61,13 @@ Tools 站的工具卡片與下載頁使用各工具正式 icon 和實際介面�
 4. 介面沒變可沿用現有快照，但保留其實際版本標示（例如快照是 1.1.0，就維持標 1.1.0，不要改成最新版號假裝重拍）。
 5. 素材不得包含私人檔案、路徑或帳號資訊。
 6. 先確認 Tools 素材發布正常，再發布 Website 新聞。
+### 品牌 LOGO 素材（2026-10-12 換新版，文字為「TSY.MICROGLOW STUDIO」）
+
+- **圓形版**（四角透明）：瀏覽器分頁 icon（`assets/favicon.png`）、深色底的版面（登入頁 `logo-circle.webp`）、信件 LOGO（`email-logo-3.png`，檔名沿用，信件範本才不用重新部署）。
+- **方形版**（不透明白底）：`apple-touch-icon.png`、PWA 的 `icon-192/512.png` 與 `icon-maskable-512.png`（maskable 內縮到 80% 安全區）、Price Radar 的 `icons/`。
+- **透明去背版**（淺色底專用，已裁到內容範圍）：`logo-mark.png/.webp`、`logo-transparent.png`、`og-image.png` 內的 LOGO。
+- 換 LOGO 時三個 repo（Website／Tools／Games）要一起換，所有引用處的 `?v=` 同步升版；OG 圖的網址也要加 `?v=`，社群平台才會重抓。
+
 - 分支名稱：Website 是 `master`，Tools 與 Games 是 `main`。push 前務必確認。
 
 ## 5. 工作樹有對方變更時，只提交自己的差異
