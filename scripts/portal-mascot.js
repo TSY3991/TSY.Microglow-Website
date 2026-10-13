@@ -110,6 +110,25 @@
     companion.dataset.facing = mirror ? "left" : "right";
   }
 
+  // Sheets load on demand: idle/blink first, wave/walk later, so the large
+  // sprite sheets do not compete with the first paint.
+  function loadSheet(name) {
+    const sheet = sheets[name];
+    if (!sheet.loading) {
+      sheet.loading = (async () => {
+        const image = new Image();
+        image.src = `./assets/mascot/${name}.webp?v=20261007b`;
+        await image.decode();
+        if (image.width !== sheet.cols * 256 || image.height !== Math.ceil(sheet.count / sheet.cols) * 256) throw new Error("Unexpected mascot sheet geometry");
+        sheet.image = image;
+      })();
+      sheet.loading.catch(() => { sheet.loading = null; });
+    }
+    return sheet.loading;
+  }
+
+  function hasSheet(name) { return !!sheets[name].image; }
+
   function setAction(next, announce) {
     action = next;
     elapsed = 0;
@@ -151,7 +170,7 @@
       // Tie each step to distance so feet slow down with the body at both ends.
       const cycles = Math.max(1, Math.round(distance / 54));
       draw("walk", Math.floor(progress * cycles * sheets.walk.count) % sheets.walk.count, facingLeft);
-      if (elapsed >= duration) setAction(Math.random() < 0.35 ? "wave" : "idle", false);
+      if (elapsed >= duration) setAction(Math.random() < 0.35 && hasSheet("wave") ? "wave" : "idle", false);
     } else if (action === "wave") {
       draw("wave", Math.floor(elapsed / sheets.wave.frameMs) % sheets.wave.count, facingLeft);
       if (elapsed >= sheets.wave.frameMs * sheets.wave.count) setAction("idle", false);
@@ -163,7 +182,7 @@
       if (cycle >= 6000) draw("blink", blinkFrames[Math.min(4, Math.floor((cycle - 6000) / 70))], facingLeft);
       else draw("idle", Math.floor(elapsed / sheets.idle.frameMs) % sheets.idle.count, facingLeft);
       if (!pageBusy() && !companion.matches(":hover")) idleTime += delta;
-      if (roaming && idleTime >= nextWalk && !pageBusy() && !companion.matches(":hover")) setAction("walk", false);
+      if (roaming && hasSheet("walk") && idleTime >= nextWalk && !pageBusy() && !companion.matches(":hover")) setAction("walk", false);
     }
     start();
   }
@@ -181,6 +200,11 @@
 
   function perform(next) {
     if (!ready) return;
+    if (!hasSheet(next)) {
+      status.textContent = "小曜準備中…";
+      loadSheet(next).then(() => perform(next), () => { status.textContent = "動作暫時無法載入，請稍後再試。"; });
+      return;
+    }
     // Explicit actions remain still when the OS requests reduced motion.
     if (motionPreference.matches) {
       setAction(next, false);
@@ -273,22 +297,31 @@
     syncPause();
   });
 
-  Promise.all(Object.entries(sheets).map(async ([name, sheet]) => {
-    const image = new Image();
-    image.src = `./assets/mascot/${name}.webp?v=20261007b`;
-    await image.decode();
-    if (image.width !== sheet.cols * 256 || image.height !== Math.ceil(sheet.count / sheet.cols) * 256) throw new Error("Unexpected mascot sheet geometry");
-    sheet.image = image;
-  })).then(() => {
-    ready = true;
-    fallback.hidden = true;
-    canvas.hidden = false;
-    companion.hidden = false;
-    companion.classList.add("is-roaming");
-    goHome();
-    syncPause();
-  }).catch(() => {
-    // The original mascot remains available when new assets cannot load.
-    companion.hidden = true;
-  });
+  function prefetchActions() {
+    // Reduced-motion and data-saver visitors only load an action when they ask for it.
+    const saveData = navigator.connection && navigator.connection.saveData;
+    if (motionPreference.matches || saveData) return;
+    const later = () => ["wave", "walk"].forEach(name => loadSheet(name).catch(() => {}));
+    if ("requestIdleCallback" in window) window.requestIdleCallback(later, { timeout: 4000 });
+    else window.setTimeout(later, 2000);
+  }
+
+  function boot() {
+    Promise.all(["idle", "blink"].map(loadSheet)).then(() => {
+      ready = true;
+      fallback.hidden = true;
+      canvas.hidden = false;
+      companion.hidden = false;
+      companion.classList.add("is-roaming");
+      goHome();
+      syncPause();
+      prefetchActions();
+    }).catch(() => {
+      // The original mascot remains available when new assets cannot load.
+      companion.hidden = true;
+    });
+  }
+
+  if (document.readyState === "complete") boot();
+  else window.addEventListener("load", boot, { once: true });
 })();

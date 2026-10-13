@@ -220,7 +220,7 @@ p {
   gap: 5px;
 }
 
-.nav-section h2 {
+.nav-section .nav-heading {
   margin: 0 0 6px;
   padding: 0 18px;
   color: var(--muted);
@@ -1931,7 +1931,7 @@ h1 strong {
     gap: 8px;
   }
 
-  .nav-section h2,
+  .nav-section .nav-heading,
   .explorer-status {
     display: none;
   }
@@ -2404,4 +2404,11 @@ h1 strong {
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+/* Smooth same-origin page changes (Website / Tools / Games); browsers without support navigate normally. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
 }
