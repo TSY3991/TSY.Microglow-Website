@@ -18,7 +18,7 @@
     idle: { cols: 4, count: 16, frameMs: 150 },
     blink: { cols: 3, count: 3 },
     wave: { cols: 4, count: 16, frameMs: 65 },
-    walk: { cols: 4, count: 8 }
+    walk: { cols: 4, count: 8, poses: [0, 1, 2, 4, 5, 6], frameMs: 95, stride: 32 }
   };
   let ready = false;
   let paused = motionPreference.matches;
@@ -158,18 +158,14 @@
     elapsed += delta;
     if (action === "walk") {
       const distance = Math.hypot(walkTarget.x - walkStart.x, walkTarget.y - walkStart.y);
-      const duration = Math.max(1200, distance / 0.052 + 450);
-      const ramp = Math.min(450, duration / 4);
-      const t = Math.min(elapsed, duration);
-      const denominator = 2 * ramp * (duration - ramp);
-      const progress = t < ramp ? t * t / denominator : t > duration - ramp
-        ? 1 - (duration - t) * (duration - t) / denominator
-        : (t - ramp / 2) / (duration - ramp);
+      const walk = sheets.walk;
+      const cycles = Math.max(1, Math.round(distance / walk.stride));
+      const duration = cycles * walk.poses.length * walk.frameMs;
+      const progress = Math.min(elapsed / duration, 1);
       point = { x: walkStart.x + (walkTarget.x - walkStart.x) * progress, y: walkStart.y + (walkTarget.y - walkStart.y) * progress };
       position();
-      // Tie each step to distance so feet slow down with the body at both ends.
-      const cycles = Math.max(1, Math.round(distance / 54));
-      draw("walk", Math.floor(progress * cycles * sheets.walk.count) % sheets.walk.count, facingLeft);
+      const phase = Math.floor(Math.min(elapsed, duration) / walk.frameMs) % walk.poses.length;
+      draw("walk", walk.poses[phase], facingLeft);
       if (elapsed >= duration) setAction(Math.random() < 0.35 && hasSheet("wave") ? "wave" : "idle", false);
     } else if (action === "wave") {
       draw("wave", Math.floor(elapsed / sheets.wave.frameMs) % sheets.wave.count, facingLeft);
