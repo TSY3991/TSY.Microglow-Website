@@ -18,7 +18,7 @@
     idle: { cols: 4, count: 16, frameMs: 150 },
     blink: { cols: 3, count: 3 },
     wave: { cols: 4, count: 16, frameMs: 65 },
-    walk: { cols: 4, count: 16 }
+    walk: { cols: 4, count: 8 }
   };
   let ready = false;
   let paused = motionPreference.matches;
@@ -117,7 +117,7 @@
     if (!sheet.loading) {
       sheet.loading = (async () => {
         const image = new Image();
-        image.src = `./assets/mascot/${name}.webp?v=20261007b`;
+        image.src = `./assets/mascot/${name}.webp?v=${name === "walk" ? "20261014a" : "20261007b"}`;
         await image.decode();
         if (image.width !== sheet.cols * 256 || image.height !== Math.ceil(sheet.count / sheet.cols) * 256) throw new Error("Unexpected mascot sheet geometry");
         sheet.image = image;
