@@ -1,0 +1,7 @@
+html { color: #173e37; background: #f5f6ed; font-family: "Microsoft JhengHei", system-ui, sans-serif; }
+body { margin: 0; padding: 24px; }
+main { max-width: 680px; margin: 10vh auto; padding: 28px; border: 1px solid #c5d9cb; border-radius: 24px; background: #fffdf5; line-height: 1.8; }
+h1 { font-size: 1.6rem; }
+nav { display: flex; flex-wrap: wrap; gap: 14px; }
+a { display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 10px 16px; color: #fff; background: #087c70; border-radius: 14px; text-decoration: none; }
+a:focus-visible { outline: 3px solid #087c70; outline-offset: 4px; }
