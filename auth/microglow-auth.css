@@ -1,0 +1,19 @@
+/* Auth presentation only; authentication and form behavior stay unchanged. */
+:root { --microglow-style-version: 20261016a; color-scheme: light; --teal: #0a887e; --teal-deep: #09665d; --gold: #916c2e; --ink: #173e37; --muted: #65776d; --panel: #fffdf5; --line: #c5d9cb; }
+body { background: radial-gradient(ellipse at 12% 5%, rgba(181, 140, 66, .07), transparent 45%), radial-gradient(ellipse at 90% 20%, rgba(10, 136, 126, .07), transparent 50%), linear-gradient(#f5f6ed, #f9f8f0); }
+.auth-back { color: #09665d; }
+.auth-card, .callback-card { box-shadow: inset 0 1px 0 #fff, 0 4px 0 #dce5d6, 0 10px 22px rgba(38, 75, 54, .055); }
+.auth-brand { background: linear-gradient(rgba(255, 253, 245, .15), rgba(230, 242, 233, .35)), url("../assets/explorer-mascot.webp") right bottom / min(62%, 360px) auto no-repeat, linear-gradient(145deg, #f1f6ed, #e6f2e9); }
+.auth-tabs { background: #e6f2e9; }
+.auth-tabs button.is-active, .auth-primary { color: #fffdf5; background: linear-gradient(#118d80, #087c70); box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 4px 0 #d4e3d7, 0 8px 16px rgba(38,75,54,.08); }
+.auth-form label { color: #426358; }
+.auth-form input, .mfa-input { border-color: #c5d9cb; background: #fffefa; }
+.auth-form input:focus { border-color: #0a887e; box-shadow: 0 0 0 3px rgba(10,136,126,.14); }
+.auth-secondary { color: #09665d; background: #f1f6ed; }
+.auth-status[data-tone="error"], [data-callback-status][data-tone="error"] { color: #b52e42; }
+.auth-status[data-tone="success"] { color: #267047; }
+.pw-eye { color: #65776d; }
+.auth-form input[aria-invalid="true"] { border-color: #b52e42; box-shadow: 0 0 0 3px rgba(181,46,66,.13); }
+.callback-spinner { border-color: #d7e8dd; border-top-color: #0a887e; }
+:is(a, button, input):focus-visible { outline: 3px solid #0a887e; outline-offset: 3px; }
+@media (max-width: 720px) { .auth-brand { background: linear-gradient(145deg, #f1f6ed, #e6f2e9); } }
