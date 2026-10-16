@@ -58,6 +58,18 @@
       record: false
     },
     {
+      id: "ai-toolkit",
+      category: "learning",
+      categoryLabel: "課程學習",
+      title: "AI 常用工具合集",
+      description: "Git、Node.js、FFmpeg 等常用工具集中同頁，附官方下載與可貼給 Codex／Claude Code 的課堂引導文字。",
+      url: "https://tsy3991.github.io/TSY.Microglow-Website/courses/ai-toolkit/",
+      cta: "查看工具合集",
+      keywords: "AI 工具合集 課程 教學 學員 下載 安裝 環境 Git Node npm npx Python FFmpeg Claude Codex Playwright PowerShell Docker PDF",
+      tags: ["AI 實作", "下載合集", "課堂引導"],
+      record: false
+    },
+    {
       id: "photo-converter",
       category: "utility",
       categoryLabel: "實用工具",
@@ -194,7 +206,7 @@
   const categoryLabels = {
     quiz: "測驗",
     game: "小遊戲",
-    learning: "學習",
+    learning: "課程學習",
     creative: "創作",
     utility: "實用"
   };
@@ -602,7 +614,8 @@
         }
       }, 600);
     });
-    setFilter("all", "home");
+    const initialFilter = new URLSearchParams(window.location.search).get("category") === "learning" ? "learning" : "all";
+    setFilter(initialFilter, initialFilter === "learning" ? "learning" : "home");
   }
 
   function setupNewsNavigation() {

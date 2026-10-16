@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+  <meta name="theme-color" content="#f5f6ed">
+  <meta name="description" content="AI 課程與實作常用工具下載入口：Git、Node.js、Python、FFmpeg 等工具集中同頁，附用途、安裝確認方式與可貼給 Codex／Claude Code 的課堂引導文字。">
+  <meta property="og:title" content="AI 常用工具合集｜微光課程學習">
+  <meta property="og:description" content="先確認任務，再準備工具。官方下載、用途說明與課堂引導文字，集中在同一頁。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tsy3991.github.io/TSY.Microglow-Website/courses/ai-toolkit/">
+  <meta property="og:image" content="https://tsy3991.github.io/TSY.Microglow-Website/assets/og-image.png?v=20261012a">
+  <link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/courses/ai-toolkit/">
+  <link rel="icon" href="../../assets/favicon.png?v=20261012a" type="image/png">
+  <title>AI 常用工具合集｜微光課程學習</title>
+  <link rel="stylesheet" href="./toolkit.css?v=20261016a">
+  <script src="./toolkit.js?v=20261016a" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要內容</a>
+  <main class="kit-shell" id="main-content" tabindex="-1">
+    <nav class="kit-topbar" aria-label="返回連結"><a href="../../?category=learning#quick-title">← 返回課程學習</a><a href="https://tsy3991.github.io/TSY.Microglow-Website/">入口網站</a></nav>
+    <header class="kit-hero">
+      <p class="kit-eyebrow">MICROGLOW · AI TOOLKIT</p><h1>AI 常用工具合集</h1>
+      <p class="kit-intro">讓 AI 幫你做事，先把工具準備好。</p>
+      <p>把 Git、Node.js、FFmpeg 等常用工具放在同一頁。依課堂或實作任務挑選，再請 Codex／Claude Code 協助檢查與使用。</p>
+      <div class="kit-hero-actions"><button type="button" class="kit-button" data-copy="classroom-prompt">複製給 AI 的引導文字</button><a class="kit-secondary" href="#tool-list">查看下載合集 ↓</a></div>
+      <div class="kit-meta"><span>以 Windows 學習環境為主</span><span>不必全部安裝</span><span>來源查核：2026/10/16</span></div>
+    </header>
+    <section class="kit-panel kit-classroom" aria-labelledby="classroom-title">
+      <div class="kit-section-heading"><div><p class="kit-kicker">課堂使用</p><h2 id="classroom-title">複製這段文字，貼給你的 AI</h2></div><span class="kit-tag">含合集網址</span></div>
+      <ol class="kit-steps"><li><strong>複製引導文字</strong><span>可先把最後一行改成老師指定的任務。</span></li><li><strong>貼到 Codex／Claude Code</strong><span>使用能執行本機指令、且有你授權的對話。</span></li><li><strong>準備工具後開始實作</strong><span>讓 AI 確認環境，只補齊這次需要的項目。</span></li></ol>
+      <label class="kit-prompt-label" for="classroom-prompt">可編輯的課堂引導文字</label>
+      <textarea id="classroom-prompt" rows="12" spellcheck="false">我要使用 Codex／Claude Code 完成課堂或實作任務。
+請先閱讀「微光 AI 常用工具合集」：
+https://tsy3991.github.io/TSY.Microglow-Website/courses/ai-toolkit/
+
+請依我的作業系統、電腦環境與下方任務，檢查哪些工具已可使用。只協助安裝本次任務需要且缺少的工具，不要一次安裝全部，也不要重複安裝 AI 環境內已提供的工具。
+
+請從合集列出的官方來源取得工具；若是官網列出的建置版或社群打包版，先說明來源。安裝前告訴我用途與會變更的項目；需要管理員權限、登入、付費或重新啟動時，先讓我確認。不要索取或公開我的密碼、金鑰或私人資料。
+
+準備完成後，請執行對應的版本或功能檢查，分別回報「已可使用」「仍缺少」「需要我手動處理」，再協助我完成任務。
+
+本次課堂／實作任務：請先詢問我要做什麼。</textarea>
+      <div class="kit-prompt-actions"><button type="button" class="kit-button" data-copy="classroom-prompt">複製整段文字（含網址）</button><a class="kit-source-link" href="https://tsy3991.github.io/TSY.Microglow-Website/courses/ai-toolkit/">本頁正式網址</a></div>
+      <p class="kit-help">AI 能執行哪些指令，取決於你使用的環境與授權。這個頁面提供下載入口與引導，不會自行安裝軟體，也不會偵測你的電腦。</p>
+    </section>
+    <section class="kit-catalog" id="tool-list" aria-labelledby="tools-title">
+      <div class="kit-section-heading"><div><p class="kit-kicker">依任務挑選</p><h2 id="tools-title">常用工具，一頁找齊</h2></div><p class="kit-count" id="tool-count" role="status" aria-live="polite">14 個工具</p></div>
+      <p class="kit-help">下載會開啟原作者或供應商頁面；版本與作業系統以該頁為準。安裝後若仍找不到指令，可重開終端機，或請 AI 協助檢查 PATH。</p>
+      <div class="kit-controls" hidden data-controls><label class="kit-search" for="tool-search"><span>搜尋工具或用途</span><input id="tool-search" type="search" placeholder="例如 Git、影片、PDF、網頁" autocomplete="off"></label><fieldset class="kit-filters"><legend>工具分類</legend><div><button type="button" data-filter="all" aria-pressed="true">全部</button><button type="button" data-filter="basic" aria-pressed="false">環境基礎</button><button type="button" data-filter="code" aria-pressed="false">程式協作</button><button type="button" data-filter="media" aria-pressed="false">影音／文件</button><button type="button" data-filter="advanced" aria-pressed="false">進階開發</button></div></fieldset></div>
+      <div class="kit-grid">
+      <article class="kit-card" data-tool data-category="basic" data-search="git 幫程式保留修改紀錄，也能下載與管理 github 專案。 要改程式、取得專案或交付作業時。 git --version" aria-labelledby="git-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">Git</span><div><p class="kit-category">環境基礎</p><h3 id="git-title">Git</h3></div></div>
+        <p class="kit-use">幫程式保留修改紀錄，也能下載與管理 GitHub 專案。</p><p class="kit-when"><strong>什麼時候用</strong>要改程式、取得專案或交付作業時。</p>
+        <p class="kit-note">Windows 版同時提供 Git Bash；是否需要設定帳號，依課堂任務決定。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-git">git --version</code></pre><button type="button" class="kit-small-button" data-copy="check-git">複製檢查方式<span class="sr-only">：Git</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://git-scm.com/install/windows" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：Git（另開分頁）</span></a><a class="kit-source-link" href="https://gitforwindows.org/" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Git（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="basic" data-search="node.js / npm / npx 執行 javascript 工具、安裝套件與啟動網頁專案。 課程使用網頁開發、javascript 或 npm 工具時。 node --version
+npm --version
+npx --version" aria-labelledby="node-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">JS</span><div><p class="kit-category">環境基礎</p><h3 id="node-title">Node.js / npm / npx</h3></div></div>
+        <p class="kit-use">執行 JavaScript 工具、安裝套件與啟動網頁專案。</p><p class="kit-when"><strong>什麼時候用</strong>課程使用網頁開發、JavaScript 或 npm 工具時。</p>
+        <p class="kit-note">通常選官方 LTS；npm、npx 隨 Node.js 安裝，不用分別找安裝包。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-node">node --version
+npm --version
+npx --version</code></pre><button type="button" class="kit-small-button" data-copy="check-node">複製檢查方式<span class="sr-only">：Node.js / npm / npx</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://nodejs.org/en/download" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：Node.js / npm / npx（另開分頁）</span></a><a class="kit-source-link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm/" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Node.js / npm / npx（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="basic" data-search="python / pip 執行資料整理、文件處理與自動化腳本。 任務或專案有 python 程式與套件需求時。 python --version
+python -m pip --version" aria-labelledby="python-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">Py</span><div><p class="kit-category">環境基礎</p><h3 id="python-title">Python / pip</h3></div></div>
+        <p class="kit-use">執行資料整理、文件處理與自動化腳本。</p><p class="kit-when"><strong>什麼時候用</strong>任務或專案有 Python 程式與套件需求時。</p>
+        <p class="kit-note">版本依專案需求選擇；pip 用來管理 Python 套件。若指令只打開商店，請 AI 協助確認安裝狀態。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-python">python --version
+python -m pip --version</code></pre><button type="button" class="kit-small-button" data-copy="check-python">複製檢查方式<span class="sr-only">：Python / pip</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://www.python.org/downloads/windows/" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：Python / pip（另開分頁）</span></a><a class="kit-source-link" href="https://docs.python.org/3/using/windows.html" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Python / pip（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="basic" data-search="powershell 7 讓 ai 在 windows 終端機執行指令與自動化腳本。 課堂腳本需要 powershell 7，或要使用新版指令語法時。 pwsh --version" aria-labelledby="powershell-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">PS</span><div><p class="kit-category">環境基礎</p><h3 id="powershell-title">PowerShell 7</h3></div></div>
+        <p class="kit-use">讓 AI 在 Windows 終端機執行指令與自動化腳本。</p><p class="kit-when"><strong>什麼時候用</strong>課堂腳本需要 PowerShell 7，或要使用新版指令語法時。</p>
+        <p class="kit-note">PowerShell 7 的指令是 pwsh，與 Windows 內建的 Windows PowerShell 不同。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-powershell">pwsh --version</code></pre><button type="button" class="kit-small-button" data-copy="check-powershell">複製檢查方式<span class="sr-only">：PowerShell 7</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://github.com/PowerShell/PowerShell/releases" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：PowerShell 7（另開分頁）</span></a><a class="kit-source-link" href="https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：PowerShell 7（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="basic" data-search="winget 在 windows 用指令搜尋、安裝與更新軟體。 想請 ai 協助安裝課程需要的工具時。 winget --version" aria-labelledby="winget-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">W</span><div><p class="kit-category">環境基礎</p><h3 id="winget-title">WinGet</h3></div></div>
+        <p class="kit-use">在 Windows 用指令搜尋、安裝與更新軟體。</p><p class="kit-when"><strong>什麼時候用</strong>想請 AI 協助安裝課程需要的工具時。</p>
+        <p class="kit-note">先確認是否已隨 App Installer 提供；套件來源與軟體版本仍要核對。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-winget">winget --version</code></pre><button type="button" class="kit-small-button" data-copy="check-winget">複製檢查方式<span class="sr-only">：WinGet</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://learn.microsoft.com/en-us/windows/package-manager/winget/" target="_blank" rel="noopener noreferrer">官方安裝說明<span class="sr-only">：WinGet（另開分頁）</span></a><a class="kit-source-link" href="https://github.com/microsoft/winget-cli" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：WinGet（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="code" data-search="github cli 用指令查看 github 專案、issue、pr 與 release。 課程需要 github 協作或自動化交付時。 gh --version" aria-labelledby="github-cli-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">gh</span><div><p class="kit-category">程式協作</p><h3 id="github-cli-title">GitHub CLI</h3></div></div>
+        <p class="kit-use">用指令查看 GitHub 專案、Issue、PR 與 Release。</p><p class="kit-when"><strong>什麼時候用</strong>課程需要 GitHub 協作或自動化交付時。</p>
+        <p class="kit-note">指令名稱是 gh；需要帳號權限的操作，登入由學員自己完成。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-github-cli">gh --version</code></pre><button type="button" class="kit-small-button" data-copy="check-github-cli">複製檢查方式<span class="sr-only">：GitHub CLI</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://cli.github.com/" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：GitHub CLI（另開分頁）</span></a><a class="kit-source-link" href="https://github.com/cli/cli#installation" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：GitHub CLI（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="code" data-search="ripgrep 快速在專案內搜尋程式碼與文字，協助 ai 找到要修改的位置。 需要閱讀或搜尋較多專案檔案時。 rg --version" aria-labelledby="ripgrep-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">rg</span><div><p class="kit-category">程式協作</p><h3 id="ripgrep-title">ripgrep</h3></div></div>
+        <p class="kit-use">快速在專案內搜尋程式碼與文字，協助 AI 找到要修改的位置。</p><p class="kit-when"><strong>什麼時候用</strong>需要閱讀或搜尋較多專案檔案時。</p>
+        <p class="kit-note">指令名稱是 rg；AI 工具若已內附可用版本，就不必重複安裝。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-ripgrep">rg --version</code></pre><button type="button" class="kit-small-button" data-copy="check-ripgrep">複製檢查方式<span class="sr-only">：ripgrep</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://github.com/BurntSushi/ripgrep/releases/latest" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：ripgrep（另開分頁）</span></a><a class="kit-source-link" href="https://github.com/BurntSushi/ripgrep#installation" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：ripgrep（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="media" data-search="ffmpeg / ffprobe 轉換影音格式、剪輯、擷取畫面，以及讀取音訊與影片資訊。 課程有影片、音訊或素材處理任務時。 ffmpeg -version
+ffprobe -version" aria-labelledby="ffmpeg-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">AV</span><div><p class="kit-category">影音／文件</p><h3 id="ffmpeg-title">FFmpeg / ffprobe</h3></div></div>
+        <p class="kit-use">轉換影音格式、剪輯、擷取畫面，以及讀取音訊與影片資訊。</p><p class="kit-when"><strong>什麼時候用</strong>課程有影片、音訊或素材處理任務時。</p>
+        <p class="kit-note">Windows 下載入口為 FFmpeg 官網列出的 Gyan 建置版；ffprobe 用來檢查媒體資訊。</p><p class="kit-source">官網列出的建置來源</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-ffmpeg">ffmpeg -version
+ffprobe -version</code></pre><button type="button" class="kit-small-button" data-copy="check-ffmpeg">複製檢查方式<span class="sr-only">：FFmpeg / ffprobe</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://www.gyan.dev/ffmpeg/builds/" target="_blank" rel="noopener noreferrer">Windows 建置版<span class="sr-only">：FFmpeg / ffprobe（另開分頁）</span></a><a class="kit-source-link" href="https://ffmpeg.org/download.html" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：FFmpeg / ffprobe（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="media" data-search="7-zip 解開課程素材、軟體壓縮包，或把成果打包交付。 要處理 zip、7z 等壓縮檔時。 7z i" aria-labelledby="sevenzip-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">7z</span><div><p class="kit-category">影音／文件</p><h3 id="sevenzip-title">7-Zip</h3></div></div>
+        <p class="kit-use">解開課程素材、軟體壓縮包，或把成果打包交付。</p><p class="kit-when"><strong>什麼時候用</strong>要處理 ZIP、7z 等壓縮檔時。</p>
+        <p class="kit-note">有安裝卻找不到 7z 指令時，可請 AI 確認程式位置與 PATH；也能使用圖形介面。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-sevenzip">7z i</code></pre><button type="button" class="kit-small-button" data-copy="check-sevenzip">複製檢查方式<span class="sr-only">：7-Zip</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://www.7-zip.org/download.html" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：7-Zip（另開分頁）</span></a><a class="kit-source-link" href="https://github.com/ip7z/7zip" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：7-Zip（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="media" data-search="poppler 把 pdf 頁面轉成圖片，或擷取 pdf 文字，方便 ai 檢查文件。 課程需要 pdf 轉圖、文字擷取或頁面檢視時。 pdftoppm -v
+pdftotext -v" aria-labelledby="poppler-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">PDF</span><div><p class="kit-category">影音／文件</p><h3 id="poppler-title">Poppler</h3></div></div>
+        <p class="kit-use">把 PDF 頁面轉成圖片，或擷取 PDF 文字，方便 AI 檢查文件。</p><p class="kit-when"><strong>什麼時候用</strong>課程需要 PDF 轉圖、文字擷取或頁面檢視時。</p>
+        <p class="kit-note">Windows 入口是社群打包版，不是 Poppler 官方安裝程式；AI 環境若已內附可用版本，可直接沿用。</p><p class="kit-source">社群打包・非官方安裝檔</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-poppler">pdftoppm -v
+pdftotext -v</code></pre><button type="button" class="kit-small-button" data-copy="check-poppler">複製檢查方式<span class="sr-only">：Poppler</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://github.com/oschwartz10612/poppler-windows/releases" target="_blank" rel="noopener noreferrer">Windows 社群版<span class="sr-only">：Poppler（另開分頁）</span></a><a class="kit-source-link" href="https://poppler.freedesktop.org/" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Poppler（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="advanced" data-search="google chrome 預覽網頁，配合瀏覽器自動化工具檢查畫面與操作。 課程指定 chrome 或需要瀏覽器測試時。 chrome://version" aria-labelledby="chrome-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">Web</span><div><p class="kit-category">進階開發</p><h3 id="chrome-title">Google Chrome</h3></div></div>
+        <p class="kit-use">預覽網頁，配合瀏覽器自動化工具檢查畫面與操作。</p><p class="kit-when"><strong>什麼時候用</strong>課程指定 Chrome 或需要瀏覽器測試時。</p>
+        <p class="kit-note">已有相容瀏覽器時，先讓 AI 確認是否能沿用；版本可在瀏覽器開啟下方網址查看。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-chrome">chrome://version</code></pre><button type="button" class="kit-small-button" data-copy="check-chrome">複製檢查方式<span class="sr-only">：Google Chrome</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://www.google.com/chrome/" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：Google Chrome（另開分頁）</span></a><a class="kit-source-link" href="https://support.google.com/chrome/answer/95346" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Google Chrome（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="advanced" data-search="playwright 自動操作瀏覽器，檢查按鈕、表單與手機／桌機畫面。 需要網頁自動化測試與截圖驗收時。 npm ls @playwright/test playwright" aria-labelledby="playwright-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">PW</span><div><p class="kit-category">進階開發</p><h3 id="playwright-title">Playwright</h3></div></div>
+        <p class="kit-use">自動操作瀏覽器，檢查按鈕、表單與手機／桌機畫面。</p><p class="kit-when"><strong>什麼時候用</strong>需要網頁自動化測試與截圖驗收時。</p>
+        <p class="kit-note">這是專案套件，不是一般桌面安裝程式；套件與瀏覽器依專案的官方安裝步驟準備。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-playwright">npm ls @playwright/test playwright</code></pre><button type="button" class="kit-small-button" data-copy="check-playwright">複製檢查方式<span class="sr-only">：Playwright</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://playwright.dev/docs/intro" target="_blank" rel="noopener noreferrer">官方安裝教學<span class="sr-only">：Playwright（另開分頁）</span></a><a class="kit-source-link" href="https://github.com/microsoft/playwright" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Playwright（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="advanced" data-search=".net sdk 建立、編譯與測試 c#、.net 和 windows 桌面程式。 課程要開發 c#／.net 專案時。 dotnet --list-sdks" aria-labelledby="dotnet-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">.N</span><div><p class="kit-category">進階開發</p><h3 id="dotnet-title">.NET SDK</h3></div></div>
+        <p class="kit-use">建立、編譯與測試 C#、.NET 和 Windows 桌面程式。</p><p class="kit-when"><strong>什麼時候用</strong>課程要開發 C#／.NET 專案時。</p>
+        <p class="kit-note">開發需要 SDK，不只是 Runtime；版本以課堂或專案要求為準。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-dotnet">dotnet --list-sdks</code></pre><button type="button" class="kit-small-button" data-copy="check-dotnet">複製檢查方式<span class="sr-only">：.NET SDK</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://dotnet.microsoft.com/en-us/download" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：.NET SDK（另開分頁）</span></a><a class="kit-source-link" href="https://learn.microsoft.com/en-us/dotnet/core/install/windows" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：.NET SDK（另開分頁）</span></a></div>
+      </article>
+      <article class="kit-card" data-tool data-category="advanced" data-search="docker desktop 透過容器執行專案需要的資料庫、服務與開發環境。 專案明確使用 docker 或容器服務時。 docker --version" aria-labelledby="docker-title">
+        <div class="kit-card-heading"><span class="kit-mark" aria-hidden="true">D</span><div><p class="kit-category">進階開發</p><h3 id="docker-title">Docker Desktop</h3></div></div>
+        <p class="kit-use">透過容器執行專案需要的資料庫、服務與開發環境。</p><p class="kit-when"><strong>什麼時候用</strong>專案明確使用 Docker 或容器服務時。</p>
+        <p class="kit-note">請先看官方系統需求與授權條款；版本指令只確認 CLI，服務是否啟動需另行檢查。</p>
+        <details class="kit-check"><summary>安裝後怎麼確認</summary><pre><code id="check-docker">docker --version</code></pre><button type="button" class="kit-small-button" data-copy="check-docker">複製檢查方式<span class="sr-only">：Docker Desktop</span></button></details>
+        <div class="kit-card-actions"><a class="kit-button" href="https://www.docker.com/products/docker-desktop/" target="_blank" rel="noopener noreferrer">官方下載<span class="sr-only">：Docker Desktop（另開分頁）</span></a><a class="kit-source-link" href="https://docs.docker.com/desktop/setup/install/windows-install/" target="_blank" rel="noopener noreferrer">來源與說明<span class="sr-only">：Docker Desktop（另開分頁）</span></a></div>
+      </article>
+      </div>
+      <div class="kit-empty kit-panel" hidden id="tool-empty"><h3>找不到符合的工具</h3><p>試試其他關鍵字，或切回全部工具。</p><button class="kit-secondary" type="button" id="clear-search">清除篩選</button></div>
+    </section>
+    <section class="kit-panel kit-faq" aria-labelledby="questions-title"><h2 id="questions-title">上課前的小提醒</h2><details><summary>這些工具每一個都要安裝嗎？</summary><p>不用。先看老師的任務，或把上方文字貼給 AI，請它判斷哪些已可使用、哪些真的需要。npm／npx、ffprobe 等隨對應工具提供的項目，不必再找獨立安裝包。</p></details><details><summary>已經有 AI 內附的工具，還要再下載嗎？</summary><p>不一定。先請 AI 執行實際檢查；現有版本能完成課程任務，就可以沿用。頁面列出的是工具選單，不是每台電腦的固定安裝清單。</p></details><details><summary>使用 Mac 或 Linux，也可以用這頁嗎？</summary><p>可以參考用途與官方文件，再讓 AI 依你的系統選擇相容版本。這頁部分下載入口專為 Windows，請不要直接安裝到其他系統。</p></details></section>
+    <p id="copy-status" class="kit-copy-status" role="status" aria-live="polite"></p>
+  </main>
+  <footer class="kit-footer"><p>TSY.Microglow 微光創作室</p><nav aria-label="站台連結"><a href="../../?category=learning#quick-title">課程學習</a><a href="https://tsy3991.github.io/TSY.Microglow-Website/">入口網站</a><a href="https://tsy3991.github.io/TSY.Microglow-Website/#feedback">問題回報</a></nav><p>第三方工具由各自作者維護；下載、版本與授權以來源網站為準。</p></footer>
+</body>
+</html>
