@@ -6,19 +6,24 @@
 
 TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（`https://tsy3991.github.io/TSY.Microglow-Website/`）。單頁式入口（`index.html`），左側導覽、頂部狀態列、最新消息、任務進度卡片、`#toolGrid` 工具卡片區（由 JS 資料驅動渲染）、手機版底部 dock。
 
-## 三個關聯 repo（各自獨立部署，共用同一個 `tsy3991.github.io` origin）
+## 站群關聯 repo（各自獨立部署，共用同一個 `tsy3991.github.io` origin）
 
 | repo | 分支 | 用途 |
 | --- | --- | --- |
 | `TSY.Microglow-Website`（這裡） | `master` | 主入口網站 |
 | `TSY.Microglow-Games` | `main` | 遊戲大廳，獨立 repo，深色霓虹風格 |
 | `TSY.Microglow-Tools` | `main` | 工具箱，獨立 repo，淺色暖色調（跟主站同一套色票，不是 Games 那套） |
+| `TSY.Microglow-Creative` | `main` | 創作站（AI 圖片創作工具、LINE 貼圖創作工具） |
+| `TSY.Microglow-Learning` | `main` | 課程學習（入口網站的課程入口連到這裡） |
+| `amateur-radio-quiz` | `main` | 三等業餘無線電測驗，網址 `tsy3991.github.io/amateur-radio-quiz/` |
 
-**分支名稱不一致**：這裡是 `master`，另外兩個是 `main`，push 前務必確認分支名稱。
+**分支名稱不一致**：Website 是 `master`，其餘 repo 都是 `main`，push 前務必確認分支名稱。
 
-三個 repo 因為同源（`tsy3991.github.io/<repo>/...`），瀏覽器 localStorage **會互通**——這是刻意設計，不是 bug，讓主站可以彙總測驗紀錄、遊戲紀錄來算 XP／等級。
+這些 repo 因為同源（`tsy3991.github.io/<repo>/...`），瀏覽器 localStorage **會互通**——這是刻意設計，不是 bug，讓主站可以彙總測驗紀錄、遊戲紀錄來算 XP／等級。
 
-備份工具（隨身硬碟同步備份工具）的原始碼**不在**這三個 repo 裡，放在使用者另一個獨立管理的本機專案資料夾（不屬於這三個 GitHub Pages repo，被該專案自己的 `.gitignore` 排除），該資料夾自己有 `CLAUDE.md` 跟完整發版檢查清單，路徑請向使用者確認。發行的二進位檔放在 `TSY3991/TSY.PortableBackupTool`（只放編譯好的檔案，不放原始碼），主站/工具箱的下載連結永遠指向 `/releases/latest`，發新版不用回頭改網站。
+**本機位置**：站群 repo 並排放在同一個站群根資料夾下，資料夾名稱與 repo 名稱相同（無線電測驗在 `TSY.Microglow-Quiz/amateur-radio-quiz`，外層不是 repo）；彼此一律用相對路徑互相指（例如 `../TSY.Microglow-Games`），不要寫死絕對路徑。站群根另有 `COORDINATION/`（不在任何 repo 內，不得提交）是 Claude／Codex 共同協作入口，處理站群任務前先讀其中的 README、TASKS、CODEX、CLAUDE。
+
+備份工具（隨身硬碟同步備份工具）等桌面工具的原始碼**不在**這些 repo 裡，放在使用者另外管理的本機專案資料夾（不屬於這些 GitHub Pages repo），該資料夾自己有 `CLAUDE.md` 跟完整發版檢查清單，路徑請向使用者確認。發行的二進位檔放在 `TSY3991/TSY.PortableBackupTool`（只放編譯好的檔案，不放原始碼；原始碼另有獨立的私人版控，不可推進這個公開發行檔 repo），主站/工具箱的下載連結永遠指向 `/releases/latest`，發新版不用回頭改網站。
 
 ## 已知的坑
 
@@ -28,10 +33,13 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 4. **`.back-link` CSS 陷阱**：`shared/base.css`（Games/Tools 都有各自一份）裡 `.back-link` 預設是首頁浮動徽章的樣式（`position:absolute; top:18px; left:18px;`），會被頁內導覽用的 `.back-link.compact-back` 繼承到不該有的定位。統一解法是 `.back-link:not(.compact-back)` 選擇器，只讓非 compact 版本套用絕對定位；新增頁面時如果又是浮動 hero 版型，記得幫 `.hero-copy` 之類的容器留 `padding-top` 讓文字不被蓋住。
 5. **`preview_screenshot`/`computer` 工具偶爾 30 秒 timeout**，即使頁面很簡單。遇到就改用 `get_page_text`、`read_page`、`javascript_tool`、`read_console_messages`、`read_network_requests` 驗證，不要卡在重試截圖。
 6. **Git-Bash 內嵌中文字 `grep`/`curl | grep` 可能悄悄比對失敗**（編碼問題），診斷網站內容時改成把輸出存檔、用 `node -e "fs.readFileSync(path,'utf8')"` 讀取比較可靠。
+7. **平台用圖不進 git**：`assets/` 底下 `microglow-banner-gensen-*`、`microglow-bmc-cover-*`、`microglow-bmc-logo-only-*`、`microglow-facebook-cover-*`、`microglow-support-cover-*` 與 `bmc-logo-v2.png` 這批是只供手動上傳外部平台的封面／Logo，依使用者決定永遠保持未追蹤。因此提交一律逐檔 `git add <檔名>`，禁止 `git add .`／`-A`／`commit -a`，commit 前確認暫存區只含要提交的檔案。
+8. **作者身分與行尾**：commit 作者用 GitHub noreply 身分（`TSY3991@users.noreply.github.com`，全域 Git 已設定），不要用個人信箱。系統層 `core.autocrlf=true`，工作樹檔案可能是 CRLF、repo 內是 LF；Git 提示「LF will be replaced by CRLF」屬正常現象，不要手動轉換行尾。
+9. **舊的 `/Games/` 忽略規則**：`.gitignore` 仍有 `/Games/`（早期 Games 曾是這個資料夾底下的子資料夾）。現在 Games 是同層獨立 repo，這條規則無作用但無害，沒有要整理 `.gitignore` 時不用動。
 
 ## 常用流程
 
-- 本機預覽：`.claude/launch.json` 裡有 `portal-static-server`（port 8849，serve 這個 repo）跟 `games-static-server`（port 8848，serve `Games/` 子資料夾，這個資料夾被 `.gitignore` 排除、只在本機開發用）。要驗證 Tools repo 時，因為它是完全獨立的 repo（不在這個資料夾底下），習慣做法是在 scratchpad clone 一份、臨時在 `launch.json` 加一個 `tools-static-server` 條目、驗證完再移除，避免留下寫死的 scratchpad 路徑。
+- 本機預覽：`.claude/launch.json` 裡有 `portal-static-server`（port 8849，serve 這個 repo）跟 `games-static-server`（port 8848，serve 同層的 `../TSY.Microglow-Games`）。要驗證 Tools、Creative、Learning、Quiz 這些同層 repo 時，可臨時在 `launch.json` 加一個指向 `../TSY.Microglow-<名稱>` 的條目，驗證完再移除（不要留下絕對路徑）；若不想動到正被別的視窗使用的資料夾，也可以在 scratchpad clone 一份再服務。
 - 主站的 `tools[]` 資料陣列在 `scripts/portal-records.js`，是工具卡片渲染的唯一資料來源（`renderTool()`/`renderTools()`），新增工具卡片改這裡就好，不要手動寫 HTML。
 - 發現「檢視／看看／評估」類需求時只分析回報，不要順手改；使用者明確說「修」才動手（使用者的全域規則，這個專案也適用）。
 - push 前想清楚是不是該跟其他進行中的工作（例如另一個視窗/Codex 正在改的檔案）一起 bundle，不要各自零散 push，除非確認不衝突。
@@ -65,7 +73,7 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 
 ## SEO 與分享預覽（2026-10-08 檢視後）
 
-- 外部 SEO 掃描工具（如 open-seo-advisor-skill）對本站的「缺 sitemap.xml／robots.txt」是**誤報**：三個 repo 都是 `tsy3991.github.io/<repo>/` 子路徑專案站，搜尋引擎只讀網域根目錄的 robots.txt，子路徑下放了也無效。sitemap 請到 Google Search Console 提交。主站有 `sitemap.xml`（目前只含首頁）；Tools／Games 沒有，這是已知且可接受的。`login.html` 的 noindex 是刻意設計。
+- 外部 SEO 掃描工具（如 open-seo-advisor-skill）對本站的「缺 sitemap.xml／robots.txt」是**誤報**：這些 repo 都是 `tsy3991.github.io/<repo>/` 子路徑專案站，搜尋引擎只讀網域根目錄的 robots.txt，子路徑下放了也無效。sitemap 請到 Google Search Console 提交。主站有 `sitemap.xml`（目前只含首頁）；Tools／Games 沒有，這是已知且可接受的。`login.html` 的 noindex 是刻意設計。
 - Tools repo 的頁面（首頁與 `tools/*/index.html`）已補 og:*、twitter:card、canonical；OG 圖是 `assets/og-image.png`（1200x630，與主站同圖），網址 `https://tsy3991.github.io/TSY.Microglow-Tools/assets/og-image.png`。**新增工具頁時要照同一組 meta 補上**，canonical 用該頁完整網址。
 - PriceRadar 頁是 React 殼（`<div id="root">`），meta 補丁只打在建置產物上，重新建置會被覆蓋，需在原始碼模板裡補。
 - Games repo 的 7 個頁面已由 Codex 補上 og／canonical 與分享圖（`d1b4be2`，2026-10-10 線上驗證）；Games UI／版面工作一律走 Codex。
@@ -73,8 +81,8 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 
 ## Claude／Codex 共用的更新流程
 
-入口網站更新、新聞格式、工具上架、`?v=` 升版、工作樹有對方變更時如何只提交自己的差異、push 規則，統一寫在 `docs/update-workflow.md`（Codex 也讀這份）。動 `index.html` 或準備 push 前先讀；規則有變更只改那一份，這裡不重複。
+入口網站更新、新聞格式、工具上架、`?v=` 升版、工作樹有對方變更時如何只提交自己的差異、push 規則，統一寫在 `docs/update-workflow.md`（Codex 也讀這份）。動 `index.html` 或準備 push 前先讀；規則有變更只改那一份，這裡不重複。Website／Creative 的同步由 Codex 當單一執行者、Claude 負責內容審閱的分工，以及 commit 白名單與禁用指令，以站群根 `COORDINATION/` 為準（不在 repo 內）。
 
 ## 延伸閱讀
 
-- 備份工具的完整發版流程：見上方「備份工具原始碼」段落提到的本機專案資料夾裡的 `CLAUDE.md`
+- 備份工具的完整發版流程：見上方「備份工具」段落提到的本機專案資料夾裡的 `CLAUDE.md`
