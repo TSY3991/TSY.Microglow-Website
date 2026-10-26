@@ -223,62 +223,15 @@
   const missionProgressBarEl = document.querySelector("#missionProgressBar");
   const missionScoreEl = document.querySelector("#missionScore");
 
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
-
-  function renderTool(tool) {
-    const tags = tool.tags
-      .map((tag) => `<strong>${escapeHtml(tag)}</strong>`)
-      .join("");
-    const record = tool.record
-      ? `<div class="tool-record">
-          <span>最新紀錄</span>
-          <strong data-record-value="${escapeHtml(tool.id)}">尚無紀錄</strong>
-          <span data-record-meta="${escapeHtml(tool.id)}">${escapeHtml(tool.recordEmptyText || "完成一次後顯示")}</span>
-        </div>`
-      : `<div class="tool-record is-static">
-          <span>工具狀態</span>
-          <strong>已上線</strong>
-          <span>${escapeHtml(categoryLabels[tool.category] || tool.categoryLabel)}</span>
-        </div>`;
-
-    return `<article
-        class="primary-tool tool-card${tool.featured ? " is-featured" : ""}"
-        data-tool-card
-        data-category="${escapeHtml(tool.category)}"
-        data-title="${escapeHtml(tool.title)}"
-        data-keywords="${escapeHtml(tool.keywords)}"
-      >
-        <span class="corner-ribbon" aria-hidden="true"></span>
-        <div class="tool-visual" aria-hidden="true">
-          <span class="antenna"></span>
-          <span class="signal signal-one"></span>
-          <span class="signal signal-two"></span>
-        </div>
-        <div class="tool-copy">
-          <p>${escapeHtml(tool.categoryLabel)}</p>
-          <h3>${escapeHtml(tool.title)}</h3>
-          <span>${escapeHtml(tool.description)}</span>
-          <div class="feature-tags" aria-label="工具特色">${tags}</div>
-        </div>
-        ${record}
-        <a class="launch-button" href="${escapeHtml(tool.url)}" data-tool-launch="${escapeHtml(tool.id)}"${tool.newTab ? ' target="_blank" rel="noopener noreferrer"' : ""}>
-          <span>${escapeHtml(tool.cta)}</span>
-          <span class="arrow-symbol" aria-hidden="true"></span>
-        </a>
-      </article>`;
-  }
-
   function renderTools() {
     if (!toolGrid) return;
 
-    toolGrid.innerHTML = tools.map(renderTool).join("");
+    const cards = Array.from(toolGrid.querySelectorAll("[data-tool-card]"));
+    const expectedIds = tools.filter((tool) => tool.url).map((tool) => tool.id);
+    const actualIds = cards.map((card) => card.querySelector("[data-tool-launch]")?.dataset.toolLaunch);
+    if (actualIds.length !== expectedIds.length || actualIds.some((id, index) => id !== expectedIds[index])) {
+      console.error("入口網站的靜態卡片與 tools[] 清單不一致；請執行 scripts/check-portal-content.cjs。 ");
+    }
 
     const liveTools = tools.filter((tool) => tool.url);
     const liveCategories = Array.from(new Set(liveTools.map((tool) => tool.categoryLabel)));

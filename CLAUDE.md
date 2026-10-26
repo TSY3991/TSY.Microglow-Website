@@ -4,7 +4,7 @@
 
 ## 這是什麼
 
-TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（`https://tsy3991.github.io/TSY.Microglow-Website/`）。單頁式入口（`index.html`），左側導覽、頂部狀態列、最新消息、任務進度卡片、`#toolGrid` 工具卡片區（由 JS 資料驅動渲染）、手機版底部 dock。
+TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（`https://tsy3991.github.io/TSY.Microglow-Website/`）。單頁式入口（`index.html`），左側導覽、頂部狀態列、最新消息、任務進度卡片、`#toolGrid` 工具卡片區（卡片先由 HTML 輸出，JS 依資料清單增強搜尋、篩選與紀錄）、手機版底部 dock。
 
 ## 站群關聯 repo（各自獨立部署，共用同一個 `tsy3991.github.io` origin）
 
@@ -40,7 +40,7 @@ TSY 微光創作室的主入口網站，靜態網頁，部署在 GitHub Pages（
 ## 常用流程
 
 - 本機預覽：`.claude/launch.json` 裡有 `portal-static-server`（port 8849，serve 這個 repo）跟 `games-static-server`（port 8848，serve 同層的 `../TSY.Microglow-Games`）。要驗證 Tools、Creative、Learning、Quiz 這些同層 repo 時，可臨時在 `launch.json` 加一個指向 `../TSY.Microglow-<名稱>` 的條目，驗證完再移除（不要留下絕對路徑）；若不想動到正被別的視窗使用的資料夾，也可以在 scratchpad clone 一份再服務。
-- 主站的 `tools[]` 資料陣列在 `scripts/portal-records.js`，是工具卡片渲染的唯一資料來源（`renderTool()`/`renderTools()`），新增工具卡片改這裡就好，不要手動寫 HTML。
+- 主站的 `tools[]` 資料陣列在 `scripts/portal-records.js`，是入口欄位與互動設定的資料來源；`index.html` 保留對應靜態卡片，兩者需用 `node scripts/check-portal-content.cjs` 逐筆核對。新增或修改入口時同步維護兩處；JS 只增強既有卡片，不重建卡片 HTML。共用規則見 `docs/update-workflow.md`。
 - 發現「檢視／看看／評估」類需求時只分析回報，不要順手改；使用者明確說「修」才動手（使用者的全域規則，這個專案也適用）。
 - push 前想清楚是不是該跟其他進行中的工作（例如另一個視窗/Codex 正在改的檔案）一起 bundle，不要各自零散 push，除非確認不衝突。
 
