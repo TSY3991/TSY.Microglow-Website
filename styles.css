@@ -200,6 +200,27 @@ p {
   font-weight: 700;
 }
 
+.brand-copy .brand-about-link {
+  width: fit-content;
+  color: var(--teal-dark);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.brand-copy .brand-about-link span {
+  color: inherit;
+  font-size: inherit;
+}
+
+.brand-copy .brand-about-link:focus-visible {
+  border-radius: 3px;
+  outline: 3px solid rgba(14, 143, 136, 0.3);
+  outline-offset: 3px;
+}
+
 .nav-groups {
   display: grid;
   align-content: start;
