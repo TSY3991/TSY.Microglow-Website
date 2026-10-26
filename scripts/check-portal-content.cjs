@@ -4,6 +4,7 @@ const vm = require('node:vm');
 
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8').replace(/^\uFEFF/, '');
+const aboutHtml = fs.readFileSync(path.join(root, 'about', 'index.html'), 'utf8').replace(/^\uFEFF/, '');
 const script = fs.readFileSync(path.join(__dirname, 'portal-records.js'), 'utf8').replace(/^\uFEFF/, '').replace(/\r\n/g, '\n');
 
 function fail(message) {
@@ -103,13 +104,33 @@ if ((html.match(/<h1\b/g) || []).length !== 1) fail('首頁 H1 數量不是 1');
 if ((html.match(/class="news-item"/g) || []).length !== 27) fail('新聞筆數不是 27');
 
 const jsonLd = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+let homeGraph;
 try {
   if (!jsonLd) throw new Error('找不到 JSON-LD');
-  JSON.parse(jsonLd);
+  homeGraph = JSON.parse(jsonLd);
 } catch (error) {
   fail(`JSON-LD 無法解析：${error.message}`);
 }
 
+const aboutJsonLd = aboutHtml.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+try {
+  if (!aboutJsonLd) throw new Error('About 頁找不到 JSON-LD');
+  const aboutGraph = JSON.parse(aboutJsonLd);
+  const homeOrganization = homeGraph?.['@graph']?.find((item) => item['@type'] === 'Organization');
+  const aboutOrganization = aboutGraph?.['@graph']?.find((item) => item['@type'] === 'Organization');
+  if (!homeOrganization || !aboutOrganization) throw new Error('首頁或 About 頁缺少 Organization 實體');
+  if (JSON.stringify(homeOrganization.sameAs) !== JSON.stringify(aboutOrganization.sameAs)) {
+    throw new Error('首頁與 About 頁的官方 sameAs 連結不一致');
+  }
+  if (!aboutGraph['@graph'].some((item) => item['@type'] === 'AboutPage')) throw new Error('About 頁缺少 AboutPage 結構化資料');
+} catch (error) {
+  fail(`About 頁結構化資料錯誤：${error.message}`);
+}
+
+if (!html.includes('href="./about/"')) fail('首頁沒有 About 頁入口');
+if (!aboutHtml.includes('<link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/about/">')) fail('About 頁 canonical 不正確');
+if (!html.includes('styles.css?v=20261026a') || !aboutHtml.includes('styles.css?v=20261026a')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
+
 if (!process.exitCode) {
-  console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；單一 H1、27 則新聞、JSON-LD 與快取版本通過。`);
+  console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、27 則新聞及快取版本通過。`);
 }
