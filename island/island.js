@@ -576,6 +576,54 @@
     return legoFloorMaterial;
   }
 
+  function buildBrickLogo(image) {
+    const size = 40;
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = size;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    context.drawImage(image, 0, 0, size, size);
+    const pixels = context.getImageData(0, 0, size, size).data;
+    const positions = [];
+    const normals = [];
+    const colors = [];
+    const indices = [];
+    const pitch = 2.25 / size;
+    const depth = 0.055;
+    const studWidth = pitch * 0.62;
+    const studHeight = 0.025;
+    const palette = { ink: "#342116", gold: "#dca315", cream: "#fff8e8" };
+
+    for (let row = 0; row < size; row += 1) {
+      for (let col = 0; col < size; col += 1) {
+        const offset = (row * size + col) * 4;
+        const alpha = pixels[offset + 3];
+        if (alpha < 70) continue;
+        const red = pixels[offset];
+        const green = pixels[offset + 1];
+        const blue = pixels[offset + 2];
+        const color = red < 125 && green < 105 && blue < 90
+          ? palette.ink
+          : (red > 155 && green > 90 && blue < 145 ? palette.gold : palette.cream);
+        const paint = new THREE.Color(color);
+        const x = (col - size / 2 + 0.5) * pitch;
+        const y = (size / 2 - row - 0.5) * pitch;
+
+        [0.12, -0.12].forEach((side) => {
+          appendScaledGeometry(GRID_BRICK_GEO, pitch - 0.008, pitch - 0.008, depth,
+            x, y, side, positions, normals, colors, indices, paint);
+          const studZ = side > 0 ? side + depth / 2 + studHeight / 2 : side - depth / 2 - studHeight / 2;
+          appendScaledGeometry(GRID_STUD_GEO, studWidth, studHeight, studWidth,
+            x, y, studZ, positions, normals, colors, indices, paint);
+        });
+      }
+    }
+
+    const logo = new THREE.Mesh(finishLegoGeometry(positions, normals, colors, indices), legoFloorMat());
+    logo.castShadow = true;
+    logo.receiveShadow = true;
+    return logo;
+  }
+
   function tileColor(districtColor, roll) {
     if (roll < 0.28) return new THREE.Color(FLOOR_NEUTRALS[0]);
     if (roll < 0.4) return new THREE.Color(FLOOR_NEUTRALS[1]);
@@ -864,20 +912,21 @@
     group.add(board);
 
     // Studio logo on a round double-sided sign at the back of the plaza.
-    const logoTex = new THREE.TextureLoader().load("../assets/microglow-studio-logo.webp");
-    logoTex.colorSpace = THREE.SRGBColorSpace;
-    logoTex.anisotropy = 8;
     const sign = new THREE.Group();
-    const faceMat = new THREE.MeshStandardMaterial({ map: logoTex, roughness: 0.85 });
-    const face = new THREE.Mesh(new THREE.PlaneGeometry(2.25, 2.25), faceMat);
-    face.position.z = 0.06;
     const frame = mesh(new THREE.BoxGeometry(2.55, 2.55, 0.16), "#a5753f", 0, 0, 0);
-    face.position.z = 0.09;
-    sign.add(frame, face,
+    sign.add(frame,
       box(2.5, 0.08, 0.05, "#f5b432", 0, 1.2, 0.1),
       box(2.5, 0.08, 0.05, "#f5b432", 0, -1.28, 0.1),
       box(0.08, 2.5, 0.05, "#f5b432", -1.2, -1.2, 0.1),
       box(0.08, 2.5, 0.05, "#f5b432", 1.2, -1.2, 0.1));
+    new THREE.TextureLoader().load("../assets/microglow-studio-logo.webp", (logoTexture) => {
+      try {
+        sign.add(buildBrickLogo(logoTexture.image));
+        logoTexture.dispose();
+      } catch (error) {
+        console.warn("積木 LOGO 暫時無法組裝：", error);
+      }
+    });
     sign.position.set(-2.8, top + 2.9, -1.3);
     group.add(sign);
     group.add(box(0.14, 1.4, 0.14, "#a5753f", -2.8, top, -1.3));
