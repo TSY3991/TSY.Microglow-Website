@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>微光島｜TSY 微光創作室</title>
+    <meta name="description" content="TSY 微光創作室的 3D 互動地圖：遊戲、工具、創作、學習、測驗五大分區由六角小島拼成一顆光點，點一格就能走進作品。">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self' https://xduwufkfmzovlwcyodcp.supabase.co wss://xduwufkfmzovlwcyodcp.supabase.co"
+    >
+    <meta property="og:title" content="微光島｜TSY 微光創作室">
+    <meta property="og:description" content="五大分區、六角小島拼成的微光互動地圖。">
+    <meta property="og:image" content="https://tsy3991.github.io/TSY.Microglow-Website/assets/og-image.png">
+    <link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/island/">
+    <link rel="icon" href="../assets/microglow-studio-favicon.png?v=20261027a" type="image/png">
+    <link rel="apple-touch-icon" href="../assets/microglow-studio-apple-touch.png?v=20261027a">
+    <link rel="stylesheet" href="./island.css?v=20261027c">
+  </head>
+  <body>
+    <div class="scene" id="scene" aria-hidden="true"></div>
+    <div class="labels" id="labels" aria-hidden="true"></div>
+
+    <header class="brand">
+      <a class="brand-back" href="../">← 入口網站</a>
+      <div class="brand-title">
+        <img src="../assets/microglow-studio-logo.webp" alt="TSY 微光創作室 Logo" width="76" height="76">
+        <div>
+          <p>TSY.MICROGLOW ISLAND</p>
+          <h1>微光島</h1>
+        </div>
+      </div>
+      <p class="brand-lead">五座分區島，圍著一顆光點。<br>點一棟設施，走進作品。</p>
+    </header>
+
+    <aside class="panel" id="panel" aria-label="微光島資訊面板">
+      <button class="panel-grip" id="panelGrip" type="button" aria-expanded="false" aria-controls="panelBody">
+        <span class="grip-bar" aria-hidden="true"></span>
+        <span class="sr-only">展開或收合面板</span>
+      </button>
+
+      <section class="stats" aria-label="即時資訊">
+        <div class="stat">
+          <span>探索者</span>
+          <strong id="statLevel">Lv.1</strong>
+          <div class="xp-track"><div class="xp-bar" id="statXpBar"></div></div>
+          <small id="statXp">0 XP</small>
+        </div>
+        <div class="stat">
+          <span>線上</span>
+          <strong><i class="live-dot" aria-hidden="true"></i><b id="statOnline">1</b> 人</strong>
+          <small>金圈小人＝線上訪客</small>
+        </div>
+        <div class="stat">
+          <span>已點亮</span>
+          <strong id="statLit">0 / 0</strong>
+          <small>開啟過的作品會亮燈</small>
+        </div>
+      </section>
+
+      <div class="panel-body" id="panelBody">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" id="tabMap" aria-selected="true" aria-controls="viewMap">分區</button>
+          <button type="button" role="tab" id="tabLog" aria-selected="false" aria-controls="viewLog">日誌</button>
+        </div>
+
+        <section class="detail" id="detail" hidden aria-live="polite"></section>
+
+        <div class="view" id="viewMap" role="tabpanel" aria-labelledby="tabMap">
+          <p class="hint" id="loadStatus">載入作品清單中…</p>
+          <div id="districtList"></div>
+        </div>
+        <div class="view" id="viewLog" role="tabpanel" aria-labelledby="tabLog" hidden>
+          <ol class="log" id="logList"></ol>
+          <a class="log-more" href="../#news-title">看全部公告 →</a>
+        </div>
+      </div>
+    </aside>
+
+    <nav class="toolbar" aria-label="場景控制">
+      <button type="button" data-action="home">全景</button>
+      <button type="button" data-action="bird" aria-pressed="false">鳥瞰</button>
+      <button type="button" data-action="labels" aria-pressed="true">名牌</button>
+      <button type="button" data-action="people" aria-pressed="true">小人</button>
+      <button type="button" data-action="pause" aria-pressed="false">暫停</button>
+      <button type="button" data-action="tour">?</button>
+    </nav>
+
+    <div class="tour" id="tour" hidden role="dialog" aria-modal="false" aria-labelledby="tourTitle">
+      <p class="tour-step" id="tourStep">HELLO, MICROGLOW / 01</p>
+      <h2 id="tourTitle"></h2>
+      <p id="tourText"></p>
+      <div class="tour-actions">
+        <button type="button" id="tourSkip">略過</button>
+        <button type="button" id="tourNext" class="primary">下一步 →</button>
+      </div>
+    </div>
+
+    <p class="fallback" id="fallback" hidden>這個瀏覽器無法顯示 3D 場景，請改用右側清單瀏覽作品。</p>
+
+    <script src="../scripts/vendor/three-0.160.0.min.js" defer></script>
+    <script src="../scripts/vendor/supabase-js-2.117.2.umd.js" defer></script>
+    <script src="../scripts/microglow-auth.js?v=20261005b" defer></script>
+    <script src="./island.js?v=20261027l" defer></script>
+  </body>
+</html>

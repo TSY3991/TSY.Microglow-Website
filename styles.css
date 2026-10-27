@@ -221,6 +221,34 @@ p {
   outline-offset: 3px;
 }
 
+.brand-island-link {
+  width: fit-content;
+  margin-top: 4px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.brand-island-link span {
+  color: inherit;
+  font-size: inherit;
+}
+
+.brand-island-link:hover,
+.brand-island-link:focus-visible {
+  background: var(--teal-dark);
+}
+
+.brand-island-link:focus-visible {
+  outline: 3px solid rgba(14, 143, 136, 0.3);
+  outline-offset: 3px;
+}
+
 .nav-groups {
   display: grid;
   align-content: start;

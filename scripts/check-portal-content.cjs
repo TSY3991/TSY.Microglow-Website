@@ -101,7 +101,7 @@ for (let index = 0; index < Math.min(cards.length, tools.length); index += 1) {
 if (/toolGrid\.innerHTML\s*=/.test(script)) fail('JavaScript 仍會以 innerHTML 重建入口卡片');
 if (!html.includes('src="./scripts/portal-records.js?v=20261026a"')) fail('portal-records.js 快取版本未升至 20261026a');
 if ((html.match(/<h1\b/g) || []).length !== 1) fail('首頁 H1 數量不是 1');
-if ((html.match(/class="news-item"/g) || []).length !== 27) fail('新聞筆數不是 27');
+if ((html.match(/class="news-item"/g) || []).length !== 28) fail('新聞筆數不是 28');
 
 const jsonLd = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
 let homeGraph;
@@ -130,8 +130,8 @@ try {
 if (!html.includes('href="./about/"')) fail('首頁沒有 About 頁入口');
 if (!html.includes('class="brand-about-link" href="./about/"')) fail('首頁品牌區沒有直接前往 About 的入口');
 if (!aboutHtml.includes('<link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/about/">')) fail('About 頁 canonical 不正確');
-if (!html.includes('styles.css?v=20261026b') || !aboutHtml.includes('styles.css?v=20261026b')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
+if (!html.includes('styles.css?v=20261027a') || !aboutHtml.includes('styles.css?v=20261027a')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
 
 if (!process.exitCode) {
-  console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、27 則新聞及快取版本通過。`);
+  console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、28 則新聞及快取版本通過。`);
 }
