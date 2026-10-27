@@ -432,7 +432,35 @@
         g.add(box(0.34, 0.3, 0.34, "#62a36e", 0.05, 0.7, 0.02));
       }
     }
+    addPropBrickStuds(g);
     return g;
+  }
+
+  const PROP_STUD_GEO = new THREE.CylinderGeometry(0.055, 0.055, 0.045, 8);
+
+  function addPropBrickStuds(root) {
+    const blocks = [];
+    root.traverse((part) => {
+      if (part.isMesh && part.geometry.type === "BoxGeometry") blocks.push(part);
+    });
+    blocks.forEach((part) => {
+      const { width, height, depth } = part.geometry.parameters;
+      if (width < 0.24 || height < 0.08 || depth < 0.2) return;
+      const across = Math.min(3, Math.max(1, Math.floor(width / 0.42)));
+      const deep = Math.min(3, Math.max(1, Math.floor(depth / 0.42)));
+      for (let ix = 0; ix < across; ix += 1) {
+        for (let iz = 0; iz < deep; iz += 1) {
+          const stud = new THREE.Mesh(PROP_STUD_GEO, part.material);
+          stud.position.set(
+            ((ix + 0.5) / across - 0.5) * width,
+            height / 2 + 0.0225,
+            ((iz + 0.5) / deep - 0.5) * depth
+          );
+          stud.castShadow = true;
+          part.add(stud);
+        }
+      }
+    });
   }
 
   function haloTexture() {
@@ -765,21 +793,30 @@
 
   function personGeometry() {
     if (!PERSON_GEO.body) {
-      PERSON_GEO.body = new THREE.SphereGeometry(0.22, 10, 8);
-      PERSON_GEO.head = new THREE.SphereGeometry(0.2, 12, 10);
-      PERSON_GEO.muzzle = new THREE.SphereGeometry(0.075, 8, 6);
-      PERSON_GEO.eye = new THREE.SphereGeometry(0.025, 8, 6);
-      PERSON_GEO.ear = new THREE.ConeGeometry(0.075, 0.17, 6);
-      PERSON_GEO.limb = new THREE.CapsuleGeometry(0.045, 0.16, 3, 6);
-      PERSON_GEO.accessory = new THREE.SphereGeometry(0.095, 8, 6);
+      PERSON_GEO.body = new THREE.BoxGeometry(0.3, 0.34, 0.2);
+      PERSON_GEO.head = new THREE.BoxGeometry(0.3, 0.3, 0.28);
+      PERSON_GEO.muzzle = new THREE.BoxGeometry(0.085, 0.025, 0.025);
+      PERSON_GEO.eye = new THREE.BoxGeometry(0.04, 0.04, 0.025);
+      PERSON_GEO.ear = new THREE.BoxGeometry(0.08, 0.08, 0.08);
+      PERSON_GEO.limb = new THREE.BoxGeometry(0.085, 0.2, 0.1);
+      PERSON_GEO.hand = new THREE.BoxGeometry(0.1, 0.08, 0.12);
+      PERSON_GEO.shoe = new THREE.BoxGeometry(0.12, 0.08, 0.16);
+      PERSON_GEO.accessory = new THREE.BoxGeometry(0.08, 0.08, 0.08);
       PERSON_GEO.gamePad = new THREE.BoxGeometry(0.24, 0.1, 0.1);
-      PERSON_GEO.toolHat = new THREE.ConeGeometry(0.18, 0.12, 8);
-      PERSON_GEO.artistHat = new THREE.SphereGeometry(0.14, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2);
+      PERSON_GEO.toolHat = new THREE.BoxGeometry(0.22, 0.1, 0.2);
+      PERSON_GEO.artistHat = new THREE.BoxGeometry(0.26, 0.09, 0.24);
       PERSON_GEO.book = new THREE.BoxGeometry(0.22, 0.05, 0.17);
-      PERSON_GEO.antenna = new THREE.CylinderGeometry(0.012, 0.018, 0.28, 6);
+      PERSON_GEO.antenna = new THREE.BoxGeometry(0.025, 0.28, 0.025);
+      PERSON_GEO.stud = new THREE.CylinderGeometry(0.035, 0.035, 0.035, 8);
       PERSON_GEO.ring = new THREE.TorusGeometry(0.22, 0.035, 6, 20);
     }
     return PERSON_GEO;
+  }
+
+  function addPersonStud(part, material, x = 0, z = 0) {
+    const stud = new THREE.Mesh(personGeometry().stud, material);
+    stud.position.set(x, 0.1675, z);
+    part.add(stud);
   }
 
   function personMat(color, extra) {
@@ -818,44 +855,49 @@
     const g = new THREE.Group();
     const role = roleFor(area);
     const body = new THREE.Mesh(geo.body, personMat(role.color));
-    body.position.y = 0.37;
-    body.scale.set(0.9, 1.05, 0.78);
+    body.position.y = 0.39;
+    body.castShadow = true;
+    body.add(new THREE.Mesh(geo.book, personMat(shade(role.color, -0.1))));
+    body.children[0].position.set(0, -0.105, 0.105);
+    body.children[0].scale.set(1.1, 0.55, 0.45);
     const head = new THREE.Mesh(geo.head, personMat("#ffe6c9"));
-    head.position.y = 0.72;
-    head.scale.set(1, 0.94, 0.9);
-    const muzzle = new THREE.Mesh(geo.muzzle, personMat("#fff8ec"));
-    muzzle.position.set(0, 0.68, 0.17);
+    head.position.y = 0.73;
+    const faceMat = personMat("#3d3029");
+    const muzzle = new THREE.Mesh(geo.muzzle, faceMat);
+    muzzle.position.set(0, 0.65, 0.153);
     const eyes = [-0.075, 0.075].map((x) => {
-      const eye = new THREE.Mesh(geo.eye, personMat("#3d3029"));
-      eye.position.set(x, 0.75, 0.188);
+      const eye = new THREE.Mesh(geo.eye, faceMat);
+      eye.position.set(x, 0.77, 0.153);
       return eye;
     });
     const ears = [-0.12, 0.12].map((x) => {
       const ear = new THREE.Mesh(geo.ear, personMat(role.color));
-      ear.position.set(x, 0.88, 0);
-      ear.rotation.z = x < 0 ? 0.22 : -0.22;
-      const inner = new THREE.Mesh(geo.ear, personMat("#f4b8a0"));
-      inner.position.set(x, 0.89, 0.035);
-      inner.scale.set(0.48, 0.58, 0.5);
+      ear.position.set(x * 1.3, 0.76, 0);
+      const inner = new THREE.Mesh(geo.eye, personMat("#f4b8a0"));
+      inner.position.set(x * 1.3, 0.76, 0.044);
       return [ear, inner];
     }).flat();
+    [-0.07, 0.07].forEach((x) => addPersonStud(head, personMat(role.color), x));
     const arms = [-1, 1].map((side) => {
       const pivot = new THREE.Group();
-      pivot.position.set(side * 0.2, 0.48, 0);
+      pivot.position.set(side * 0.19, 0.49, 0);
       const arm = new THREE.Mesh(geo.limb, personMat(role.color));
       arm.position.y = -0.1;
       arm.rotation.z = side * -0.38;
-      pivot.add(arm);
+      const hand = new THREE.Mesh(geo.hand, personMat("#ffe6c9"));
+      hand.position.set(0, -0.22, 0.015);
+      pivot.add(arm, hand);
       g.add(pivot);
       return pivot;
     });
     const legs = [-1, 1].map((side) => {
       const pivot = new THREE.Group();
       pivot.position.set(side * 0.085, 0.18, 0);
-      const leg = new THREE.Mesh(geo.limb, personMat("#8b624d"));
-      leg.scale.set(0.8, 0.82, 0.8);
+      const leg = new THREE.Mesh(geo.limb, personMat("#247b77"));
       leg.position.y = -0.08;
-      pivot.add(leg);
+      const shoe = new THREE.Mesh(geo.shoe, personMat("#8b624d"));
+      shoe.position.set(0, -0.18, 0.025);
+      pivot.add(leg, shoe);
       g.add(pivot);
       return pivot;
     });
@@ -863,25 +905,38 @@
 
     const accessory = new THREE.Group();
     if (role.accessory === "game") {
-      accessory.add(new THREE.Mesh(geo.gamePad, personMat("#443b54")));
-      accessory.position.set(0, 0.39, 0.2);
+      const pad = new THREE.Mesh(geo.gamePad, personMat("#443b54"));
+      pad.add(new THREE.Mesh(geo.accessory, personMat("#f06b5d")), new THREE.Mesh(geo.accessory, personMat("#f5b432")));
+      pad.children[0].position.set(-0.055, 0.035, 0.052);
+      pad.children[1].position.set(0.055, 0.035, 0.052);
+      accessory.add(pad);
+      accessory.position.set(0, 0.39, 0.19);
     } else if (role.accessory === "tool") {
-      accessory.add(new THREE.Mesh(geo.toolHat, personMat("#f5b432")));
-      accessory.position.set(0, 0.95, 0);
-      accessory.rotation.z = Math.PI;
+      accessory.add(new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.06, 0.24), personMat("#f5b432")));
+      const crown = new THREE.Mesh(geo.toolHat, personMat("#f5b432"));
+      crown.position.y = 0.055;
+      accessory.add(crown);
+      accessory.position.set(0, 0.91, 0);
     } else if (role.accessory === "artist") {
-      accessory.add(new THREE.Mesh(geo.artistHat, personMat("#f5b432")));
-      accessory.position.set(0, 0.86, 0);
+      const brim = new THREE.Mesh(geo.artistHat, personMat("#f5b432"));
+      accessory.add(brim, new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.09, 0.17), personMat("#d55e62")));
+      accessory.children[1].position.set(-0.015, 0.07, -0.015);
+      accessory.position.set(0, 0.9, 0);
     } else if (role.accessory === "student") {
-      accessory.add(new THREE.Mesh(geo.book, personMat("#f5b432")));
-      accessory.position.set(0, 0.94, 0);
+      const book = new THREE.Mesh(geo.gamePad, personMat("#f5b432"));
+      book.add(new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.08, 0.08), personMat("#fff4df")));
+      book.children[0].position.x = 0.12;
+      accessory.add(book);
+      accessory.position.set(0.19, 0.4, 0.13);
     } else {
       const antenna = new THREE.Mesh(geo.antenna, personMat("#a5753f"));
-      antenna.position.set(0.12, 0.97, -0.02);
+      antenna.position.set(0.12, 0.16, 0);
+      const radio = new THREE.Mesh(geo.gamePad, personMat("#147d9a"));
+      radio.position.set(-0.015, -0.12, 0.02);
       const tip = new THREE.Mesh(geo.accessory, personMat("#f5b432", glow("#f5b432")));
-      tip.scale.setScalar(0.38);
-      tip.position.set(0.12, 1.12, -0.02);
-      accessory.add(antenna, tip);
+      tip.position.set(0.12, 0.31, 0);
+      accessory.add(radio, antenna, tip);
+      accessory.position.set(0.19, 0.48, 0.11);
     }
     g.add(accessory);
     if (visitor) {
