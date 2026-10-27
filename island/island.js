@@ -438,18 +438,57 @@
 
   const GRID_BRICK_GEO = new THREE.BoxGeometry(1, 1, 1);
   const GRID_STUD_GEO = new THREE.CylinderGeometry(0.5, 0.5, 0.32, 8);
+  const LEGO_MATERIALS = new WeakMap();
+  const LEGO_ACCENTS = ["#c91a09", "#0055bf", "#f2cd37", "#237841"];
+  const FLOOR_NEUTRALS = ["#eee9dc", "#d7d8d2", "#f4f3ed"];
 
-  function appendScaledGeometry(source, sx, sy, sz, cx, cy, cz, positions, normals, indices) {
+  function legoMaterial(source) {
+    if (!LEGO_MATERIALS.has(source)) {
+      const plastic = source.clone();
+      plastic.color.set("#ffffff");
+      plastic.vertexColors = true;
+      plastic.roughness = 0.34;
+      plastic.metalness = 0.02;
+      plastic.needsUpdate = true;
+      LEGO_MATERIALS.set(source, plastic);
+    }
+    return LEGO_MATERIALS.get(source);
+  }
+
+  function legoBrickColor(color, seed) {
+    const marker = ((Math.trunc(seed) % 29) + 29) % 29;
+    if (marker === 0 || marker === 18) return new THREE.Color(LEGO_ACCENTS[0]);
+    if (marker === 7) return new THREE.Color(LEGO_ACCENTS[1]);
+    if (marker === 14) return new THREE.Color(LEGO_ACCENTS[2]);
+    if (marker === 23) return new THREE.Color(LEGO_ACCENTS[3]);
+    const result = color.clone();
+    const hsl = {};
+    result.getHSL(hsl);
+    if (hsl.l > 0.2 && hsl.l < 0.84 && hsl.s > 0.12) {
+      hsl.s = Math.max(0.82, hsl.s);
+      hsl.l = Math.max(0.34, Math.min(0.67, hsl.l * 1.04 + (marker % 3 - 1) * 0.025));
+      result.setHSL(hsl.h, hsl.s, hsl.l);
+    }
+    return result;
+  }
+
+  function appendScaledGeometry(source, sx, sy, sz, cx, cy, cz, positions, normals, colors, indices, paint, rotation = 0) {
     const position = source.attributes.position;
     const normal = source.attributes.normal;
     const first = positions.length / 3;
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
     for (let i = 0; i < position.count; i += 1) {
-      positions.push(position.getX(i) * sx + cx, position.getY(i) * sy + cy, position.getZ(i) * sz + cz);
+      const x = position.getX(i) * sx;
+      const y = position.getY(i) * sy;
+      const z = position.getZ(i) * sz;
+      positions.push(x * cos + z * sin + cx, y + cy, -x * sin + z * cos + cz);
       const nx = normal.getX(i) / sx;
       const ny = normal.getY(i) / sy;
       const nz = normal.getZ(i) / sz;
       const length = Math.hypot(nx, ny, nz) || 1;
-      normals.push(nx / length, ny / length, nz / length);
+      normals.push((nx * cos + nz * sin) / length, ny / length, (-nx * sin + nz * cos) / length);
+      colors.push(paint.r, paint.g, paint.b);
     }
     if (source.index) {
       for (let i = 0; i < source.index.count; i += 1) indices.push(first + source.index.getX(i));
@@ -473,8 +512,11 @@
     const brickZ = Math.max(0.025, cellZ - gap);
     const positions = [];
     const normals = [];
+    const colors = [];
     const indices = [];
-    const addBrick = (sx, sy, sz, x, y, z) => appendScaledGeometry(GRID_BRICK_GEO, sx, sy, sz, x, y, z, positions, normals, indices);
+    const color = part.material.color.clone();
+    const addBrick = (sx, sy, sz, x, y, z, seed) => appendScaledGeometry(GRID_BRICK_GEO, sx, sy, sz, x, y, z, positions, normals, colors, indices, legoBrickColor(color, seed));
+    const addStud = (width, height, x, y, z, seed) => appendScaledGeometry(GRID_STUD_GEO, width, height, width, x, y, z, positions, normals, colors, indices, legoBrickColor(color, seed));
 
     for (let iy = 0; iy < high; iy += 1) {
       const y = -height / 2 + (iy + 0.5) * cellY;
@@ -482,12 +524,12 @@
         const x = -width / 2 + (ix + 0.5) * cellX;
         for (let iz = 0; iz < deep; iz += 1) {
           const z = -depth / 2 + (iz + 0.5) * cellZ;
-          addBrick(brickX, brickY, brickZ, x, y, z);
+          const seed = part.id * 37 + ix * 17 + iy * 11 + iz * 7;
+          addBrick(brickX, brickY, brickZ, x, y, z, seed);
           if (iy === high - 1) {
             const studWidth = Math.min(cellX, cellZ) * 0.58;
             const studHeight = Math.min(cellY * 0.24, 0.045);
-            appendScaledGeometry(GRID_STUD_GEO, studWidth, studHeight, studWidth, x,
-              y + brickY / 2 + studHeight / 2, z, positions, normals, indices);
+            addStud(studWidth, studHeight, x, y + brickY / 2 + studHeight / 2, z, seed);
           }
         }
       }
@@ -496,10 +538,14 @@
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
     geometry.setIndex(indices);
     geometry.computeBoundingBox();
     geometry.computeBoundingSphere();
     part.geometry = geometry;
+    part.material = legoMaterial(part.material);
+    part.castShadow = true;
+    part.receiveShadow = true;
   }
 
   function gridifyBlockMeshes(root, pitch, seam) {
@@ -508,6 +554,125 @@
       if (part.isMesh && part.geometry.type === "BoxGeometry") blocks.push(part);
     });
     blocks.forEach((part) => gridifyBlockMesh(part, pitch, seam));
+  }
+
+  let legoFloorMaterial = null;
+
+  function finishLegoGeometry(positions, normals, colors, indices) {
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+    geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setIndex(indices);
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    return geometry;
+  }
+
+  function legoFloorMat() {
+    if (!legoFloorMaterial) {
+      legoFloorMaterial = new THREE.MeshStandardMaterial({ color: "#ffffff", vertexColors: true, roughness: 0.36, metalness: 0.02 });
+    }
+    return legoFloorMaterial;
+  }
+
+  function tileColor(districtColor, roll) {
+    if (roll < 0.28) return new THREE.Color(FLOOR_NEUTRALS[0]);
+    if (roll < 0.4) return new THREE.Color(FLOOR_NEUTRALS[1]);
+    if (roll < 0.64) return legoBrickColor(new THREE.Color(districtColor), Math.round(roll * 1000));
+    if (roll < 0.76) return new THREE.Color(LEGO_ACCENTS[0]);
+    if (roll < 0.84) return new THREE.Color(LEGO_ACCENTS[1]);
+    if (roll < 0.92) return new THREE.Color(LEGO_ACCENTS[2]);
+    return new THREE.Color(LEGO_ACCENTS[3]);
+  }
+
+  function addStuddedHexFloor(root, radius, floorY, rotation, districtColor, seed) {
+    const tile = 0.64;
+    const thickness = 0.075;
+    const gap = 0.018;
+    const studWidth = 0.2;
+    const studHeight = 0.045;
+    const positions = [];
+    const normals = [];
+    const colors = [];
+    const indices = [];
+    const limit = radius * Math.cos(Math.PI / 6) - tile * 0.72;
+    const edgeNormals = Array.from({ length: 6 }, (_, i) => Math.PI / 6 + i * Math.PI / 3);
+    const across = Math.ceil(radius / tile);
+
+    for (let ix = -across; ix <= across; ix += 1) {
+      const x = ix * tile;
+      for (let iz = -across; iz <= across; iz += 1) {
+        const z = iz * tile;
+        if (edgeNormals.some((a) => x * Math.cos(a) + z * Math.sin(a) > limit)) continue;
+        const color = tileColor(districtColor, hash(seed + ix * 71 + iz * 97));
+        appendScaledGeometry(GRID_BRICK_GEO, tile - gap, thickness, tile - gap, x, thickness / 2, z,
+          positions, normals, colors, indices, color);
+        appendScaledGeometry(GRID_STUD_GEO, studWidth, studHeight, studWidth, x, thickness + studHeight / 2, z,
+          positions, normals, colors, indices, color);
+      }
+    }
+
+    const floor = new THREE.Mesh(finishLegoGeometry(positions, normals, colors, indices), legoFloorMat());
+    floor.position.y = floorY;
+    floor.rotation.y = rotation;
+    floor.castShadow = true;
+    floor.receiveShadow = true;
+    root.add(floor);
+    return floorY + thickness + studHeight;
+  }
+
+  function addHexBrickWall(root, radius, height, rotation, color, seed) {
+    const positions = [];
+    const normals = [];
+    const colors = [];
+    const indices = [];
+    const segmentCount = Math.max(2, Math.ceil(radius / 0.62));
+    const rows = Math.max(1, Math.ceil(height / 0.26));
+    const segment = radius / segmentCount;
+    const brickHeight = height / rows;
+    const depth = 0.22;
+    const gap = 0.014;
+    const studWidth = 0.14;
+    const studHeight = 0.035;
+    const baseColor = new THREE.Color(color);
+
+    for (let side = 0; side < 6; side += 1) {
+      const a0 = rotation + side * Math.PI / 3;
+      const a1 = rotation + (side + 1) * Math.PI / 3;
+      const x0 = radius * Math.cos(a0);
+      const z0 = radius * Math.sin(a0);
+      const x1 = radius * Math.cos(a1);
+      const z1 = radius * Math.sin(a1);
+      const dx = x1 - x0;
+      const dz = z1 - z0;
+      const length = Math.hypot(dx, dz);
+      const outwardX = ((x0 + x1) / 2) / (radius * Math.cos(Math.PI / 6));
+      const outwardZ = ((z0 + z1) / 2) / (radius * Math.cos(Math.PI / 6));
+      const turn = Math.atan2(-dz, dx);
+
+      for (let row = 0; row < rows; row += 1) {
+        const y = (row + 0.5) * brickHeight;
+        for (let i = 0; i < segmentCount; i += 1) {
+          const t = (i + 0.5) / segmentCount;
+          const x = x0 + dx * t - outwardX * depth / 2;
+          const z = z0 + dz * t - outwardZ * depth / 2;
+          const paint = legoBrickColor(baseColor, seed + side * 101 + row * 31 + i * 17);
+          appendScaledGeometry(GRID_BRICK_GEO, segment - gap, brickHeight - gap, depth - gap,
+            x, y, z, positions, normals, colors, indices, paint, turn);
+          if (row === rows - 1) {
+            appendScaledGeometry(GRID_STUD_GEO, studWidth, studHeight, studWidth, x,
+              y + (brickHeight - gap) / 2 + studHeight / 2, z, positions, normals, colors, indices, paint, turn);
+          }
+        }
+      }
+    }
+
+    const wall = new THREE.Mesh(finishLegoGeometry(positions, normals, colors, indices), legoFloorMat());
+    wall.castShadow = true;
+    wall.receiveShadow = true;
+    root.add(wall);
+    return wall;
   }
 
   function haloTexture() {
@@ -632,21 +797,20 @@
     group.position.copy(world);
     // Rotate the hex so a flat side faces the core and the bridge lands square.
     const towardCore = Math.atan2(-dir.x, -dir.z);
-    const base = mesh(new THREE.CylinderGeometry(radius, radius * 1.03, height, 6), shade(district.color, 0.02), 0, height / 2, 0);
-    const cap = mesh(new THREE.CylinderGeometry(radius * 0.95, radius * 0.98, 0.08, 6), "#eef3dc", 0, height + 0.04, 0);
-    base.rotation.y = cap.rotation.y = towardCore - Math.PI / 6;
-    const path = mesh(new THREE.CylinderGeometry(LOT_RING + 0.35, LOT_RING + 0.35, 0.02, 40), "#f4e7cc", 0, height + 0.09, 0);
-    const pathHole = mesh(new THREE.CylinderGeometry(LOT_RING - 0.35, LOT_RING - 0.35, 0.03, 40), "#eef3dc", 0, height + 0.09, 0);
-    group.add(base, cap);
-    if (payloads.length > 1) group.add(path, pathHole);
+    const rotation = towardCore - Math.PI / 6;
+    const base = mesh(new THREE.CylinderGeometry(radius, radius * 1.03, height, 6), shade(district.color, -0.2), 0, height / 2, 0);
+    base.rotation.y = rotation;
+    group.add(base);
+    addHexBrickWall(group, radius, height, rotation, district.color, d * 137 + 5);
+    const floorTop = addStuddedHexFloor(group, radius * 0.95, height + 0.035, rotation, district.color, d * 419 + 23);
 
     const benchSpot = new THREE.Vector3(-radius * 0.68, 0, radius * 0.32);
-    const island = { district, world, radius, height: height + 0.1, isIsland: true, payload: null, lift: 0, lots: [], benches: [benchSpot] };
+    const island = { district, world, radius, height: floorTop, isIsland: true, payload: null, lift: 0, lots: [], benches: [benchSpot] };
     const spots = lotSpots(payloads.length);
     island.lots = spots;
-    scatter(group, d * 97 + 13, height + 0.1, radius, payloads.length > 1 ? 7 : 4, spots);
+    scatter(group, d * 97 + 13, floorTop, radius, payloads.length > 1 ? 7 : 4, spots);
     const bench = buildProp("bench", "#36b879");
-    bench.position.set(benchSpot.x, height + 0.1, benchSpot.z);
+    bench.position.set(benchSpot.x, floorTop, benchSpot.z);
     bench.rotation.y = Math.atan2(-benchSpot.x, -benchSpot.z);
     group.add(bench);
 
@@ -674,11 +838,12 @@
   function buildCore(news) {
     const group = new THREE.Group();
     const height = 0.7;
-    const top = height + 0.1;
-    group.add(
-      mesh(new THREE.CylinderGeometry(CORE_RADIUS, CORE_RADIUS * 1.03, height, 6), "#e9d6ac", 0, height / 2, 0),
-      mesh(new THREE.CylinderGeometry(CORE_RADIUS * 0.94, CORE_RADIUS * 0.97, 0.08, 6), "#fff8e8", 0, height + 0.04, 0)
-    );
+    const rotation = -Math.PI / 6;
+    const base = mesh(new THREE.CylinderGeometry(CORE_RADIUS, CORE_RADIUS * 1.03, height, 6), "#a98a5a", 0, height / 2, 0);
+    base.rotation.y = rotation;
+    group.add(base);
+    addHexBrickWall(group, CORE_RADIUS, height, rotation, "#e9b94d", 839);
+    const top = addStuddedHexFloor(group, CORE_RADIUS * 0.94, height + 0.035, rotation, "#f5b432", 1207);
     const orb = mesh(new THREE.BoxGeometry(1.35, 1.35, 1.35), "#fff2ce", 0, top + 1.7, 0, { emissive: "#f5b432", emissiveIntensity: 1.2 });
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: HALO, transparent: true, depthWrite: false }));
     halo.scale.setScalar(6);
@@ -749,7 +914,7 @@
       g.add(box(0.05, 0.05, len, color, x, 0.42, 0));
       for (let z = -len / 2 + 0.1; z <= len / 2; z += 0.8) g.add(box(0.06, 0.42, 0.06, "#a5753f", x, 0.02, z));
     });
-    g.position.set((from.x + to.x) / 2, 0.45, (from.z + to.z) / 2);
+    g.position.set((from.x + to.x) / 2, 0.56, (from.z + to.z) / 2);
     g.rotation.y = Math.atan2(dir.x, dir.z);
     gridifyBlockMeshes(g, 0.26, 0.012);
     scene.add(g);
@@ -761,11 +926,12 @@
   }
 
   function addWorld() {
-    scene.add(new THREE.HemisphereLight(0xfff6e5, 0x9ec7cf, 1.5));
-    const sun = new THREE.DirectionalLight(0xfff0d6, 2.4);
+    scene.add(new THREE.HemisphereLight(0xfff3da, 0x718b87, 0.95));
+    const sun = new THREE.DirectionalLight(0xffe8bd, 2.8);
     sun.position.set(-22, 40, 18);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.radius = 3;
     Object.assign(sun.shadow.camera, { left: -34, right: 34, top: 34, bottom: -34, near: 1, far: 110 });
     sun.shadow.bias = -0.0005;
     scene.add(sun);
@@ -1013,7 +1179,7 @@
   function planRoute(p) {
     const roll = Math.random();
     const here = p.area;
-    const BRIDGE_Y = 0.62;
+    const BRIDGE_Y = 0.73;
     if (Math.random() < 0.12 && here.benches?.length) {
       const seat = here.benches[Math.floor(Math.random() * here.benches.length)];
       p.path = [{ v: new THREE.Vector3(here.world.x + seat.x, 0, here.world.z + seat.z), y: here.height, area: here, action: "sit" }];
@@ -1705,7 +1871,7 @@
 
     const mobile = window.matchMedia("(max-width: 820px)").matches;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.75));
-    renderer.shadowMap.enabled = !mobile;
+    renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
