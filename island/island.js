@@ -432,35 +432,82 @@
         g.add(box(0.34, 0.3, 0.34, "#62a36e", 0.05, 0.7, 0.02));
       }
     }
-    addPropBrickStuds(g);
+    gridifyBlockMeshes(g, 0.26, 0.012);
     return g;
   }
 
-  const PROP_STUD_GEO = new THREE.CylinderGeometry(0.055, 0.055, 0.045, 8);
+  const GRID_BRICK_GEO = new THREE.BoxGeometry(1, 1, 1);
+  const GRID_STUD_GEO = new THREE.CylinderGeometry(0.5, 0.5, 0.32, 8);
 
-  function addPropBrickStuds(root) {
+  function appendScaledGeometry(source, sx, sy, sz, cx, cy, cz, positions, normals, indices) {
+    const position = source.attributes.position;
+    const normal = source.attributes.normal;
+    const first = positions.length / 3;
+    for (let i = 0; i < position.count; i += 1) {
+      positions.push(position.getX(i) * sx + cx, position.getY(i) * sy + cy, position.getZ(i) * sz + cz);
+      const nx = normal.getX(i) / sx;
+      const ny = normal.getY(i) / sy;
+      const nz = normal.getZ(i) / sz;
+      const length = Math.hypot(nx, ny, nz) || 1;
+      normals.push(nx / length, ny / length, nz / length);
+    }
+    if (source.index) {
+      for (let i = 0; i < source.index.count; i += 1) indices.push(first + source.index.getX(i));
+    } else {
+      for (let i = 0; i < position.count; i += 1) indices.push(first + i);
+    }
+  }
+
+  function gridifyBlockMesh(part, pitch, seam) {
+    const { width, height, depth } = part.geometry.parameters;
+    if (Math.min(width, height, depth) < 0.055) return;
+    const across = Math.max(1, Math.ceil(width / pitch));
+    const high = Math.max(1, Math.ceil(height / pitch));
+    const deep = Math.max(1, Math.ceil(depth / pitch));
+    const cellX = width / across;
+    const cellY = height / high;
+    const cellZ = depth / deep;
+    const gap = Math.min(seam, cellX * 0.06, cellY * 0.06, cellZ * 0.06);
+    const brickX = Math.max(0.025, cellX - gap);
+    const brickY = Math.max(0.025, cellY - gap);
+    const brickZ = Math.max(0.025, cellZ - gap);
+    const positions = [];
+    const normals = [];
+    const indices = [];
+    const addBrick = (sx, sy, sz, x, y, z) => appendScaledGeometry(GRID_BRICK_GEO, sx, sy, sz, x, y, z, positions, normals, indices);
+
+    for (let iy = 0; iy < high; iy += 1) {
+      const y = -height / 2 + (iy + 0.5) * cellY;
+      for (let ix = 0; ix < across; ix += 1) {
+        const x = -width / 2 + (ix + 0.5) * cellX;
+        for (let iz = 0; iz < deep; iz += 1) {
+          const z = -depth / 2 + (iz + 0.5) * cellZ;
+          addBrick(brickX, brickY, brickZ, x, y, z);
+          if (iy === high - 1) {
+            const studWidth = Math.min(cellX, cellZ) * 0.58;
+            const studHeight = Math.min(cellY * 0.24, 0.045);
+            appendScaledGeometry(GRID_STUD_GEO, studWidth, studHeight, studWidth, x,
+              y + brickY / 2 + studHeight / 2, z, positions, normals, indices);
+          }
+        }
+      }
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+    geometry.setIndex(indices);
+    geometry.computeBoundingBox();
+    geometry.computeBoundingSphere();
+    part.geometry = geometry;
+  }
+
+  function gridifyBlockMeshes(root, pitch, seam) {
     const blocks = [];
     root.traverse((part) => {
       if (part.isMesh && part.geometry.type === "BoxGeometry") blocks.push(part);
     });
-    blocks.forEach((part) => {
-      const { width, height, depth } = part.geometry.parameters;
-      if (width < 0.24 || height < 0.08 || depth < 0.2) return;
-      const across = Math.min(3, Math.max(1, Math.floor(width / 0.42)));
-      const deep = Math.min(3, Math.max(1, Math.floor(depth / 0.42)));
-      for (let ix = 0; ix < across; ix += 1) {
-        for (let iz = 0; iz < deep; iz += 1) {
-          const stud = new THREE.Mesh(PROP_STUD_GEO, part.material);
-          stud.position.set(
-            ((ix + 0.5) / across - 0.5) * width,
-            height / 2 + 0.0225,
-            ((iz + 0.5) / deep - 0.5) * depth
-          );
-          stud.castShadow = true;
-          part.add(stud);
-        }
-      }
-    });
+    blocks.forEach((part) => gridifyBlockMesh(part, pitch, seam));
   }
 
   function haloTexture() {
@@ -484,6 +531,7 @@
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: HALO, transparent: true, depthWrite: false }));
     halo.scale.setScalar(0.9);
     b.add(star, halo);
+    gridifyBlockMeshes(b, 0.1, 0.008);
     b.position.set(0, cell.height + cell.propTop + 0.35, 0);
     cell.group.add(b);
     cell.beacon = b;
@@ -559,6 +607,7 @@
     prop.rotation.y = hash(index + district.color.length) * 0.8 - 0.4;
     prop.scale.setScalar(1.7);
     group.add(prop);
+    gridifyBlockMeshes(group, 0.26, 0.012);
 
     const cell = { district, payload, group, world, height: top + 0.1, lift: 0, island };
     cell.propTop = new THREE.Box3().setFromObject(prop).max.y - cell.height;
@@ -679,6 +728,7 @@
       group.add(item);
       if (kind === "bench") benches.push(new THREE.Vector3(Math.cos(a) * 2.6, 0, Math.sin(a) * 2.6));
     }
+    gridifyBlockMeshes(group, 0.26, 0.012);
 
     coreCell = { district: null, isCore: true, payload: { type: "core", news }, group, world: new THREE.Vector3(), height: top, lift: 0, propTop: 2.7, radius: CORE_RADIUS * 0.8, lots: [new THREE.Vector3(), new THREE.Vector3(0, 0, 2.3)], benches };
     group.traverse((obj) => { if (obj.isMesh) obj.userData.cell = coreCell; });
@@ -701,6 +751,7 @@
     });
     g.position.set((from.x + to.x) / 2, 0.45, (from.z + to.z) / 2);
     g.rotation.y = Math.atan2(dir.x, dir.z);
+    gridifyBlockMeshes(g, 0.26, 0.012);
     scene.add(g);
   }
 
@@ -751,6 +802,7 @@
         blades.position.set(0, 2.4, 0.08);
         mill.add(blades);
         mill.position.set(size * 0.2, 0.43, 0);
+        gridifyBlockMeshes(mill, 0.26, 0.012);
         islet.add(mill);
         animators.push((t) => { blades.rotation.z = t * 1.5 + i; });
       }
@@ -763,6 +815,7 @@
       const sailColor = ["#ef735f", "#0e8f88", "#d55e62", "#62a36e"][i];
       boat.add(box(0.12, 0.9, 0.56, sailColor, 0, 0.78, 0.15));
       boat.add(box(0.12, 0.48, 0.38, shade(sailColor, 0.18), 0, 1.08, 0.15));
+      gridifyBlockMeshes(boat, 0.26, 0.012);
       scene.add(boat);
       const r = 24 + i * 1.6;
       const speed = 0.04 + hash(i + 7) * 0.03;
@@ -946,6 +999,7 @@
       ring.scale.setScalar(1.22);
       g.add(ring);
     }
+    gridifyBlockMeshes(g, 0.12, 0.008);
     g.visible = peopleVisible;
     scene.add(g);
     const start = randomSpot(area);
