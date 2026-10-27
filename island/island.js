@@ -91,7 +91,9 @@
     const level = Math.min(10, Math.floor(xp / 100) + 1);
     $("#statLevel").textContent = `Lv.${level}`;
     $("#statXp").textContent = `${xp} XP`;
-    $("#statXpBar").style.width = `${level >= 10 ? 100 : xp % 100}%`;
+    const progress = level >= 10 ? 100 : xp % 100;
+    $("#statXpBar").style.width = `${progress}%`;
+    $("#statXpTrack").setAttribute("aria-valuenow", String(progress));
   }
 
   /* ---------- content: parsed from the portal's own static HTML ---------- */
@@ -105,7 +107,7 @@
       const link = card.querySelector("[data-tool-launch]");
       return {
         id: link?.dataset.toolLaunch || "",
-        url: link?.getAttribute("href") || "",
+        url: link ? new URL(link.getAttribute("href"), response.url).href : "",
         cta: link?.querySelector("span")?.textContent.trim() || "前往",
         category: card.dataset.category || "",
         kicker: card.querySelector(".tool-copy > p")?.textContent.trim() || "",
@@ -120,7 +122,7 @@
       return {
         date: item.querySelector("time")?.textContent.trim() || "",
         title: item.querySelector("strong")?.textContent.trim() || "",
-        url: link?.getAttribute("href") || "",
+        url: link ? new URL(link.getAttribute("href"), response.url).href : "",
         text: item.querySelector("p")?.textContent.trim() || ""
       };
     });
@@ -512,10 +514,15 @@
     group.add(base, cap);
     if (payloads.length > 1) group.add(path, pathHole);
 
-    const island = { district, world, radius, height: height + 0.1, isIsland: true, payload: null, lift: 0, lots: [] };
+    const benchSpot = new THREE.Vector3(-radius * 0.68, 0, radius * 0.32);
+    const island = { district, world, radius, height: height + 0.1, isIsland: true, payload: null, lift: 0, lots: [], benches: [benchSpot] };
     const spots = lotSpots(payloads.length);
     island.lots = spots;
     scatter(group, d * 97 + 13, height + 0.1, radius, payloads.length > 1 ? 12 : 8, spots);
+    const bench = buildProp("bench", "#36b879");
+    bench.position.set(benchSpot.x, height + 0.1, benchSpot.z);
+    bench.rotation.y = Math.atan2(-benchSpot.x, -benchSpot.z);
+    group.add(bench);
 
     // Shoreline pier toward the core.
     const pierEnd = dir.clone().multiplyScalar(-radius * 0.87);
@@ -581,15 +588,18 @@
     group.add(cyl(0.08, 0.08, 1.4, "#a5753f", -2.8, top, -1.3, 8));
     // Always face the logo straight at the viewer.
     animators.push(() => { sign.lookAt(camera.position); });
+    const benches = [];
     for (let i = 0; i < 5; i += 1) {
       const a = (i / 5) * Math.PI * 2 - Math.PI / 2 + Math.PI / 5;
-      const item = buildProp(i % 2 ? "bench" : "lamp", "#36b879");
+      const kind = i % 2 ? "bench" : "lamp";
+      const item = buildProp(kind, "#36b879");
       item.position.set(Math.cos(a) * 2.6, top, Math.sin(a) * 2.6);
       item.rotation.y = -a + Math.PI / 2;
       group.add(item);
+      if (kind === "bench") benches.push(new THREE.Vector3(Math.cos(a) * 2.6, 0, Math.sin(a) * 2.6));
     }
 
-    coreCell = { district: null, isCore: true, payload: { type: "core", news }, group, world: new THREE.Vector3(), height: top, lift: 0, propTop: 2.7, radius: CORE_RADIUS * 0.8, lots: [new THREE.Vector3(), new THREE.Vector3(0, 0, 2.3)] };
+    coreCell = { district: null, isCore: true, payload: { type: "core", news }, group, world: new THREE.Vector3(), height: top, lift: 0, propTop: 2.7, radius: CORE_RADIUS * 0.8, lots: [new THREE.Vector3(), new THREE.Vector3(0, 0, 2.3)], benches };
     group.traverse((obj) => { if (obj.isMesh) obj.userData.cell = coreCell; });
     pickables.push(group);
     scene.add(group);
@@ -669,7 +679,7 @@
     for (let i = 0; i < 4; i += 1) {
       const boat = new THREE.Group();
       boat.add(box(0.5, 0.22, 1.2, "#fffdf8", 0, 0, 0), box(0.04, 1.1, 0.04, "#a5753f", 0, 0.22, 0));
-      const sail = mesh(new THREE.ConeGeometry(0.42, 0.9, 3), PERSON_COLORS[i], 0, 0.8, 0.15);
+      const sail = mesh(new THREE.ConeGeometry(0.42, 0.9, 3), ["#ef735f", "#0e8f88", "#d55e62", "#62a36e"][i], 0, 0.8, 0.15);
       sail.scale.set(0.15, 1, 1);
       boat.add(sail);
       scene.add(boat);
@@ -684,21 +694,51 @@
     }
   }
 
-  /* ---------- people: residents stroll, online visitors wear a gold ring ---------- */
+  /* ---------- original toy residents: five roles, shared geometry and materials ---------- */
 
   const people = [];
   let peopleVisible = true;
-  const PERSON_COLORS = ["#f06b5d", "#4fc1e3", "#f5b432", "#8f52da", "#36b879", "#2e73df"];
+  const ROLE_BY_DISTRICT = {
+    game: { color: "#ef735f", accessory: "game" },
+    utility: { color: "#0e8f88", accessory: "tool" },
+    creative: { color: "#d55e62", accessory: "artist" },
+    learning: { color: "#62a36e", accessory: "student" },
+    quiz: { color: "#398cbd", accessory: "radio" }
+  };
   const PERSON_GEO = {};
+  const PERSON_MATS = new Map();
   let visitorCount = 0;
+  let visitorVisualLimit = 12;
 
   function personGeometry() {
     if (!PERSON_GEO.body) {
-      PERSON_GEO.body = new THREE.CylinderGeometry(0.1, 0.14, 0.32, 8);
-      PERSON_GEO.head = new THREE.SphereGeometry(0.12, 10, 8);
+      PERSON_GEO.body = new THREE.SphereGeometry(0.22, 10, 8);
+      PERSON_GEO.head = new THREE.SphereGeometry(0.2, 12, 10);
+      PERSON_GEO.muzzle = new THREE.SphereGeometry(0.075, 8, 6);
+      PERSON_GEO.eye = new THREE.SphereGeometry(0.025, 8, 6);
+      PERSON_GEO.ear = new THREE.ConeGeometry(0.075, 0.17, 6);
+      PERSON_GEO.limb = new THREE.CapsuleGeometry(0.045, 0.16, 3, 6);
+      PERSON_GEO.accessory = new THREE.SphereGeometry(0.095, 8, 6);
+      PERSON_GEO.gamePad = new THREE.BoxGeometry(0.24, 0.1, 0.1);
+      PERSON_GEO.toolHat = new THREE.ConeGeometry(0.18, 0.12, 8);
+      PERSON_GEO.artistHat = new THREE.SphereGeometry(0.14, 8, 5, 0, Math.PI * 2, 0, Math.PI / 2);
+      PERSON_GEO.book = new THREE.BoxGeometry(0.22, 0.05, 0.17);
+      PERSON_GEO.antenna = new THREE.CylinderGeometry(0.012, 0.018, 0.28, 6);
       PERSON_GEO.ring = new THREE.TorusGeometry(0.22, 0.035, 6, 20);
     }
     return PERSON_GEO;
+  }
+
+  function personMat(color, extra) {
+    const key = `${color}|${Boolean(extra)}`;
+    if (!PERSON_MATS.has(key)) PERSON_MATS.set(key, mat(color, extra || {}));
+    return PERSON_MATS.get(key);
+  }
+
+  function roleFor(area) {
+    if (area?.district?.key && ROLE_BY_DISTRICT[area.district.key]) return ROLE_BY_DISTRICT[area.district.key];
+    const roles = Object.values(ROLE_BY_DISTRICT);
+    return roles[Math.floor(Math.random() * roles.length)];
   }
 
   function walkAreas() {
@@ -706,14 +746,14 @@
   }
 
   function randomSpot(area) {
-    // Stay on the island, off the facility lots.
     const limit = (area.isCore ? CORE_RADIUS : area.radius) * 0.78;
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 12; i += 1) {
       const a = Math.random() * Math.PI * 2;
       const r = Math.sqrt(Math.random()) * limit;
       const x = Math.cos(a) * r;
       const z = Math.sin(a) * r;
-      if (!area.lots.some((p) => Math.hypot(x - p.x, z - p.z) < 1.5)) {
+      if (!area.lots.some((p) => Math.hypot(x - p.x, z - p.z) < 1.5)
+        && !(area.benches || []).some((p) => Math.hypot(x - p.x, z - p.z) < 0.9)) {
         return new THREE.Vector3(area.world.x + x, 0, area.world.z + z);
       }
     }
@@ -723,35 +763,103 @@
   function makePerson(area, visitor) {
     const geo = personGeometry();
     const g = new THREE.Group();
-    const color = PERSON_COLORS[Math.floor(Math.random() * PERSON_COLORS.length)];
-    const body = new THREE.Mesh(geo.body, mat(color));
-    body.position.y = 0.16;
-    const head = new THREE.Mesh(geo.head, mat("#ffe1c4"));
-    head.position.y = 0.44;
-    body.castShadow = head.castShadow = true;
-    g.add(body, head);
+    const role = roleFor(area);
+    const body = new THREE.Mesh(geo.body, personMat(role.color));
+    body.position.y = 0.37;
+    body.scale.set(0.9, 1.05, 0.78);
+    const head = new THREE.Mesh(geo.head, personMat("#ffe6c9"));
+    head.position.y = 0.72;
+    head.scale.set(1, 0.94, 0.9);
+    const muzzle = new THREE.Mesh(geo.muzzle, personMat("#fff8ec"));
+    muzzle.position.set(0, 0.68, 0.17);
+    const eyes = [-0.075, 0.075].map((x) => {
+      const eye = new THREE.Mesh(geo.eye, personMat("#3d3029"));
+      eye.position.set(x, 0.75, 0.188);
+      return eye;
+    });
+    const ears = [-0.12, 0.12].map((x) => {
+      const ear = new THREE.Mesh(geo.ear, personMat(role.color));
+      ear.position.set(x, 0.88, 0);
+      ear.rotation.z = x < 0 ? 0.22 : -0.22;
+      const inner = new THREE.Mesh(geo.ear, personMat("#f4b8a0"));
+      inner.position.set(x, 0.89, 0.035);
+      inner.scale.set(0.48, 0.58, 0.5);
+      return [ear, inner];
+    }).flat();
+    const arms = [-1, 1].map((side) => {
+      const pivot = new THREE.Group();
+      pivot.position.set(side * 0.2, 0.48, 0);
+      const arm = new THREE.Mesh(geo.limb, personMat(role.color));
+      arm.position.y = -0.1;
+      arm.rotation.z = side * -0.38;
+      pivot.add(arm);
+      g.add(pivot);
+      return pivot;
+    });
+    const legs = [-1, 1].map((side) => {
+      const pivot = new THREE.Group();
+      pivot.position.set(side * 0.085, 0.18, 0);
+      const leg = new THREE.Mesh(geo.limb, personMat("#8b624d"));
+      leg.scale.set(0.8, 0.82, 0.8);
+      leg.position.y = -0.08;
+      pivot.add(leg);
+      g.add(pivot);
+      return pivot;
+    });
+    [body, head, muzzle, ...eyes, ...ears].forEach((part) => { part.castShadow = true; g.add(part); });
+
+    const accessory = new THREE.Group();
+    if (role.accessory === "game") {
+      accessory.add(new THREE.Mesh(geo.gamePad, personMat("#443b54")));
+      accessory.position.set(0, 0.39, 0.2);
+    } else if (role.accessory === "tool") {
+      accessory.add(new THREE.Mesh(geo.toolHat, personMat("#f5b432")));
+      accessory.position.set(0, 0.95, 0);
+      accessory.rotation.z = Math.PI;
+    } else if (role.accessory === "artist") {
+      accessory.add(new THREE.Mesh(geo.artistHat, personMat("#f5b432")));
+      accessory.position.set(0, 0.86, 0);
+    } else if (role.accessory === "student") {
+      accessory.add(new THREE.Mesh(geo.book, personMat("#f5b432")));
+      accessory.position.set(0, 0.94, 0);
+    } else {
+      const antenna = new THREE.Mesh(geo.antenna, personMat("#a5753f"));
+      antenna.position.set(0.12, 0.97, -0.02);
+      const tip = new THREE.Mesh(geo.accessory, personMat("#f5b432", glow("#f5b432")));
+      tip.scale.setScalar(0.38);
+      tip.position.set(0.12, 1.12, -0.02);
+      accessory.add(antenna, tip);
+    }
+    g.add(accessory);
     if (visitor) {
-      const ring = new THREE.Mesh(geo.ring, mat("#f5b432", glow("#f5b432")));
+      const ring = new THREE.Mesh(geo.ring, personMat("#f5b432", glow("#f5b432")));
       ring.rotation.x = Math.PI / 2;
-      ring.position.y = 0.03;
+      ring.position.y = 0.04;
+      ring.scale.setScalar(1.22);
       g.add(ring);
-      g.scale.setScalar(1.3);
     }
     g.visible = peopleVisible;
     scene.add(g);
     const start = randomSpot(area);
-    const person = { g, area, visitor, path: [], pos: start, wait: Math.random() * 3, speed: 0.8 + Math.random() * 0.5 };
+    const person = { g, area, visitor, role, path: [], pos: start, wait: Math.random() * 3, speed: 0.65 + Math.random() * 0.35,
+      arms, legs, eyes, action: "idle", actionTime: 0, phase: Math.random() * Math.PI * 2 };
     g.position.set(start.x, area.height, start.z);
     people.push(person);
     return person;
   }
 
-  // Waypoints carry their own height so people step up onto bridges and back down.
   function planRoute(p) {
     const roll = Math.random();
     const here = p.area;
     const BRIDGE_Y = 0.62;
-    if (here.isCore && roll < 0.3) {
+    if (Math.random() < 0.12 && here.benches?.length) {
+      const seat = here.benches[Math.floor(Math.random() * here.benches.length)];
+      p.path = [{ v: new THREE.Vector3(here.world.x + seat.x, 0, here.world.z + seat.z), y: here.height, area: here, action: "sit" }];
+    } else if (Math.random() < 0.18 && !here.isCore && here.district.cells.length) {
+      const target = here.district.cells[Math.floor(Math.random() * here.district.cells.length)];
+      const away = target.world.clone().sub(here.world).setY(0).normalize().multiplyScalar(1.85);
+      p.path = [{ v: target.world.clone().add(away), y: here.height, area: here, action: "inspect" }];
+    } else if (here.isCore && roll < 0.3) {
       const d = DISTRICTS[Math.floor(Math.random() * DISTRICTS.length)];
       const [a, b] = d.bridge;
       p.path = [{ v: a, y: BRIDGE_Y }, { v: b, y: BRIDGE_Y }, { v: randomSpot(d.island), y: d.island.height, area: d.island }];
@@ -759,19 +867,26 @@
       const [a, b] = here.district.bridge;
       p.path = [{ v: b, y: BRIDGE_Y }, { v: a, y: BRIDGE_Y }, { v: randomSpot(coreCell), y: coreCell.height, area: coreCell }];
     } else {
-      p.path = [{ v: randomSpot(here), y: here.height, area: here }];
+      const meet = people.find((other) => other !== p && other.area === here && !other.visitor && p.pos.distanceTo(other.pos) < 7);
+      if (meet && Math.random() < 0.45) {
+        const direction = p.pos.clone().sub(meet.pos).setY(0).normalize().multiplyScalar(0.72);
+        p.path = [{ v: meet.pos.clone().add(direction), y: here.height, area: here, action: "wave" }];
+      } else p.path = [{ v: randomSpot(here), y: here.height, area: here }];
     }
+    p.action = "walk";
   }
 
   function populate() {
+    const mobile = window.matchMedia("(max-width: 820px)").matches;
     walkAreas().forEach((area) => {
-      const n = area.isCore ? 8 : area.lots.length > 1 ? 16 : 8;
+      const n = mobile ? (area.isCore ? 3 : 2) : (area.isCore ? 6 : area.lots.length > 1 ? 5 : 3);
       for (let i = 0; i < n; i += 1) makePerson(area, false);
     });
+    visitorVisualLimit = mobile ? 5 : 12;
   }
 
   function setPeopleCount(count) {
-    const target = Math.max(1, Math.min(16, count));
+    const target = Math.min(visitorVisualLimit, Math.max(1, count));
     const pool = walkAreas();
     while (visitorCount < target) {
       makePerson(pool[Math.floor(Math.random() * pool.length)], true);
@@ -785,14 +900,37 @@
     }
   }
 
+  function posePerson(p, time) {
+    const walking = p.action === "walk";
+    const swing = walking ? Math.sin(time * 7 + p.phase) * 0.55 : 0;
+    p.legs[0].rotation.x = swing;
+    p.legs[1].rotation.x = -swing;
+    p.arms[0].rotation.x = -swing * 0.75;
+    p.arms[1].rotation.x = swing * 0.75;
+    p.arms[0].rotation.z = p.action === "wave" ? -1.8 + Math.sin(time * 10) * 0.25 : 0;
+    const blinking = Math.sin(time * 0.8 + p.phase * 2) > 0.997;
+    p.eyes.forEach((eye) => { eye.scale.y = blinking ? 0.15 : 1; });
+    if (!p.path.length) p.g.position.y = p.area.height + (walking ? Math.abs(Math.sin(time * 7 + p.phase)) * 0.035 : 0);
+    else if (walking) p.g.position.y += Math.abs(Math.sin(time * 7 + p.phase)) * 0.002;
+    if (p.action === "sit") {
+      p.g.position.y -= 0.1;
+      p.legs[0].rotation.x = p.legs[1].rotation.x = -0.65;
+    }
+    p.g.rotation.x = p.action === "inspect" ? -0.08 : 0;
+  }
+
   function updatePeople(dt) {
+    const time = performance.now() / 1000;
     people.forEach((p) => {
       if (!p.path.length) {
         p.wait -= dt;
+        p.actionTime = Math.max(0, p.actionTime - dt);
+        if (p.actionTime === 0 && ["sit", "wave", "inspect"].includes(p.action)) p.action = "idle";
         if (p.wait <= 0) {
           planRoute(p);
           p.wait = 0.5 + Math.random() * 3;
         }
+        posePerson(p, time);
         return;
       }
       const step = p.path[0];
@@ -805,6 +943,19 @@
         p.pos.set(target.x, 0, target.z);
         if (step.area) p.area = step.area;
         p.path.shift();
+        if (step.action) {
+          p.action = step.action;
+          p.actionTime = step.action === "sit" ? 4 + Math.random() * 4 : 1.4 + Math.random() * 1.3;
+          p.wait = p.actionTime;
+          if (step.action === "wave") {
+            const friend = people.find((other) => other !== p && other.area === p.area && other.pos.distanceTo(p.pos) < 1.3);
+            if (friend) {
+              friend.action = "wave";
+              friend.actionTime = p.actionTime;
+              friend.wait = p.actionTime;
+            }
+          }
+        }
       } else {
         p.pos.x += (dx / dist) * move;
         p.pos.z += (dz / dist) * move;
@@ -813,7 +964,7 @@
       p.g.position.x = p.pos.x;
       p.g.position.z = p.pos.z;
       p.g.position.y += (step.y - p.g.position.y) * Math.min(1, dt * 8);
-      p.g.children[0].position.y = 0.16 + Math.abs(Math.sin(performance.now() / 120 + p.g.id)) * 0.04;
+      posePerson(p, time);
     });
   }
 
@@ -981,6 +1132,7 @@
     list.replaceChildren();
     DISTRICTS.forEach((district, i) => {
       const section = el("section", "district");
+      section.dataset.district = district.key;
       section.style.setProperty("--district", district.color);
       const head = el("button", "district-head");
       head.type = "button";
@@ -1011,6 +1163,83 @@
       });
       section.append(ul);
       list.append(section);
+    });
+    applyListFilters();
+  }
+
+  function applyListFilters() {
+    const query = $("#entrySearch").value.trim().toLocaleLowerCase();
+    const category = $("#districtFilter").value;
+    let matched = 0;
+    document.querySelectorAll(".district").forEach((section) => {
+      const district = DISTRICTS.find((item) => item.key === section.dataset.district);
+      const categoryMatch = category === "all" || category === district.key;
+      let sectionMatches = 0;
+      section.querySelectorAll(".entries li").forEach((item, index) => {
+        const entry = district.cells?.[index]?.payload?.entry;
+        const haystack = entry ? `${entry.title} ${entry.kicker} ${entry.text} ${entry.tags.join(" ")}`.toLocaleLowerCase() : item.textContent.toLocaleLowerCase();
+        const match = categoryMatch && (!query || haystack.includes(query));
+        item.hidden = !match;
+        if (match) sectionMatches += 1;
+      });
+      section.hidden = !categoryMatch || sectionMatches === 0;
+      matched += sectionMatches;
+    });
+    $("#resultCount").textContent = `${matched} 項作品`;
+    $("#emptyState").hidden = matched > 0;
+  }
+
+  function renderFallbackList(entries) {
+    const list = $("#districtList");
+    list.replaceChildren();
+    DISTRICTS.forEach((district, index) => {
+      const items = entries.filter((entry) => entry.category === district.key);
+      const section = el("section", "district");
+      section.dataset.district = district.key;
+      section.style.setProperty("--district", district.color);
+      const head = el("div", "district-head");
+      head.append(el("span", "district-num", String(index + 1).padStart(2, "0")), el("div", "", district.name), el("em", "", String(items.length)));
+      section.append(head);
+      const ul = el("ul", "entries");
+      items.forEach((entry) => {
+        const li = el("li");
+        const link = el("a", "fallback-entry", entry.title);
+        link.href = entry.url;
+        li.append(link);
+        ul.append(li);
+      });
+      section.append(ul);
+      list.append(section);
+    });
+    $("#loadStatus").hidden = entries.length > 0 && !contentLoadFailed;
+    $("#loadStatus").textContent = contentLoadFailed
+      ? "暫時讀不到入口網站作品資料，請稍後重試或回入口網站瀏覽。"
+      : entries.length ? "3D 場景無法啟動，以下清單仍可開啟作品。" : "首頁目前沒有可顯示的作品。";
+    applyListFilters();
+  }
+
+  function setupListControls() {
+    $("#entrySearch").addEventListener("input", applyListFilters);
+    $("#districtFilter").addEventListener("change", applyListFilters);
+    const resultText = {
+      game: "從遊戲島挑一款微光小遊戲，或進入遊戲大廳。",
+      utility: "工具島整理照片、影音、PDF、備份與比價工具。",
+      creative: "創作島集合 AI 圖片與貼圖創作入口。",
+      learning: "學習島連到微光課程學習入口。",
+      quiz: "測驗島提供三等業餘無線電測驗練習入口。"
+    };
+    $("#finderOptions").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-finder]");
+      if (!button) return;
+      $("#finderOptions").querySelectorAll("button").forEach((item) => item.classList.toggle("is-selected", item === button));
+      $("#districtFilter").value = button.dataset.finder;
+      applyListFilters();
+      const district = DISTRICTS.find((item) => item.key === button.dataset.finder);
+      $("#finderResult").textContent = `${district.name}：${resultText[district.key]}`;
+      $("#finderResult").hidden = false;
+      $("#panel").classList.add("is-open");
+      $("#panelGrip").setAttribute("aria-expanded", "true");
+      document.querySelector(`.district[data-district="${CSS.escape(district.key)}"]`)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" });
     });
   }
 
@@ -1046,6 +1275,9 @@
       }
     });
     $("#statLit").textContent = `${lit} / ${entryCells.length}`;
+    const percent = entryCells.length ? Math.round((lit / entryCells.length) * 100) : 0;
+    $("#statLitBar").className = `lit-bar progress-${Math.floor(percent / 10) * 10}`;
+    $("#statLitHint").textContent = `${percent}% 已點亮・開啟作品累積探索進度`;
   }
 
   function setupTabs() {
@@ -1094,12 +1326,15 @@
           people.forEach((p) => { p.g.visible = peopleVisible; });
         } else if (action === "pause") {
           paused = toggle();
+          button.textContent = paused ? "播放" : "暫停";
         } else if (action === "tour") {
           startTour();
         }
       });
     });
-    document.querySelector('[data-action="pause"]').setAttribute("aria-pressed", String(paused));
+    const pauseButton = document.querySelector('[data-action="pause"]');
+    pauseButton.setAttribute("aria-pressed", String(paused));
+    pauseButton.textContent = paused ? "播放" : "暫停";
   }
 
   /* ---------- tour ---------- */
@@ -1118,10 +1353,20 @@
     $("#tourText").textContent = text;
     $("#tourNext").textContent = tourIndex === TOUR.length - 1 ? "開始探索" : "下一步 →";
     $("#tour").hidden = false;
+    $("#tourBackdrop").hidden = false;
+    $("#panel").inert = true;
+    $(".brand").inert = true;
+    $(".toolbar").inert = true;
+    $("#tourNext").focus();
   }
 
   function endTour() {
     $("#tour").hidden = true;
+    $("#tourBackdrop").hidden = true;
+    $("#panel").inert = false;
+    $(".brand").inert = false;
+    $(".toolbar").inert = false;
+    document.querySelector('[data-action="tour"]').focus();
     try {
       window.localStorage.setItem(TOUR_KEY, "1");
     } catch {
@@ -1221,14 +1466,20 @@
     labels.forEach(({ el: tag, position, cell }) => {
       projected.copy(position).project(camera);
       const quiet = Boolean(cell && far && cell !== hovered && cell !== selected);
-      tag.classList.toggle("is-behind", projected.z > 1 || quiet);
-      tag.style.transform = `translate(${(projected.x * 0.5 + 0.5) * w}px, ${(-projected.y * 0.5 + 0.5) * h}px) translate(-50%, -100%)`;
+      const screenX = (projected.x * 0.5 + 0.5) * w;
+      const screenY = (-projected.y * 0.5 + 0.5) * h;
+      const marginX = tag.offsetWidth / 2 + 8;
+      const marginY = tag.offsetHeight + 8;
+      const offscreen = screenX < marginX || screenX > w - marginX || screenY < marginY || screenY > h - 8;
+      tag.classList.toggle("is-behind", projected.z > 1 || quiet || offscreen);
+      tag.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -100%)`;
     });
   }
 
   function resize() {
     const w = window.innerWidth;
     const h = window.innerHeight;
+    if (!renderer) return;
     renderer.setSize(w, h);
     // Keep the island centred in the space the panel leaves free.
     if (w > 820) camera.setViewOffset(w, h, ($("#panel").offsetWidth + 16) / 2, 0, w, h);
@@ -1261,10 +1512,13 @@
 
   /* ---------- boot ---------- */
 
+  let contentLoadFailed = false;
+
   async function boot() {
     updateXpUi();
     setupTabs();
     setupToolbar();
+    setupListControls();
     window.addEventListener("storage", () => { updateXpUi(); refreshLit(); });
 
     let content = { entries: [], news: [] };
@@ -1273,6 +1527,7 @@
       $("#loadStatus").hidden = true;
     } catch (error) {
       console.error("無法讀取入口網站內容：", error);
+      contentLoadFailed = true;
       $("#loadStatus").textContent = "暫時讀不到作品清單，請回入口網站瀏覽。";
     }
 
@@ -1280,11 +1535,15 @@
       $("#fallback").hidden = false;
       DISTRICTS.forEach((d) => { d.count = 0; d.cells = []; });
       $("#panel").classList.add("is-open");
+      $("#panelGrip").setAttribute("aria-expanded", "true");
+      renderFallbackList(content.entries);
+      renderLog(content.news);
       return;
     }
 
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
+    const mobile = window.matchMedia("(max-width: 820px)").matches;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.75));
+    renderer.shadowMap.enabled = !mobile;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1304,6 +1563,7 @@
     window.addEventListener("resize", resize);
     setupInput();
     connectPresence();
+    $("#statOnline").parentElement.nextElementSibling.textContent = `金圈小人最多顯示 ${visitorVisualLimit} 位線上訪客`;
 
     let seen = false;
     try {
