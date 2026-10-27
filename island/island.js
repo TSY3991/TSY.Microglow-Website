@@ -165,7 +165,7 @@
     m.receiveShadow = true;
     return m;
   }
-  const box = (w, h, d, c, x, y, z) => mesh(new THREE.BoxGeometry(w, h, d), c, x, y + h / 2, z);
+  const box = (w, h, d, c, x, y, z, extra) => mesh(new THREE.BoxGeometry(w, h, d), c, x, y + h / 2, z, extra);
   const cyl = (rt, rb, h, c, x, y, z, seg = 16) => mesh(new THREE.CylinderGeometry(rt, rb, h, seg), c, x, y + h / 2, z);
   const ball = (r, c, x, y, z, extra) => mesh(new THREE.SphereGeometry(r, 18, 14), c, x, y, z, extra);
   const glow = (c) => ({ emissive: c, emissiveIntensity: 0.9 });
@@ -190,16 +190,40 @@
   }
 
   function roof(w, d, c, y) {
-    const geo = new THREE.CylinderGeometry(w / 2, w / 2, d, 3);
-    const m = mesh(geo, c, 0, y + w / 4, 0);
-    m.rotation.set(Math.PI / 2, 0, Math.PI / 2);
-    m.scale.set(1, 1, 0.55);
-    return m;
+    const g = new THREE.Group();
+    g.add(box(w, d * 0.58, w * 0.72, c, 0, y, 0));
+    g.add(box(w * 0.78, d * 0.42, w * 0.56, shade(c, 0.12), 0, y + d * 0.58, 0));
+    return g;
+  }
+
+  function blockGear(size, color) {
+    const g = new THREE.Group();
+    const arm = size * 0.22;
+    g.add(box(size, arm, arm, color, 0, 0, 0), box(arm, size, arm, color, 0, 0, 0));
+    g.add(box(size * 0.48, size * 0.48, arm * 1.25, "#fff4df", 0, size * 0.2, 0));
+    return g;
+  }
+
+  function blockSignal(size, color) {
+    const g = new THREE.Group();
+    const t = Math.max(0.025, size * 0.09);
+    g.add(box(size, t, t, color, 0, 0, 0), box(size, t, t, color, 0, size - t, 0));
+    g.add(box(t, size, t, color, -size / 2 + t / 2, 0, 0), box(t, size, t, color, size / 2 - t / 2, 0, 0));
+    return g;
+  }
+
+  function blockPadFrame(size, thickness, color) {
+    const g = new THREE.Group();
+    g.add(box(size, thickness, thickness, color, 0, 0, -size / 2 + thickness / 2));
+    g.add(box(size, thickness, thickness, color, 0, 0, size / 2 - thickness / 2));
+    g.add(box(thickness, thickness, size - thickness * 2, color, -size / 2 + thickness / 2, 0, 0));
+    g.add(box(thickness, thickness, size - thickness * 2, color, size / 2 - thickness / 2, 0, 0));
+    return g;
   }
 
   function flag(color, x, y, z, h = 0.9) {
     const g = new THREE.Group();
-    g.add(cyl(0.025, 0.025, h, "#5b5148", x, y, z, 6));
+    g.add(box(0.05, h, 0.05, "#5b5148", x, y, z));
     const f = box(0.32, 0.2, 0.02, color, x + 0.17, y + h - 0.22, z);
     g.add(f);
     animators.push((t) => { f.rotation.y = Math.sin(t * 3 + x) * 0.25; });
@@ -213,12 +237,16 @@
     const dark = shade(color, -0.12);
     switch (kind) {
       case "lobby": {
-        g.add(box(1.0, 0.55, 0.8, "#fff4df", 0, 0, 0));
-        [[-0.5, -0.4], [0.5, -0.4], [-0.5, 0.4], [0.5, 0.4]].forEach(([x, z]) => {
-          g.add(cyl(0.16, 0.16, 0.8, light, x, 0, z, 10));
-          g.add(mesh(new THREE.ConeGeometry(0.21, 0.36, 10), color, x, 0.98, z));
-        });
-        g.add(flag("#f5b432", 0, 0.55, 0, 0.8));
+        // A tiny arcade cabinet: bright screen, marquee, controls and plinth.
+        g.add(box(1.12, 0.14, 0.82, dark, 0, 0, 0));
+        g.add(box(0.78, 0.86, 0.62, "#fff4df", 0, 0.14, 0));
+        g.add(box(0.82, 0.18, 0.66, color, 0, 0.96, 0));
+        g.add(box(0.57, 0.42, 0.035, "#17383a", 0, 0.48, 0.33));
+        g.add(box(0.46, 0.05, 0.02, "#4fc1e3", 0, 0.59, 0.36));
+        g.add(box(0.12, 0.06, 0.055, "#f06b5d", -0.15, 0.23, 0.36));
+        g.add(box(0.12, 0.06, 0.055, "#f5b432", 0.14, 0.23, 0.36));
+        g.add(box(0.07, 0.07, 0.07, "#36b879", 0, 0.22, 0.36));
+        g.add(flag("#f5b432", 0.45, 0.2, -0.22, 0.7));
         break;
       }
       case "tetris": {
@@ -232,22 +260,23 @@
       }
       case "snake": {
         for (let i = 0; i < 7; i += 1) {
-          const s = ball(i === 6 ? 0.17 : 0.13, i === 6 ? dark : light, -0.6 + i * 0.2, 0.15, 0);
+          const s = box(0.22, 0.22, 0.22, i === 6 ? "#36b879" : light, -0.6 + i * 0.2, 0.05, 0);
           g.add(s);
           animators.push((t) => { s.position.z = Math.sin(t * 2.4 + i * 0.7) * 0.22; });
         }
+        g.add(box(0.24, 0.24, 0.24, "#f06b5d", 0.15, 0.02, 0.42), box(0.08, 0.08, 0.08, "#36b879", 0.15, 0.26, 0.42));
         break;
       }
       case "stairs": {
         for (let i = 0; i < 5; i += 1) g.add(box(0.5, 0.12 + i * 0.16, 0.26, i % 2 ? light : "#fff4df", 0, 0, 0.55 - i * 0.26));
-        const kid = ball(0.11, "#f5b432", 0, 0.9, -0.5);
+        const kid = box(0.18, 0.18, 0.18, "#f5b432", 0, 0.81, -0.5);
         g.add(kid);
         animators.push((t) => { kid.position.y = 0.95 + Math.abs(Math.sin(t * 3)) * 0.2; });
         break;
       }
       case "gem": {
-        g.add(cyl(0.3, 0.38, 0.16, "#fff4df", 0, 0, 0, 6));
-        const gem = mesh(new THREE.OctahedronGeometry(0.36), light, 0, 0.7, 0, { emissive: color, emissiveIntensity: 0.35, roughness: 0.2 });
+        g.add(box(0.82, 0.14, 0.82, "#fff4df", 0, 0, 0));
+        const gem = box(0.52, 0.52, 0.52, light, 0, 0.42, 0, { emissive: color, emissiveIntensity: 0.35, roughness: 0.2 });
         g.add(gem);
         animators.push((t) => { gem.rotation.y = t * 0.8; gem.position.y = 0.7 + Math.sin(t * 2) * 0.06; });
         break;
@@ -255,7 +284,7 @@
       case "orbs": {
         ["#f06b5d", "#4fc1e3", "#f5b432"].forEach((c, i) => {
           const a = (i / 3) * Math.PI * 2;
-          const o = ball(0.2, c, Math.cos(a) * 0.32, 0.2, Math.sin(a) * 0.32);
+          const o = box(0.3, 0.3, 0.3, c, Math.cos(a) * 0.32, 0.05, Math.sin(a) * 0.32);
           g.add(o);
           animators.push((t) => { o.position.y = 0.2 + Math.abs(Math.sin(t * 2 + i)) * 0.18; });
         });
@@ -269,33 +298,41 @@
         break;
       }
       case "workshop": {
-        g.add(box(0.9, 0.5, 0.7, "#fff4df", 0, 0, 0));
-        g.add(roof(0.9, 0.78, color, 0.5));
-        const gear = mesh(new THREE.TorusGeometry(0.2, 0.07, 8, 10), "#f5b432", 0.62, 0.62, 0.15);
+        g.add(box(1.16, 0.12, 0.82, dark, 0, 0, 0));
+        g.add(box(0.92, 0.48, 0.65, color, 0, 0.12, 0));
+        g.add(box(0.42, 0.12, 0.13, "#a5753f", 0, 0.61, -0.04));
+        g.add(box(0.46, 0.07, 0.72, "#fff4df", 0, 0.31, 0.34));
+        g.add(box(0.16, 0.05, 0.16, "#f5b432", -0.28, 0.28, 0.39));
+        g.add(box(0.06, 0.06, 0.035, "#fff4df", -0.28, 0.28, 0.42));
+        const gear = blockGear(0.42, "#f5b432");
+        gear.position.set(0.52, 0.56, 0.08);
         g.add(gear);
         animators.push((t) => { gear.rotation.z = t; });
         break;
       }
       case "camera": {
-        g.add(box(0.75, 0.45, 0.4, dark, 0, 0, 0));
-        const lens = cyl(0.17, 0.17, 0.22, "#2b2b2b", 0, 0.05, 0.3, 18);
-        lens.rotation.x = Math.PI / 2;
-        lens.position.set(0, 0.23, 0.3);
-        g.add(lens, box(0.18, 0.1, 0.12, "#f06b5d", 0.22, 0.45, 0));
+        g.add(box(0.92, 0.52, 0.44, dark, 0, 0, 0));
+        g.add(box(0.34, 0.13, 0.24, light, -0.17, 0.48, 0));
+        g.add(box(0.34, 0.34, 0.16, "#2b2b2b", 0, 0.06, 0.32));
+        g.add(box(0.22, 0.22, 0.06, "#4fc1e3", 0, 0.12, 0.43), box(0.18, 0.1, 0.12, "#f06b5d", 0.28, 0.45, 0));
         break;
       }
       case "reel": {
-        const disc = cyl(0.42, 0.42, 0.1, light, 0, 0, 0, 24);
-        disc.rotation.x = Math.PI / 2;
-        disc.position.y = 0.5;
-        g.add(disc, box(0.12, 0.1, 0.12, "#5b5148", 0, 0, 0));
+        const disc = new THREE.Group();
+        disc.add(box(0.66, 0.12, 0.66, light, 0, 0.42, 0));
+        disc.add(box(0.16, 0.16, 0.16, "#5b5148", 0, 0.44, 0));
+        [[-0.2, 0], [0.2, 0], [0, -0.2], [0, 0.2]].forEach(([x, z]) => disc.add(box(0.08, 0.08, 0.08, "#fff4df", x, 0.44, z)));
+        g.add(disc);
         animators.push((t) => { disc.rotation.y = t * 1.2; });
         break;
       }
       case "drive": {
-        g.add(box(0.7, 0.22, 0.5, "#fff4df", 0, 0, 0), box(0.7, 0.22, 0.5, light, 0, 0.24, 0));
-        const led = ball(0.05, "#36b879", 0.25, 0.36, 0.26, glow("#36b879"));
-        g.add(led);
+        g.add(box(0.92, 0.16, 0.65, dark, 0, 0, 0));
+        g.add(box(0.78, 0.31, 0.54, "#fff4df", 0, 0.13, 0));
+        g.add(box(0.68, 0.08, 0.46, light, 0, 0.42, 0));
+        g.add(box(0.18, 0.06, 0.04, "#a5753f", 0, 0.5, 0.24));
+        const led = box(0.08, 0.08, 0.08, "#36b879", 0.26, 0.46, 0.24, glow("#36b879"));
+        g.add(led, box(0.08, 0.08, 0.08, "#f5b432", -0.26, 0.46, 0.24));
         animators.push((t) => { led.visible = Math.sin(t * 6) > -0.2; });
         break;
       }
@@ -306,14 +343,16 @@
           g.add(p);
         }
         g.add(box(0.22, 0.08, 0.1, "#f25757", 0.12, 0.35, 0.2));
+        for (let i = 0; i < 3; i += 1) g.add(box(0.3, 0.012, 0.025, i === 0 ? "#4fc1e3" : "#a9b8b2", -0.02, 0.39, -0.13 + i * 0.12));
         break;
       }
       case "radar": {
-        g.add(cyl(0.05, 0.07, 0.6, "#5b5148", 0, 0, 0, 8));
-        const dish = mesh(new THREE.SphereGeometry(0.42, 18, 10, 0, Math.PI * 2, 0, Math.PI / 2.6), light, 0, 0.62, 0, { side: THREE.DoubleSide });
-        dish.rotation.x = Math.PI * 0.75;
+        g.add(box(0.14, 0.6, 0.14, "#5b5148", 0, 0, 0));
         const pivot = new THREE.Group();
-        pivot.add(dish);
+        pivot.add(box(0.78, 0.12, 0.55, light, 0, 0.58, 0));
+        pivot.add(box(0.58, 0.08, 0.08, "#fff4df", 0, 0.7, 0.12));
+        pivot.add(box(0.08, 0.34, 0.08, "#a5753f", 0, 0.42, 0));
+        g.add(box(0.14, 0.55, 0.14, "#a5753f", 0, 0, 0));
         g.add(pivot);
         animators.push((t) => { pivot.rotation.y = t * 0.9; });
         break;
@@ -321,41 +360,50 @@
       case "easel": {
         const legs = [[-0.22, 0.1], [0.22, 0.1], [0, -0.22]];
         legs.forEach(([x, z]) => {
-          const leg = cyl(0.03, 0.03, 1.1, "#a5753f", x, 0, z, 6);
-          leg.rotation.x = z < 0 ? -0.25 : 0.12;
+          const leg = box(0.06, 1.1, 0.06, "#a5753f", x, 0, z);
+          leg.rotation.z = x === 0 ? 0.12 : x < 0 ? -0.16 : 0.16;
           g.add(leg);
         });
-        g.add(box(0.7, 0.55, 0.05, "#fffdf8", 0, 0.45, 0.16));
-        g.add(ball(0.1, "#f5b432", -0.12, 0.8, 0.2), ball(0.08, "#4fc1e3", 0.14, 0.62, 0.2), ball(0.07, color, 0.02, 0.72, 0.2));
+        g.add(box(0.78, 0.62, 0.08, "#a5753f", 0, 0.45, 0.16));
+        g.add(box(0.66, 0.5, 0.035, "#fffdf8", 0, 0.5, 0.22));
+        g.add(box(0.2, 0.28, 0.12, "#f06b5d", -0.1, 0.69, 0.26));
+        g.add(box(0.14, 0.14, 0.14, "#f5b432", -0.38, 0.18, 0.2), box(0.12, 0.12, 0.12, "#4fc1e3", -0.2, 0.18, 0.2), box(0.12, 0.12, 0.12, color, -0.3, 0.3, 0.31));
         break;
       }
       case "school": {
         g.add(box(1.0, 0.55, 0.6, "#fff4df", 0, 0, 0));
         g.add(roof(1.0, 0.68, color, 0.55));
         g.add(box(0.22, 0.32, 0.04, dark, 0, 0, 0.31));
-        g.add(cyl(0.12, 0.12, 0.03, "#fffdf8", 0, 0.62, 0.31, 16));
+        g.add(box(0.18, 0.08, 0.18, "#fffdf8", 0, 0.62, 0.31));
+        [-0.32, 0.32].forEach((x) => g.add(box(0.18, 0.18, 0.035, "#4fc1e3", x, 0.19, 0.32)));
+        g.add(box(0.72, 0.07, 0.48, "#36b879", 0, 0.72, -0.02));
         g.add(flag("#f5b432", 0.6, 0, 0.35, 1.3));
         break;
       }
       case "tower": {
-        g.add(mesh(new THREE.CylinderGeometry(0.05, 0.4, 1.9, 4, 4, true), color, 0, 0.95, 0, { wireframe: true }));
-        g.add(cyl(0.03, 0.03, 1.9, "#5b5148", 0, 0, 0, 6));
-        const tip = ball(0.09, "#f25757", 0, 1.98, 0, glow("#f25757"));
+        // A pocket radio with a clear antenna and animated signal waves.
+        g.add(box(0.72, 0.95, 0.34, color, 0, 0.08, 0));
+        g.add(box(0.5, 0.48, 0.035, "#17383a", 0, 0.38, 0.19));
+        g.add(box(0.35, 0.045, 0.02, "#4fc1e3", 0, 0.55, 0.215));
+        g.add(box(0.12, 0.07, 0.05, "#f5b432", -0.2, 0.16, 0.21), box(0.12, 0.07, 0.05, "#f06b5d", 0.2, 0.16, 0.21));
+        const antenna = box(0.05, 0.92, 0.05, "#a5753f", 0.24, 0.9, -0.08);
+        antenna.rotation.z = -0.18;
+        g.add(antenna);
+        const tip = box(0.1, 0.1, 0.1, "#f25757", 0.34, 1.73, -0.08, glow("#f25757"));
         g.add(tip);
-        const ring = mesh(new THREE.TorusGeometry(0.3, 0.015, 6, 28), "#4fc1e3", 0, 1.98, 0, glow("#4fc1e3"));
-        ring.rotation.x = Math.PI / 2;
+        const ring = blockSignal(0.52, "#4fc1e3");
+        ring.position.set(0.34, 1.7, -0.08);
         g.add(ring);
         animators.push((t) => {
           const p = (t * 0.8) % 1;
           ring.scale.setScalar(0.4 + p * 2.2);
-          ring.material.opacity = 1 - p;
+          ring.visible = p < 0.9;
           tip.visible = Math.sin(t * 4) > 0;
         });
-        ring.material.transparent = true;
         break;
       }
       case "kiosk": {
-        g.add(cyl(0.05, 0.05, 0.8, "#5b5148", -0.3, 0, 0, 6), cyl(0.05, 0.05, 0.8, "#5b5148", 0.3, 0, 0, 6));
+        g.add(box(0.08, 0.8, 0.08, "#5b5148", -0.3, 0, 0), box(0.08, 0.8, 0.08, "#5b5148", 0.3, 0, 0));
         g.add(box(0.85, 0.5, 0.08, color, 0, 0.6, 0));
         g.add(box(0.7, 0.36, 0.09, "#fffdf8", 0, 0.67, 0));
         break;
@@ -366,21 +414,22 @@
         break;
       }
       case "lamp": {
-        g.add(cyl(0.035, 0.05, 0.85, "#5b5148", 0, 0, 0, 8));
-        g.add(ball(0.12, "#fff2ce", 0, 0.92, 0, glow("#f5b432")));
+        g.add(box(0.07, 0.85, 0.07, "#5b5148", 0, 0, 0));
+        g.add(box(0.24, 0.22, 0.24, "#fff2ce", 0, 0.84, 0, glow("#f5b432")));
         break;
       }
       case "flowers": {
         for (let i = 0; i < 6; i += 1) {
           const a = hash(i * 7.1) * Math.PI * 2;
           const r = 0.15 + hash(i * 3.3) * 0.4;
-          g.add(ball(0.08, ["#f06b5d", "#f5b432", "#fffdf8", "#8f52da"][i % 4], Math.cos(a) * r, 0.1, Math.sin(a) * r));
+          g.add(box(0.13, 0.13, 0.13, ["#f06b5d", "#f5b432", "#fffdf8", "#8f52da"][i % 4], Math.cos(a) * r, 0.04, Math.sin(a) * r));
         }
         break;
       }
       default: { // tree
-        g.add(cyl(0.06, 0.08, 0.35, "#a5753f", 0, 0, 0, 6));
-        g.add(mesh(new THREE.IcosahedronGeometry(0.34, 0), shade("#36b879", hash(color.length) * 0.1), 0, 0.62, 0, { flatShading: true }));
+        g.add(box(0.13, 0.35, 0.13, "#a5753f", 0, 0, 0));
+        g.add(box(0.48, 0.42, 0.48, shade("#36b879", hash(color.length) * 0.1), 0, 0.32, 0));
+        g.add(box(0.34, 0.3, 0.34, "#62a36e", 0.05, 0.7, 0.02));
       }
     }
     return g;
@@ -403,7 +452,7 @@
   function addBeacon(cell) {
     if (cell.beacon) return;
     const b = new THREE.Group();
-    const star = mesh(new THREE.OctahedronGeometry(0.13), "#f5b432", 0, 0, 0, glow("#f5b432"));
+    const star = mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), "#f5b432", 0, 0, 0, glow("#f5b432"));
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: HALO, transparent: true, depthWrite: false }));
     halo.scale.setScalar(0.9);
     b.add(star, halo);
@@ -448,7 +497,7 @@
   }
 
   function scatter(group, seed, top, radius, count, avoid) {
-    const kinds = ["tree", "tree", "tree", "flowers", "lamp", "bench"];
+    const kinds = ["tree", "tree", "flowers", "lamp", "bench"];
     let placed = 0;
     for (let i = 0; i < count * 4 && placed < count; i += 1) {
       const a = hash(seed + i * 5.7) * Math.PI * 2;
@@ -471,9 +520,9 @@
     const group = new THREE.Group();
     group.position.copy(world);
     const top = island.height;
-    const lot = mesh(new THREE.CylinderGeometry(1.25, 1.3, 0.1, 24), shade(district.color, 0.32), 0, top, 0);
-    const rim = mesh(new THREE.TorusGeometry(1.27, 0.06, 6, 32), shade(district.color, -0.05), 0, top + 0.1, 0);
-    rim.rotation.x = Math.PI / 2;
+    const lot = mesh(new THREE.BoxGeometry(2.5, 0.1, 2.5), shade(district.color, 0.32), 0, top + 0.05, 0);
+    const rim = blockPadFrame(2.65, 0.1, shade(district.color, -0.05));
+    rim.position.y = top + 0.1;
     group.add(lot, rim);
 
     const kind = PROP_BY_ID[payload.entry.id] || PROP_BY_CATEGORY[payload.entry.category] || "tree";
@@ -518,7 +567,7 @@
     const island = { district, world, radius, height: height + 0.1, isIsland: true, payload: null, lift: 0, lots: [], benches: [benchSpot] };
     const spots = lotSpots(payloads.length);
     island.lots = spots;
-    scatter(group, d * 97 + 13, height + 0.1, radius, payloads.length > 1 ? 12 : 8, spots);
+    scatter(group, d * 97 + 13, height + 0.1, radius, payloads.length > 1 ? 7 : 4, spots);
     const bench = buildProp("bench", "#36b879");
     bench.position.set(benchSpot.x, height + 0.1, benchSpot.z);
     bench.rotation.y = Math.atan2(-benchSpot.x, -benchSpot.z);
@@ -553,7 +602,7 @@
       mesh(new THREE.CylinderGeometry(CORE_RADIUS, CORE_RADIUS * 1.03, height, 6), "#e9d6ac", 0, height / 2, 0),
       mesh(new THREE.CylinderGeometry(CORE_RADIUS * 0.94, CORE_RADIUS * 0.97, 0.08, 6), "#fff8e8", 0, height + 0.04, 0)
     );
-    const orb = ball(0.9, "#fff2ce", 0, top + 1.7, 0, { emissive: "#f5b432", emissiveIntensity: 1.2 });
+    const orb = mesh(new THREE.BoxGeometry(1.35, 1.35, 1.35), "#fff2ce", 0, top + 1.7, 0, { emissive: "#f5b432", emissiveIntensity: 1.2 });
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: HALO, transparent: true, depthWrite: false }));
     halo.scale.setScalar(6);
     halo.position.copy(orb.position);
@@ -578,14 +627,18 @@
     logoTex.anisotropy = 8;
     const sign = new THREE.Group();
     const faceMat = new THREE.MeshStandardMaterial({ map: logoTex, roughness: 0.85 });
-    const face = new THREE.Mesh(new THREE.CircleGeometry(1.7, 48), faceMat);
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(2.25, 2.25), faceMat);
     face.position.z = 0.06;
-    const frame = mesh(new THREE.CylinderGeometry(1.76, 1.76, 0.1, 48), "#a5753f", 0, 0, 0);
-    frame.rotation.x = Math.PI / 2;
-    sign.add(frame, face);
+    const frame = mesh(new THREE.BoxGeometry(2.55, 2.55, 0.16), "#a5753f", 0, 0, 0);
+    face.position.z = 0.09;
+    sign.add(frame, face,
+      box(2.5, 0.08, 0.05, "#f5b432", 0, 1.2, 0.1),
+      box(2.5, 0.08, 0.05, "#f5b432", 0, -1.28, 0.1),
+      box(0.08, 2.5, 0.05, "#f5b432", -1.2, -1.2, 0.1),
+      box(0.08, 2.5, 0.05, "#f5b432", 1.2, -1.2, 0.1));
     sign.position.set(-2.8, top + 2.9, -1.3);
     group.add(sign);
-    group.add(cyl(0.08, 0.08, 1.4, "#a5753f", -2.8, top, -1.3, 8));
+    group.add(box(0.14, 1.4, 0.14, "#a5753f", -2.8, top, -1.3));
     // Always face the logo straight at the viewer.
     animators.push(() => { sign.lookAt(camera.position); });
     const benches = [];
@@ -660,7 +713,7 @@
       }
       if (i % 3 === 0) {
         const mill = new THREE.Group();
-        mill.add(cyl(0.05, 0.08, 2.4, "#fffdf8", 0, 0, 0, 8));
+        mill.add(box(0.1, 2.4, 0.1, "#fffdf8", 0, 0, 0));
         const blades = new THREE.Group();
         for (let b = 0; b < 3; b += 1) {
           const blade = box(0.08, 1.1, 0.03, "#fffdf8", 0, 0, 0);
@@ -679,9 +732,9 @@
     for (let i = 0; i < 4; i += 1) {
       const boat = new THREE.Group();
       boat.add(box(0.5, 0.22, 1.2, "#fffdf8", 0, 0, 0), box(0.04, 1.1, 0.04, "#a5753f", 0, 0.22, 0));
-      const sail = mesh(new THREE.ConeGeometry(0.42, 0.9, 3), ["#ef735f", "#0e8f88", "#d55e62", "#62a36e"][i], 0, 0.8, 0.15);
-      sail.scale.set(0.15, 1, 1);
-      boat.add(sail);
+      const sailColor = ["#ef735f", "#0e8f88", "#d55e62", "#62a36e"][i];
+      boat.add(box(0.12, 0.9, 0.56, sailColor, 0, 0.78, 0.15));
+      boat.add(box(0.12, 0.48, 0.38, shade(sailColor, 0.18), 0, 1.08, 0.15));
       scene.add(boat);
       const r = 24 + i * 1.6;
       const speed = 0.04 + hash(i + 7) * 0.03;
