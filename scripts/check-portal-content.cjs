@@ -130,7 +130,7 @@ try {
 if (!html.includes('href="./about/"')) fail('首頁沒有 About 頁入口');
 if (!html.includes('class="brand-about-link" href="./about/"')) fail('首頁品牌區沒有直接前往 About 的入口');
 if (!aboutHtml.includes('<link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/about/">')) fail('About 頁 canonical 不正確');
-if (!html.includes('styles.css?v=20261027a') || !aboutHtml.includes('styles.css?v=20261027a')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
+if (!html.includes('styles.css?v=20261027b') || !aboutHtml.includes('styles.css?v=20261027b')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
 
 if (!process.exitCode) {
   console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、28 則新聞及快取版本通過。`);
