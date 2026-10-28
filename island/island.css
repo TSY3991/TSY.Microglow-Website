@@ -220,6 +220,7 @@ html, body {
 }
 .toolbar button:hover { background: #f4eee2; }
 .toolbar button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.toolbar-compact { display: none; }
 
 /* Tour */
 .tour-backdrop {
@@ -278,16 +279,24 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .toolbar {
     left: 12px; right: 12px; transform: none;
     bottom: calc(160px + env(safe-area-inset-bottom)); top: auto;
-    justify-content: center; max-width: none; overflow-x: auto;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px;
+    justify-content: stretch; max-width: none; overflow: hidden;
     border: 1px solid rgba(255,255,255,.8); border-radius: 16px;
   }
   .panel.is-open ~ .toolbar, .panel.has-detail ~ .toolbar {
     bottom: calc(min(76vh, 660px) + 12px + env(safe-area-inset-bottom));
   }
-  .toolbar button { height: 44px; min-width: 44px; padding: 0 10px; white-space: nowrap; flex: none; }
+  .toolbar button { height: 44px; min-width: 0; padding: 0 4px; white-space: nowrap; }
+  .toolbar-label { display: none; }
+  .toolbar-compact { display: inline; font-size: 16px; line-height: 1; }
   .tour { padding: 20px; }
   .finder-options { grid-template-columns: 1fr; }
   .list-controls { grid-template-columns: 1fr 112px; }
+}
+
+@media (max-width: 380px) {
+  .toolbar { left: 8px; right: 8px; bottom: calc(176px + env(safe-area-inset-bottom)); gap: 3px; padding: 5px; }
+  .toolbar button { border-radius: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -15,7 +15,7 @@
     <link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/island/">
     <link rel="icon" href="../assets/microglow-studio-favicon.png?v=20261027a" type="image/png">
     <link rel="apple-touch-icon" href="../assets/microglow-studio-apple-touch.png?v=20261027a">
-    <link rel="stylesheet" href="./island.css?v=20261027e">
+    <link rel="stylesheet" href="./island.css?v=20261029a">
   </head>
   <body>
     <div class="scene" id="scene" aria-hidden="true"></div>
@@ -107,12 +107,12 @@
     </aside>
 
     <nav class="toolbar" aria-label="場景控制">
-      <button type="button" data-action="home">全景</button>
-      <button type="button" data-action="bird" aria-pressed="false">鳥瞰</button>
-      <button type="button" data-action="labels" aria-pressed="true">名牌</button>
-      <button type="button" data-action="people" aria-pressed="true">小人</button>
-      <button type="button" data-action="pause" aria-pressed="false">暫停</button>
-      <button type="button" data-action="tour" aria-label="重播導覽" title="重播導覽">?</button>
+      <button type="button" data-action="home" aria-label="回到全景" title="回到全景"><span class="toolbar-label">全景</span><span class="toolbar-compact" aria-hidden="true">⌂</span></button>
+      <button type="button" data-action="bird" aria-pressed="false" aria-label="切換鳥瞰視角" title="鳥瞰"><span class="toolbar-label">鳥瞰</span><span class="toolbar-compact" aria-hidden="true">俯</span></button>
+      <button type="button" data-action="labels" aria-pressed="true" aria-label="切換名牌顯示" title="名牌"><span class="toolbar-label">名牌</span><span class="toolbar-compact" aria-hidden="true">牌</span></button>
+      <button type="button" data-action="people" aria-pressed="true" aria-label="切換居民顯示" title="小人"><span class="toolbar-label">小人</span><span class="toolbar-compact" aria-hidden="true">人</span></button>
+      <button type="button" data-action="pause" aria-pressed="false" aria-label="暫停場景動畫" title="暫停"><span class="toolbar-label">暫停</span><span class="toolbar-compact" aria-hidden="true">Ⅱ</span></button>
+      <button type="button" data-action="tour" aria-label="重播導覽" title="重播導覽"><span class="toolbar-label">說明</span><span class="toolbar-compact" aria-hidden="true">?</span></button>
     </nav>
 
     <div class="tour-backdrop" id="tourBackdrop" hidden></div>
@@ -131,6 +131,6 @@
     <script src="../scripts/vendor/three-0.160.0.min.js" defer></script>
     <script src="../scripts/vendor/supabase-js-2.117.2.umd.js" defer></script>
     <script src="../scripts/microglow-auth.js?v=20261005b" defer></script>
-    <script src="./island.js?v=20261028f" defer></script>
+    <script src="./island.js?v=20261029a" defer></script>
   </body>
 </html>

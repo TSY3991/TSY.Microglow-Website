@@ -1796,7 +1796,10 @@
           people.forEach((p) => { p.g.visible = peopleVisible; });
         } else if (action === "pause") {
           paused = toggle();
-          button.textContent = paused ? "播放" : "暫停";
+          button.setAttribute("aria-label", paused ? "播放場景動畫" : "暫停場景動畫");
+          button.title = paused ? "播放" : "暫停";
+          button.querySelector(".toolbar-label").textContent = paused ? "播放" : "暫停";
+          button.querySelector(".toolbar-compact").textContent = paused ? "▶" : "Ⅱ";
         } else if (action === "tour") {
           startTour();
         }
@@ -1804,7 +1807,10 @@
     });
     const pauseButton = document.querySelector('[data-action="pause"]');
     pauseButton.setAttribute("aria-pressed", String(paused));
-    pauseButton.textContent = paused ? "播放" : "暫停";
+    pauseButton.setAttribute("aria-label", paused ? "播放場景動畫" : "暫停場景動畫");
+    pauseButton.title = paused ? "播放" : "暫停";
+    pauseButton.querySelector(".toolbar-label").textContent = paused ? "播放" : "暫停";
+    pauseButton.querySelector(".toolbar-compact").textContent = paused ? "▶" : "Ⅱ";
   }
 
   /* ---------- tour ---------- */
@@ -1931,9 +1937,10 @@
   function updateLabels() {
     const w = window.innerWidth;
     const h = window.innerHeight;
+    const mobile = w <= 820;
     // Zoomed out, only district signs show; entry tags appear once you zoom in or point at them.
     const far = view.radius > 40;
-    labels.forEach(({ el: tag, position, cell }) => {
+    const projectedLabels = labels.map(({ el: tag, position, cell }, index) => {
       projected.copy(position).project(camera);
       const quiet = Boolean(cell && ((far && cell !== hovered && cell !== selected) || (selected && cell !== selected && cell.island !== selected.island)));
       const screenX = (projected.x * 0.5 + 0.5) * w;
@@ -1941,8 +1948,27 @@
       const marginX = tag.offsetWidth / 2 + 8;
       const marginY = tag.offsetHeight + 8;
       const offscreen = screenX < marginX || screenX > w - marginX || screenY < marginY || screenY > h - 8;
-      tag.classList.toggle("is-behind", projected.z > 1 || quiet || offscreen);
       tag.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -100%)`;
+      const hidden = projected.z > 1 || quiet || offscreen;
+      const priority = cell === selected ? 4 : cell === hovered ? 3 : tag.classList.contains("is-district") ? 2 : 1;
+      return { tag, screenX, screenY, hidden, priority, index };
+    });
+
+    const occupied = [];
+    projectedLabels.sort((a, b) => b.priority - a.priority || a.index - b.index);
+    projectedLabels.forEach((item) => {
+      let hidden = item.hidden;
+      if (mobile && !hidden) {
+        const width = item.tag.offsetWidth;
+        const height = item.tag.offsetHeight;
+        const centerY = item.screenY - height / 2;
+        const overlap = occupied.some((rect) =>
+          Math.abs(item.screenX - rect.x) < (width + rect.width) / 2 + 10
+          && Math.abs(centerY - rect.y) < (height + rect.height) / 2 + 8);
+        hidden = overlap;
+        if (!hidden) occupied.push({ x: item.screenX, y: centerY, width, height });
+      }
+      item.tag.classList.toggle("is-behind", hidden);
     });
   }
 
