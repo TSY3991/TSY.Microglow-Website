@@ -436,6 +436,129 @@
     return g;
   }
 
+  const FACILITY_ICON_SOURCES = {
+    "photo-converter": "../assets/island-facility-icons/photo-converter.png?v=20261028a",
+    "car-media-converter": "../assets/island-facility-icons/car-media-converter.png?v=20261028a",
+    "portable-backup-tool": "../assets/island-facility-icons/portable-backup-tool.png?v=20261028a",
+    "pdf-workshop": "../assets/island-facility-icons/pdf-workshop.png?v=20261028a",
+    "price-radar": "../assets/island-facility-icons/price-radar.png?v=20261028a",
+    "microglow-creative": "../assets/island-facility-icons/ai-creative-entry.jpg?v=20261028a",
+    tetris: "../assets/island-facility-icons/tetris.jpg?v=20261028a",
+    snake: "../assets/island-facility-icons/snake.jpg?v=20261028a",
+    downstairs: "../assets/island-facility-icons/downstairs.jpg?v=20261028a",
+    gem: "../assets/island-facility-icons/gem.jpg?v=20261028a",
+    orbs: "../assets/island-facility-icons/orbs.jpg?v=20261028a",
+    "business-empire": "../assets/island-facility-icons/business-empire.jpg?v=20261028a"
+  };
+  const facilityIconTextures = new Map();
+
+  function facilityIconTexture(category, color, id) {
+    const source = FACILITY_ICON_SOURCES[id];
+    const key = source || `${category}:${color}`;
+    if (facilityIconTextures.has(key)) return facilityIconTextures.get(key);
+
+    if (source) {
+      const texture = new THREE.TextureLoader().load(source);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.magFilter = THREE.LinearFilter;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      facilityIconTextures.set(key, texture);
+      return texture;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    const block = (x, y, w, h, paint) => { ctx.fillStyle = paint; ctx.fillRect(x, y, w, h); };
+    block(8, 8, 112, 112, "#fff4df");
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 8;
+    ctx.strokeRect(12, 12, 104, 104);
+    [[22, 22], [106, 22], [22, 106], [106, 106]].forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    if (id === "microglow-tools") {
+      block(35, 40, 58, 48, color);
+      block(46, 31, 36, 12, color);
+      block(42, 49, 44, 6, "#fff4df");
+      block(42, 63, 25, 6, "#fff4df");
+      block(42, 77, 35, 6, "#f5b432");
+    } else if (category === "game") {
+      block(39, 54, 50, 24, color);
+      block(29, 61, 18, 17, color);
+      block(81, 61, 18, 17, color);
+      block(43, 60, 21, 7, "#fffdf8");
+      block(50, 53, 7, 21, "#fffdf8");
+      block(72, 58, 8, 8, "#f5b432");
+      block(83, 67, 8, 8, "#36b879");
+    } else if (category === "utility") {
+      block(57, 34, 14, 60, color);
+      block(34, 57, 60, 14, color);
+      block(49, 49, 30, 30, "#fff4df");
+      block(57, 57, 14, 14, "#f5b432");
+      block(52, 26, 24, 10, color);
+      block(52, 92, 24, 10, color);
+      block(26, 52, 10, 24, color);
+      block(92, 52, 10, 24, color);
+    } else if (category === "creative") {
+      block(38, 35, 52, 40, "#fffdf8");
+      block(35, 78, 58, 8, "#a5753f");
+      block(42, 84, 8, 25, "#a5753f");
+      block(78, 84, 8, 25, "#a5753f");
+      block(47, 45, 10, 12, "#f06b5d");
+      block(60, 53, 10, 12, "#f5b432");
+      block(73, 42, 10, 12, "#0e8f88");
+    } else if (category === "learning") {
+      block(34, 38, 28, 48, "#e7efe2");
+      block(66, 38, 28, 48, "#fffdf8");
+      block(61, 35, 6, 54, color);
+      block(40, 50, 16, 5, "#a9b8b2");
+      block(40, 62, 16, 5, "#a9b8b2");
+      block(72, 50, 16, 5, "#a9b8b2");
+      block(72, 62, 16, 5, "#a9b8b2");
+    } else {
+      block(35, 58, 52, 36, color);
+      block(43, 66, 18, 16, "#fff4df");
+      block(68, 67, 8, 8, "#f5b432");
+      block(76, 38, 8, 25, "#a5753f");
+      block(70, 30, 20, 7, "#f5b432");
+      block(89, 31, 7, 8, color);
+      block(98, 24, 7, 7, color);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
+    facilityIconTextures.set(key, texture);
+    return texture;
+  }
+
+  function buildFacilityIcon(category, color, id) {
+    const icon = new THREE.Group();
+    const tile = mesh(new THREE.BoxGeometry(0.96, 0.08, 0.76), color, 0, 0.04, 0);
+    icon.add(tile);
+    gridifyBlockMeshes(icon, 0.2, 0.01);
+
+    const symbol = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: facilityIconTexture(category, color, id),
+      transparent: true,
+      depthWrite: false,
+      toneMapped: false
+    }));
+    symbol.position.y = 0.5;
+    const size = window.matchMedia("(max-width: 820px)").matches ? 0.68 : 0.76;
+    symbol.scale.set(size, size, 1);
+    icon.add(symbol);
+    icon.userData.topHeight = 0.9;
+    return icon;
+  }
+
   const GRID_BRICK_GEO = new THREE.BoxGeometry(1, 1, 1);
   const GRID_STUD_GEO = new THREE.CylinderGeometry(0.5, 0.5, 1, 12);
   const LEGO_MATERIALS = new WeakMap();
@@ -763,12 +886,15 @@
     prop.position.y = top + 0.1;
     prop.rotation.y = hash(index + district.color.length) * 0.8 - 0.4;
     prop.scale.setScalar(1.7);
-    group.add(prop);
+    const propTop = new THREE.Box3().setFromObject(prop).max.y - (top + 0.1);
+    const categoryIcon = buildFacilityIcon(payload.entry.category, district.color, payload.entry.id);
+    categoryIcon.position.y = top + 0.1 + propTop + 0.02;
+    group.add(prop, categoryIcon);
     gridifyBlockMeshes(group, 0.26, 0.012);
 
     const cell = { district, payload, group, world, height: top + 0.1, lift: 0, island };
-    cell.propTop = new THREE.Box3().setFromObject(prop).max.y - cell.height;
-    group.traverse((obj) => { if (obj.isMesh) obj.userData.cell = cell; });
+    cell.propTop = propTop + 0.02 + categoryIcon.userData.topHeight;
+    group.traverse((obj) => { if (obj.isMesh || obj.isSprite) obj.userData.cell = cell; });
     pickables.push(group);
     scene.add(group);
     cells.push(cell);
