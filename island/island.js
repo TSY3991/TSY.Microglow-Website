@@ -1728,21 +1728,45 @@
 
   function setupTabs() {
     const tabs = [["#tabMap", "#viewMap"], ["#tabLog", "#viewLog"]];
+    const panel = $("#panel");
+    const grip = $("#panelGrip");
+    let gripPointerId = null;
+    let gripStartY = 0;
+    let dragClickUntil = 0;
+    const setPanelOpen = (open) => {
+      panel.classList.toggle("is-open", open);
+      if (!open) panel.classList.remove("has-detail");
+      grip.setAttribute("aria-expanded", String(open));
+    };
+
     tabs.forEach(([tab, panel]) => {
       $(tab).addEventListener("click", () => {
         tabs.forEach(([t, p]) => {
           $(t).setAttribute("aria-selected", String(t === tab));
           $(p).hidden = p !== panel;
         });
-        $("#panel").classList.add("is-open");
-        $("#panelGrip").setAttribute("aria-expanded", "true");
+        setPanelOpen(true);
       });
     });
-    $("#panelGrip").addEventListener("click", () => {
-      const open = !$("#panel").classList.contains("is-open");
-      $("#panel").classList.toggle("is-open", open);
-      if (!open) $("#panel").classList.remove("has-detail");
-      $("#panelGrip").setAttribute("aria-expanded", String(open));
+    grip.addEventListener("pointerdown", (event) => {
+      if (!event.isPrimary) return;
+      gripPointerId = event.pointerId;
+      gripStartY = event.clientY;
+      grip.setPointerCapture(event.pointerId);
+    });
+    grip.addEventListener("pointerup", (event) => {
+      if (event.pointerId !== gripPointerId) return;
+      const deltaY = event.clientY - gripStartY;
+      gripPointerId = null;
+      if (Math.abs(deltaY) >= 28) {
+        dragClickUntil = performance.now() + 500;
+        setPanelOpen(deltaY < 0);
+      }
+    });
+    grip.addEventListener("pointercancel", () => { gripPointerId = null; });
+    grip.addEventListener("click", (event) => {
+      if (event.detail > 0 && performance.now() < dragClickUntil) return;
+      setPanelOpen(!panel.classList.contains("is-open"));
     });
   }
 

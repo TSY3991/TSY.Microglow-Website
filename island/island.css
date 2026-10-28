@@ -266,7 +266,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
     box-shadow: 0 -10px 36px rgba(42,47,45,.16);
   }
   .panel-grip {
-    display: grid; place-items: center; min-height: 44px; border: 0; background: transparent; cursor: pointer;
+    display: grid; place-items: center; min-height: 44px; border: 0; background: transparent; cursor: grab; touch-action: none;
   }
   .grip-bar { width: 44px; height: 5px; border-radius: 99px; background: #d9cfbd; }
   .panel-body { display: none; }
@@ -277,9 +277,12 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 
   .toolbar {
     left: 12px; right: 12px; transform: none;
-    bottom: calc(min(76vh, 660px) + 12px); top: auto;
+    bottom: calc(160px + env(safe-area-inset-bottom)); top: auto;
     justify-content: center; max-width: none; overflow-x: auto;
     border: 1px solid rgba(255,255,255,.8); border-radius: 16px;
+  }
+  .panel.is-open ~ .toolbar, .panel.has-detail ~ .toolbar {
+    bottom: calc(min(76vh, 660px) + 12px + env(safe-area-inset-bottom));
   }
   .toolbar button { height: 44px; min-width: 44px; padding: 0 10px; white-space: nowrap; flex: none; }
   .tour { padding: 20px; }
