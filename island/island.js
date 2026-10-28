@@ -437,10 +437,9 @@
   }
 
   const GRID_BRICK_GEO = new THREE.BoxGeometry(1, 1, 1);
-  const GRID_STUD_GEO = new THREE.CylinderGeometry(0.5, 0.5, 0.32, 8);
+  const GRID_STUD_GEO = new THREE.CylinderGeometry(0.5, 0.5, 1, 12);
   const LEGO_MATERIALS = new WeakMap();
-  const LEGO_ACCENTS = ["#c91a09", "#0055bf", "#f2cd37", "#237841"];
-  const FLOOR_NEUTRALS = ["#eee9dc", "#d7d8d2", "#f4f3ed"];
+  const FLOOR_NEUTRALS = ["#eee9dc", "#f4f3ed"];
 
   function legoMaterial(source) {
     if (!LEGO_MATERIALS.has(source)) {
@@ -457,15 +456,11 @@
 
   function legoBrickColor(color, seed) {
     const marker = ((Math.trunc(seed) % 29) + 29) % 29;
-    if (marker === 0 || marker === 18) return new THREE.Color(LEGO_ACCENTS[0]);
-    if (marker === 7) return new THREE.Color(LEGO_ACCENTS[1]);
-    if (marker === 14) return new THREE.Color(LEGO_ACCENTS[2]);
-    if (marker === 23) return new THREE.Color(LEGO_ACCENTS[3]);
     const result = color.clone();
     const hsl = {};
     result.getHSL(hsl);
     if (hsl.l > 0.2 && hsl.l < 0.84 && hsl.s > 0.12) {
-      hsl.s = Math.max(0.82, hsl.s);
+      hsl.s = Math.min(0.68, hsl.s);
       hsl.l = Math.max(0.34, Math.min(0.67, hsl.l * 1.04 + (marker % 3 - 1) * 0.025));
       result.setHSL(hsl.h, hsl.s, hsl.l);
     }
@@ -577,13 +572,9 @@
   }
 
   function tileColor(districtColor, roll) {
-    if (roll < 0.28) return new THREE.Color(FLOOR_NEUTRALS[0]);
-    if (roll < 0.4) return new THREE.Color(FLOOR_NEUTRALS[1]);
-    if (roll < 0.64) return legoBrickColor(new THREE.Color(districtColor), Math.round(roll * 1000));
-    if (roll < 0.76) return new THREE.Color(LEGO_ACCENTS[0]);
-    if (roll < 0.84) return new THREE.Color(LEGO_ACCENTS[1]);
-    if (roll < 0.92) return new THREE.Color(LEGO_ACCENTS[2]);
-    return new THREE.Color(LEGO_ACCENTS[3]);
+    if (roll < 0.72) return new THREE.Color(FLOOR_NEUTRALS[0]);
+    if (roll < 0.9) return new THREE.Color(FLOOR_NEUTRALS[1]);
+    return new THREE.Color(districtColor).lerp(new THREE.Color(FLOOR_NEUTRALS[0]), 0.62);
   }
 
   function addStuddedHexFloor(root, radius, floorY, rotation, districtColor, seed) {
@@ -761,10 +752,11 @@
     const group = new THREE.Group();
     group.position.copy(world);
     const top = island.height;
-    const lot = mesh(new THREE.BoxGeometry(2.5, 0.1, 2.5), shade(district.color, 0.32), 0, top + 0.05, 0);
-    const rim = blockPadFrame(2.65, 0.1, shade(district.color, -0.05));
+    const lot = mesh(new THREE.BoxGeometry(2.5, 0.1, 2.5), "#eee9dc", 0, top + 0.05, 0);
+    const inset = mesh(new THREE.BoxGeometry(2.28, 0.035, 2.28), shade(district.color, 0.16), 0, top + 0.117, 0);
+    const rim = blockPadFrame(2.65, 0.1, shade(district.color, 0.12));
     rim.position.y = top + 0.1;
-    group.add(lot, rim);
+    group.add(lot, inset, rim);
 
     const kind = PROP_BY_ID[payload.entry.id] || PROP_BY_CATEGORY[payload.entry.category] || "tree";
     const prop = buildProp(kind, district.color);
@@ -798,11 +790,11 @@
     // Rotate the hex so a flat side faces the core and the bridge lands square.
     const towardCore = Math.atan2(-dir.x, -dir.z);
     const rotation = towardCore - Math.PI / 6;
-    const base = mesh(new THREE.CylinderGeometry(radius, radius * 1.03, height, 6), shade(district.color, -0.2), 0, height / 2, 0);
+    const base = mesh(new THREE.CylinderGeometry(radius, radius * 1.03, height, 6), shade(district.color, -0.035), 0, height / 2, 0);
     base.rotation.y = rotation;
     group.add(base);
     addHexBrickWall(group, radius, height, rotation, district.color, d * 137 + 5);
-    const floorTop = addStuddedHexFloor(group, radius * 0.95, height + 0.035, rotation, district.color, d * 419 + 23);
+    const floorTop = addStuddedHexFloor(group, radius * 0.985, height + 0.035, rotation, district.color, d * 419 + 23);
 
     const benchSpot = new THREE.Vector3(-radius * 0.68, 0, radius * 0.32);
     const island = { district, world, radius, height: floorTop, isIsland: true, payload: null, lift: 0, lots: [], benches: [benchSpot] };
@@ -1327,7 +1319,7 @@
   let lastInteraction = 0;
 
   function goHome() {
-    Object.assign(goal, { radius: window.innerWidth < 820 ? 84 : HOME.radius, phi: HOME.phi, target: HOME.target.clone() });
+    Object.assign(goal, { radius: window.innerWidth < 820 ? 140 : HOME.radius, phi: HOME.phi, target: HOME.target.clone() });
   }
 
   function focusOn(point, radius) {
@@ -1793,7 +1785,7 @@
     const far = view.radius > 40;
     labels.forEach(({ el: tag, position, cell }) => {
       projected.copy(position).project(camera);
-      const quiet = Boolean(cell && far && cell !== hovered && cell !== selected);
+      const quiet = Boolean(cell && ((far && cell !== hovered && cell !== selected) || (selected && cell !== selected && cell.island !== selected.island)));
       const screenX = (projected.x * 0.5 + 0.5) * w;
       const screenY = (-projected.y * 0.5 + 0.5) * h;
       const marginX = tag.offsetWidth / 2 + 8;
@@ -1871,7 +1863,7 @@
 
     const mobile = window.matchMedia("(max-width: 820px)").matches;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.75));
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = !mobile;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
