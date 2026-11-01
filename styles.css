@@ -185,6 +185,18 @@ p {
   min-width: 0;
 }
 
+.brand-name {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.brand-mark:focus-visible,
+.brand-name:focus-visible {
+  outline: 3px solid rgba(14, 143, 136, 0.3);
+  outline-offset: 3px;
+}
+
 .brand-copy strong {
   overflow: hidden;
   font-size: 1.26rem;

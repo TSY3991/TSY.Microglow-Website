@@ -1,0 +1,11 @@
+# Keep email template sources in the repository, outside the published site.
+# Retain standard Jekyll exclusions when configuring legacy Pages builds.
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/
+  - supabase/
