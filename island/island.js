@@ -836,18 +836,30 @@
   const LOT_RING = 3.4;
   let coreCell = null;
 
+  // Lots sit on concentric rings: 1 centre + 6 inner + 12 outer. An island that
+  // outgrows the inner ring gets a bigger hex so new entries are never dropped.
+  const LOT_RING_OUTER = 6.2;
+  const MAX_FACILITIES = 19;
+
   function islandRadius(count) {
-    return count <= 1 ? 4.6 : 6.6;
+    if (count <= 1) return 4.6;
+    return count <= 7 ? 6.6 : 9.4;
   }
 
   function lotSpots(count) {
     if (count <= 1) return [new THREE.Vector3(0, 0, 0)];
-    const ring = Math.min(6, count - 1);
     const spots = [new THREE.Vector3(0, 0, 0)];
-    for (let i = 0; i < ring; i += 1) {
-      const a = (i / ring) * Math.PI * 2 + Math.PI / 6;
-      spots.push(new THREE.Vector3(Math.cos(a) * LOT_RING, 0, Math.sin(a) * LOT_RING));
-    }
+    const ringSpots = (n, radius, phase) => {
+      for (let i = 0; i < n; i += 1) {
+        const a = (i / n) * Math.PI * 2 + phase;
+        spots.push(new THREE.Vector3(Math.cos(a) * radius, 0, Math.sin(a) * radius));
+      }
+    };
+    const inner = Math.min(6, count - 1);
+    ringSpots(inner, LOT_RING, Math.PI / 6);
+    const outer = Math.min(12, count - 1 - inner);
+    // Spread the outer lots evenly so a partly filled ring still looks balanced.
+    if (outer > 0) ringSpots(outer, LOT_RING_OUTER, Math.PI / 12);
     return spots;
   }
 
@@ -904,7 +916,11 @@
   }
 
   function buildIslandFor(district, d, entries) {
-    const payloads = entries.filter((e) => e.category === district.key).slice(0, 7).map((entry) => ({ type: "entry", entry }));
+    const all = entries.filter((e) => e.category === district.key);
+    if (all.length > MAX_FACILITIES) {
+      console.warn(`${district.name} 有 ${all.length} 項設施，超過島上容量 ${MAX_FACILITIES}，多出的項目只出現在清單。`);
+    }
+    const payloads = all.slice(0, MAX_FACILITIES).map((entry) => ({ type: "entry", entry }));
     const radius = islandRadius(payloads.length);
     const angle = (d / DISTRICTS.length) * Math.PI * 2 - Math.PI / 2;
     const dir = new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle));

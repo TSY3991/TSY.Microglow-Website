@@ -132,6 +132,28 @@ if (!html.includes('class="brand-about-link" href="./about/"')) fail('首頁品�
 if (!aboutHtml.includes('<link rel="canonical" href="https://tsy3991.github.io/TSY.Microglow-Website/about/">')) fail('About 頁 canonical 不正確');
 if (!html.includes('styles.css?v=20261031a') || !aboutHtml.includes('styles.css?v=20261031a')) fail('首頁與 About 頁的 styles.css 快取版本未同步');
 
+// 微光島（/island/）從首頁卡片即時解析資料，但模型對照、圖示與容量寫在 island.js，這裡核對有沒有脫節。
+{
+  const islandJs = fs.readFileSync(path.join(root, 'island', 'island.js'), 'utf8').replace(/^﻿/, '');
+  const block = (name) => islandJs.match(new RegExp(`const ${name} = \\{([\\s\\S]*?)\\n  \\};`))?.[1] || '';
+  const keysOf = (text) => new Set(Array.from(text.matchAll(/(?:^|[\s,{])"?([\w-]+)"?\s*:/g), (match) => match[1]));
+  const propIds = keysOf(block('PROP_BY_ID'));
+  const iconIds = keysOf(block('FACILITY_ICON_SOURCES'));
+  const districtKeys = new Set(Array.from(islandJs.matchAll(/\{ key: "(\w+)", name:/g), (match) => match[1]));
+  const capacity = Number(islandJs.match(/const MAX_FACILITIES = (\d+);/)?.[1]);
+  if (!capacity || !districtKeys.size || !propIds.size) fail('無法從 island.js 讀出 DISTRICTS／PROP_BY_ID／MAX_FACILITIES，請更新這支檢查');
+  const perCategory = {};
+  for (const tool of tools.filter((item) => item.url)) {
+    perCategory[tool.category] = (perCategory[tool.category] || 0) + 1;
+    if (!districtKeys.has(tool.category)) fail(`微光島沒有「${tool.category}」分區島（${tool.id}）；請在 island.js 的 DISTRICTS 新增`);
+    if (!propIds.has(tool.id)) fail(`微光島 PROP_BY_ID 缺少 ${tool.id}，會退回分類預設模型`);
+    if (!iconIds.has(tool.id)) console.warn(`NOTE: 微光島 FACILITY_ICON_SOURCES 沒有 ${tool.id}，會使用程式繪製的分類圖示`);
+  }
+  for (const [category, count] of Object.entries(perCategory)) {
+    if (capacity && count > capacity) fail(`「${category}」有 ${count} 項，超過微光島每島容量 ${capacity}`);
+  }
+}
+
 if (!process.exitCode) {
   console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、28 則新聞及快取版本通過。`);
 }

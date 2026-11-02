@@ -1,6 +1,6 @@
 // 入口網站 service worker：導覽請求「網路優先、離線退回快取」，靜態資源「先用快取、背景更新」。
 // 登入／回呼頁（/auth/）與跨網域請求（Supabase 等）一律不經過快取。
-const CACHE = "microglow-portal-v2";
+const CACHE = "microglow-portal-v3";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -35,6 +35,22 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => caches.match(request, { ignoreSearch: true }).then((hit) => hit || caches.match("./")))
+    );
+    return;
+  }
+
+  // 首頁 HTML 是微光島等頁面讀取作品與公告的資料來源，必須網路優先，否則會慢一次才看到更新。
+  if (url.pathname.endsWith("/index.html")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
     );
     return;
   }
