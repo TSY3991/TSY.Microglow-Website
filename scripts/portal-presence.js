@@ -27,8 +27,24 @@
     return fresh;
   }
 
+  const presenceKey = createPresenceKey();
+  const visitEl = document.querySelector("#siteVisitTotal");
+
+  // Cumulative popularity: the server counts this browser at most once per 30 minutes.
+  async function recordVisit() {
+    if (!visitEl) return;
+    try {
+      const { data, error } = await client.rpc("record_portal_visit", { p_key: presenceKey });
+      if (error || !data || typeof data.total !== "number") return;
+      visitEl.textContent = data.total.toLocaleString("en-US");
+    } catch (_) {
+      // Counter unavailable: keep the placeholder.
+    }
+  }
+  recordVisit();
+
   const channel = client.channel("portal-online", {
-    config: { presence: { key: createPresenceKey() } }
+    config: { presence: { key: presenceKey } }
   });
 
   channel
