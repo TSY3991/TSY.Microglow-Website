@@ -143,6 +143,24 @@
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0xefe6d4, 100, 220);
+  let waterMesh = null;
+  const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+  function updateSceneColorScheme() {
+    if (colorScheme.matches) {
+      const background = 0x102527;
+      scene.background = new THREE.Color(background);
+      scene.fog.color.setHex(background);
+      renderer?.setClearColor(background, 1);
+      waterMesh?.material.color.setHex(0x193b3d);
+    } else {
+      scene.background = null;
+      scene.fog.color.setHex(0xefe6d4);
+      renderer?.setClearColor(0x000000, 0);
+      waterMesh?.material.color.setHex(0x6fbfd3);
+    }
+  }
+  updateSceneColorScheme();
+  colorScheme.addEventListener("change", updateSceneColorScheme);
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 400);
   const animators = [];
   const labels = [];
@@ -1070,10 +1088,11 @@
     sun.shadow.bias = -0.0005;
     scene.add(sun);
 
-    const water = mesh(new THREE.CircleGeometry(160, 72), "#6fbfd3", 0, -0.02, 0, { roughness: 0.35 });
-    water.rotation.x = -Math.PI / 2;
-    water.castShadow = false;
-    scene.add(water);
+    waterMesh = mesh(new THREE.CircleGeometry(160, 72), "#6fbfd3", 0, -0.02, 0, { roughness: 0.35 });
+    updateSceneColorScheme();
+    waterMesh.rotation.x = -Math.PI / 2;
+    waterMesh.castShadow = false;
+    scene.add(waterMesh);
 
     // Little satellite islets and sailboats to fill the sea.
     for (let i = 0; i < 9; i += 1) {

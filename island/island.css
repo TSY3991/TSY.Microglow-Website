@@ -303,3 +303,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .live-dot { animation: none; }
 }
+
+.skip-link { position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); left:calc(12px + env(safe-area-inset-left,0px)); z-index:100; padding:10px 16px; border-radius:12px; color:#102527; background:#8ee0cf; font-weight:800; transform:translateY(-180%); }
+.skip-link:focus-visible { transform:none; outline:3px solid #fff; outline-offset:3px; }
+@media (prefers-color-scheme:dark) {
+ :root { color-scheme:dark; --page:#102527; --panel:#193336; --ink:#f6f3e9; --ink-soft:#d4e2de; --muted:#b5c9c4; --line:rgba(223,243,238,.25); --teal:#8ee0cf; --gold:#ffcf70; --district:#8ee0cf; --shadow:0 18px 42px rgba(0,0,0,.48); }
+ html,body { background:#102527; color:var(--ink); } .stats { background:linear-gradient(135deg,#203d40,#193336); } .xp-track,.lit-track { background:#365052; }
+ .finder { border-color:#526b5e; background:linear-gradient(145deg,#263c36,#203d40); box-shadow:inset 0 1px 0 #ffffff18,0 3px 0 #122c2b; } .finder-kicker { color:#ffcf70 !important; }
+ .finder-options button,.finder-result { background:#193336; color:#d4e2de; border-color:#526b5e; } .finder-options button:hover,.finder-options button.is-selected { background:#204d48; color:#f6f3e9; } .panel,.tabs { background:#193336; } .tag { color:#102527; }
+ .tabs button[aria-selected="true"],.toolbar button[aria-pressed="true"] { background:#8ee0cf; border-color:#8ee0cf; color:#102527; }
+ .list-controls input,.list-controls select { background:#102527; border-color:#526b5e; color:#f6f3e9; }
+ .empty-state,.district-head { background:#263c3e; color:#f6f3e9; }
+ .district-head:hover { background:#304b4d; }
+ .entries button:hover,.entries button.is-active,.fallback-entry:hover,.toolbar button:hover { background:#294547; color:#f6f3e9; }
+ .detail { background:#193336; }
+ .detail .chips span { background:#294547; color:#f6f3e9; }
+ .detail a.go { color:#102527; }
+ .tour { border-color:#526b5e; background:linear-gradient(150deg,#203d40,#193336); color:#f6f3e9; box-shadow:0 22px 70px rgba(0,0,0,.5),inset 0 1px 0 #ffffff18; }
+ .tour-step { color:#ffcf70; }
+ .tour-actions button { background:#102527; border-color:#526b5e; color:#d4e2de; }
+}
+.brand { top:calc(18px + env(safe-area-inset-top,0px)); left:calc(18px + env(safe-area-inset-left,0px)); }
+.panel { top:calc(16px + env(safe-area-inset-top,0px)); right:calc(16px + env(safe-area-inset-right,0px)); bottom:calc(16px + env(safe-area-inset-bottom,0px)); }
+@media (max-width:900px) { .panel { right:env(safe-area-inset-right,0px); bottom:env(safe-area-inset-bottom,0px); left:env(safe-area-inset-left,0px); } }
