@@ -217,7 +217,10 @@
 
   greet.addEventListener("click", () => { if (performance.now() >= suppressClickUntil) perform("wave"); });
   greet.addEventListener("pointerdown", event => {
-    if (!ready || !event.isPrimary || event.button !== 0) return;
+    if (!event.isPrimary || event.button !== 0) return;
+    // Pointer interaction keeps the mascot free of a persistent focus frame; Tab still shows keyboard focus.
+    event.preventDefault();
+    if (!ready) return;
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY, origin: { ...point }, moved: false };
     greet.setPointerCapture(event.pointerId);
     stop();

@@ -133,7 +133,7 @@ html, body {
   background: linear-gradient(145deg, #fffaf0, #f4f7e9);
   box-shadow: inset 0 1px 0 #fff, 0 3px 0 #e9e1d0;
 }
-.finder-kicker { margin: 0 0 4px !important; color: #a5753f !important; font-size: 10px !important; font-weight: 800; letter-spacing: .14em; }
+.finder-kicker { margin: 0 0 4px !important; color: #875924 !important; font-size: 10px !important; font-weight: 800; letter-spacing: .14em; }
 .finder h2 { margin: 0; font-size: 17px; }
 .finder > p:not(.finder-kicker):not(.finder-result) { margin: 4px 0 12px; color: var(--muted); font-size: 12px; }
 .finder-options { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }

@@ -26,3 +26,29 @@
 :root[data-theme="dark"] .auth-primary{color:#102527}
 
 :root[data-theme="dark"] .callback-card [data-callback-status]{color:#ffadb2}
+
+/* Full light/dark text contrast review. */
+
+:root:not([data-theme="dark"]){--teal:#08766e;--blue:#235aaf;--purple:#7541b1;--muted:#5e6966;--accent:#08766e;--accent-strong:#075e59}
+:root:not([data-theme="dark"]) .brand-island-link{color:#102527}
+:root:not([data-theme="dark"]) .nav-item.active{background:#07635e}
+:root:not([data-theme="dark"]) .follow-button{background:#1768d2}
+:root:not([data-theme="dark"]) :is(.news-item time,.feature-tags strong:nth-child(3)){color:#935000}
+:root:not([data-theme="dark"]) :is(.search-box input,.feedback-field input,.feedback-field textarea)::placeholder{color:#5e6966;opacity:1}
+.account-status-link small{color:#063e39}
+:root[data-theme="dark"] .mission-score span{background:#203d40;color:#ffcf70}
+:root:not([data-theme="dark"]) :is(.finder-kicker,.tour-step){color:#875924}
+.district-num{color:#102527;background:#ffcf70}
+.district-head em{color:var(--ink)}
+.toolbar button[aria-pressed="true"] .toolbar-label{color:inherit}
+:root[data-theme="dark"] input::placeholder{color:#b5c9c4;opacity:1}
+
+
+
+:root:not([data-theme="dark"]){--muted:#4e5b56}
+:root:not([data-theme="dark"]) .brand-island-link{color:#fff}
+:root:not([data-theme="dark"]) .home-link{background:#07635e;color:#fff}
+:root:not([data-theme="dark"]) .banner-copy{color:#102527;text-shadow:none}
+:root:not([data-theme="dark"]) .finder>.finder-kicker{color:#875924}
+:root:not([data-theme="dark"]) :is(.tour-actions .primary,.auth-tabs button.is-active,.auth-primary){background:#07635e;color:#fff}
+:root[data-theme="dark"] .banner-copy{color:#f6f3e9}

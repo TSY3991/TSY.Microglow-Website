@@ -20,7 +20,7 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
   :root[data-theme="dark"] .news-toggle{ min-height:44px; color:#8ee0cf; background:#193336; border-color:#526b6b; }
   :root[data-theme="dark"] html, :root[data-theme="dark"] body{ color-scheme:dark; background-color:var(--page); color:var(--ink); }
   :root[data-theme="dark"] :is(.app-shell,.dashboard,.hero-banner,.hero-news,.feedback-panel,.support-panel,.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.explorer-dialog){ color:var(--ink); }
-  :root[data-theme="dark"] :is(.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.hero-news,.feedback-panel,.support-panel){ background-color:var(--panel); border-color:var(--line); box-shadow:var(--shadow); }
+  :root[data-theme="dark"] :is(.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.hero-news,.feedback-panel,.support-panel){ background:var(--panel); border-color:var(--line); box-shadow:var(--shadow); }
   :root[data-theme="dark"] :is(.muted,.text-muted,.news-date,.news-summary){ color:var(--muted); }
   :root[data-theme="dark"] .news-link{ color:var(--teal); }
   :root[data-theme="dark"] .about-content{ background:rgba(25,51,54,.96); border-color:#526b6b; color:var(--ink); }
@@ -42,3 +42,27 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 :root[data-theme="dark"] .about-summary a{color:#102527;background:#8ee0cf}
 :root[data-theme="dark"] .support-donate{color:#8ee0cf;background:#193336;border-color:#526b6b}
 :root[data-theme="dark"] a[href*="facebook.com/TSY.Microglow"]{background:#1768d2;color:#fff}
+
+/* Dark surfaces must replace the light background layers, not only the base color. */
+.brand-logo-dark{display:none}
+:root[data-theme="dark"] .brand-logo-light{display:none}
+:root[data-theme="dark"] .brand-logo-dark{display:block;object-fit:contain}
+:root[data-theme="dark"] .hero-banner{background:var(--panel)}
+:root[data-theme="dark"] .category-tabs button{color:var(--ink-soft);background:var(--panel-soft);border-color:#526b6b}
+:root[data-theme="dark"] :is(.category-tabs .active,.launch-button){color:#102527;background:#8ee0cf;border-color:#8ee0cf}
+:root[data-theme="dark"] .search-box{background:var(--panel-soft);color:var(--ink);border-color:#526b6b}
+:root[data-theme="dark"] .search-box input::placeholder{color:#b5c9c4}
+:root[data-theme="dark"] .search-symbol{border-color:#b5c9c4}
+:root[data-theme="dark"] .search-symbol::after{background:#b5c9c4}
+:root[data-theme="dark"] .tool-record{background:var(--panel-soft);color:var(--ink-soft);border-color:#526b6b}
+:root[data-theme="dark"] .tool-copy>p,:root[data-theme="dark"] .feature-tags strong:nth-child(2){color:#b7d4ff;background:#233e60}
+:root[data-theme="dark"] .feature-tags strong:nth-child(3){color:#ffcf70;background:#493b20}
+:root[data-theme="dark"] .feature-tags strong:nth-child(4){color:#e0c4ff;background:#463355}
+:root[data-theme="dark"] .tool-visual{background:var(--panel-soft);border-color:#526b6b}
+:root[data-theme="dark"] .primary-tool::after{border-color:#526b6b}
+:root[data-theme="dark"] .tool-empty{background:var(--panel-soft);color:var(--ink-soft)}
+
+:root[data-theme="dark"] .site-counter>span{background:var(--panel-soft)}
+:root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea,.known-issue,.known-issue-empty){background:var(--panel-soft);color:var(--ink);border-color:#526b6b}
+:root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea)::placeholder{color:var(--muted);opacity:1}
+:root[data-theme="dark"] :is(.feedback-button,.issue-badge[data-status="fixed"]){background:#8ee0cf;color:#102527}
