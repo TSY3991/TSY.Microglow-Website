@@ -9,26 +9,36 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 .skip-link { position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); left:calc(12px + env(safe-area-inset-left,0px)); z-index:1000; padding:10px 16px; border-radius:12px; color:#102527; background:#8ee0cf; font-weight:800; transform:translateY(-180%); }
 .skip-link:focus-visible { transform:none; outline:3px solid #fff; outline-offset:3px; }
 
-@media (prefers-color-scheme: dark) {
-  :root { color-scheme:dark; --page:#102527; --panel:#193336; --panel-soft:#203d40; --ink:#f6f3e9; --ink-soft:#d4e2de; --muted:#b5c9c4; --line:rgba(223,243,238,.22); --teal:#8ee0cf; --teal-dark:#8ee0cf; --teal-soft:#204d48; --gold:#ffcf70; --gold-soft:#493b20; --red:#ffadb2; --shadow:0 18px 42px rgba(0,0,0,.38); --soft-shadow:0 8px 22px rgba(0,0,0,.28); }
-  body { background:radial-gradient(ellipse at 12% 5%,#20413b,transparent 45%),radial-gradient(ellipse at 90% 20%,#163b3a,transparent 50%),linear-gradient(135deg,#102527,#193336); }
-  body::before { background:radial-gradient(circle at 92% 34%,rgba(14,143,136,.08),transparent 24%); }
-  :is(.top-stat,.explorer-status,.site-counter) { background:#193336; color:#f6f3e9; border-color:#526b6b; box-shadow:0 8px 24px #0005; }
-  .top-stat :is(span,small),.explorer-status :is(span,small),.site-counter :is(span,small) { color:#b5c9c4; }
-  .brand-island-link { color:#102527; background:#8ee0cf; }
-  .nav-item.in-view { color:#f6f3e9; background:#204d48; border-color:#526b6b; }
-  .news-toggle { min-height:44px; color:#8ee0cf; background:#193336; border-color:#526b6b; }
-  html,body { color-scheme:dark; background-color:var(--page); color:var(--ink); }
-  :is(.app-shell,.dashboard,.hero-banner,.hero-news,.feedback-panel,.support-panel,.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.explorer-dialog) { color:var(--ink); }
-  :is(.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.hero-news,.feedback-panel,.support-panel) { background-color:var(--panel); border-color:var(--line); box-shadow:var(--shadow); }
-  :is(.muted,.text-muted,.news-date,.news-summary) { color:var(--muted); }
-  .news-link { color:var(--teal); }
-  .about-content { background:rgba(25,51,54,.96); border-color:#526b6b; color:var(--ink); }
-  .about-content :is(h1,h2) { color:var(--ink); }
-  .about-content :is(p,.about-list) { color:var(--ink-soft); }
-  .about-eyebrow { color:var(--teal); }
-  .mobile-dock { background:rgba(25,51,54,.96); border-color:#526b6b; box-shadow:0 18px 42px rgba(0,0,0,.42); }
-  .mobile-dock a { color:var(--ink-soft); }
-  .mobile-dock a.active { color:#102527; border-color:#8ee0cf; background:linear-gradient(180deg,#8ee0cf,#70cbb7); }
-}
+
+  :root[data-theme="dark"]{ color-scheme:dark; --page:#102527; --panel:#193336; --panel-soft:#203d40; --ink:#f6f3e9; --ink-soft:#d4e2de; --muted:#b5c9c4; --line:rgba(223,243,238,.22); --teal:#8ee0cf; --teal-dark:#8ee0cf; --teal-soft:#204d48; --gold:#ffcf70; --gold-soft:#493b20; --red:#ffadb2; --shadow:0 18px 42px rgba(0,0,0,.38); --soft-shadow:0 8px 22px rgba(0,0,0,.28); }
+  :root[data-theme="dark"] body{ background:radial-gradient(ellipse at 12% 5%,#20413b,transparent 45%),radial-gradient(ellipse at 90% 20%,#163b3a,transparent 50%),linear-gradient(135deg,#102527,#193336); }
+  :root[data-theme="dark"] body::before{ background:radial-gradient(circle at 92% 34%,rgba(14,143,136,.08),transparent 24%); }
+  :root[data-theme="dark"] :is(.top-stat,.explorer-status,.site-counter){ background:#193336; color:#f6f3e9; border-color:#526b6b; box-shadow:0 8px 24px #0005; }
+  :root[data-theme="dark"] .top-stat :is(span,small), :root[data-theme="dark"] .explorer-status :is(span,small), :root[data-theme="dark"] .site-counter :is(span,small){ color:#b5c9c4; }
+  :root[data-theme="dark"] .brand-island-link{ color:#102527; background:#8ee0cf; }
+  :root[data-theme="dark"] .nav-item.in-view{ color:#f6f3e9; background:#204d48; border-color:#526b6b; }
+  :root[data-theme="dark"] .news-toggle{ min-height:44px; color:#8ee0cf; background:#193336; border-color:#526b6b; }
+  :root[data-theme="dark"] html, :root[data-theme="dark"] body{ color-scheme:dark; background-color:var(--page); color:var(--ink); }
+  :root[data-theme="dark"] :is(.app-shell,.dashboard,.hero-banner,.hero-news,.feedback-panel,.support-panel,.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.explorer-dialog){ color:var(--ink); }
+  :root[data-theme="dark"] :is(.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.hero-news,.feedback-panel,.support-panel){ background-color:var(--panel); border-color:var(--line); box-shadow:var(--shadow); }
+  :root[data-theme="dark"] :is(.muted,.text-muted,.news-date,.news-summary){ color:var(--muted); }
+  :root[data-theme="dark"] .news-link{ color:var(--teal); }
+  :root[data-theme="dark"] .about-content{ background:rgba(25,51,54,.96); border-color:#526b6b; color:var(--ink); }
+  :root[data-theme="dark"] .about-content :is(h1,h2){ color:var(--ink); }
+  :root[data-theme="dark"] .about-content :is(p,.about-list){ color:var(--ink-soft); }
+  :root[data-theme="dark"] .about-eyebrow{ color:var(--teal); }
+  :root[data-theme="dark"] .mobile-dock{ background:rgba(25,51,54,.96); border-color:#526b6b; box-shadow:0 18px 42px rgba(0,0,0,.42); }
+  :root[data-theme="dark"] .mobile-dock a{ color:var(--ink-soft); }
+  :root[data-theme="dark"] .mobile-dock a.active{ color:#102527; border-color:#8ee0cf; background:linear-gradient(180deg,#8ee0cf,#70cbb7); }
+
 .news-link { min-height:44px; display:inline-flex; align-items:center; }
+/* Prompt 7: dark-only contrast corrections */
+:root[data-theme="dark"] .side-panel{background:rgba(25,51,54,.98);border-color:#526b6b;color:#f6f3e9;box-shadow:0 18px 42px rgba(0,0,0,.38)}
+:root[data-theme="dark"] .brand-about-link{color:#8ee0cf}
+:root[data-theme="dark"] .news-item time{color:#ffcf70;background:#493b20}
+:root[data-theme="dark"] .about-summary{background:#193336;border-color:#526b6b;color:#f6f3e9}
+:root[data-theme="dark"] .about-summary :is(h2,p){color:#f6f3e9}
+:root[data-theme="dark"] .about-summary-kicker{color:#ffcf70}
+:root[data-theme="dark"] .about-summary a{color:#102527;background:#8ee0cf}
+:root[data-theme="dark"] .support-donate{color:#8ee0cf;background:#193336;border-color:#526b6b}
+:root[data-theme="dark"] a[href*="facebook.com/TSY.Microglow"]{background:#1768d2;color:#fff}

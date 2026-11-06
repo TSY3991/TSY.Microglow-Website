@@ -144,9 +144,8 @@
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0xefe6d4, 100, 220);
   let waterMesh = null;
-  const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
   function updateSceneColorScheme() {
-    if (colorScheme.matches) {
+    if (document.documentElement.dataset.theme === "dark") {
       const background = 0x102527;
       scene.background = new THREE.Color(background);
       scene.fog.color.setHex(background);
@@ -160,7 +159,7 @@
     }
   }
   updateSceneColorScheme();
-  colorScheme.addEventListener("change", updateSceneColorScheme);
+  document.addEventListener("tsy-theme-change", updateSceneColorScheme);
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 400);
   const animators = [];
   const labels = [];

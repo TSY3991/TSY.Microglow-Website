@@ -54,4 +54,4 @@ p {
 }
 .home-link:hover { filter: brightness(1.08); }
 
-@media (prefers-color-scheme:dark) { body { background:#102527; color:#f6f3e9; } .panel { background:#193336; border-color:#526b6b; box-shadow:0 18px 40px #0007; } .code { color:#8ee0cf; } p { color:#b5c9c4; } .home-link { background:linear-gradient(135deg,#8ee0cf,#63c4b1); color:#102527; } }
+ :root[data-theme="dark"] body{ background:#102527; color:#f6f3e9; } :root[data-theme="dark"] .panel{ background:#193336; border-color:#526b6b; box-shadow:0 18px 40px #0007; } :root[data-theme="dark"] .code{ color:#8ee0cf; } :root[data-theme="dark"] p{ color:#b5c9c4; } :root[data-theme="dark"] .home-link{ background:linear-gradient(135deg,#8ee0cf,#63c4b1); color:#102527; }
