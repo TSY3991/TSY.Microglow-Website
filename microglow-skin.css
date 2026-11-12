@@ -1,46 +1,126 @@
 /* Visual layer only; content, geometry and interactions remain in their existing files. */
-:root { --microglow-style-version: 20261103c; --muted:#5e6966; --radius: 14px; --shadow: inset 0 1px 0 #fff, 0 4px 0 #dce5d6, 0 10px 22px rgba(38, 75, 54, .055); --soft-shadow: 0 6px 18px rgba(38, 75, 54, .06); }
+:root {
+  --microglow-style-version: 20261112a;
+  --muted: #53625e;
+  --radius: 14px;
+  --shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 0 #dce5d6, 0 10px 24px rgba(38, 75, 54, 0.055);
+  --soft-shadow: 0 4px 14px rgba(38, 75, 54, 0.06);
+}
 body { background: radial-gradient(ellipse at 12% 5%, rgba(181, 140, 66, .07), transparent 45%), radial-gradient(ellipse at 90% 20%, rgba(10, 136, 126, .07), transparent 50%), linear-gradient(#f5f6ed, #f9f8f0); }
-:is(.hero-banner, .hero-news, .feedback-panel, .support-panel, .explorer-dialog) { border-color: #c5d9cb; border-radius: 24px; box-shadow: inset 0 1px 0 #fff, 0 4px 0 #dce5d6, 0 10px 22px rgba(38, 75, 54, .055); }
-:is(.tool-card, .news-item, .metric-card, .mission-card, .recommend-card, .primary-tool) { border-color: #c5d9cb; border-radius: 20px; box-shadow: inset 0 1px 0 #fff, 0 4px 0 #dce5d6, 0 10px 22px rgba(38, 75, 54, .055); }
+:is(.hero-banner, .hero-news, .feedback-panel, .support-panel, .explorer-dialog) { border-color: #c5d9cb; border-radius: 24px; box-shadow: var(--shadow); }
+:is(.tool-card, .news-item, .metric-card, .mission-card, .recommend-card, .primary-tool) { border-color: #c5d9cb; border-radius: 20px; box-shadow: var(--shadow); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
+:is(.tool-card, .primary-tool):hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 #fff, 0 6px 0 #dce5d6, 0 16px 32px rgba(38, 75, 54, 0.09); border-color: #a8cdb5; }
 :is(.search-box, .feedback-field input, .feedback-field textarea) { border-color: #c5d9cb; border-radius: 14px; }
 :is(.launch-button, .feedback-button, .news-toggle, .account-status-link) { border-radius: 14px; }
 html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !important; box-shadow: 0 0 0 5px rgba(10, 136, 126, .14); }
 .skip-link { position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); left:calc(12px + env(safe-area-inset-left,0px)); z-index:1000; padding:10px 16px; border-radius:12px; color:#102527; background:#8ee0cf; font-weight:800; transform:translateY(-180%); }
 .skip-link:focus-visible { transform:none; outline:3px solid #fff; outline-offset:3px; }
 
+/* 2026 排版字重與呼吸感層次優化 */
+.news-item p,
+.tool-copy span,
+.hero-line,
+.about-summary p,
+.support-copy p,
+.feedback-copy p {
+  line-height: 1.72 !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.015em;
+}
 
-  :root[data-theme="dark"]{ color-scheme:dark; --page:#102527; --panel:#193336; --panel-soft:#203d40; --ink:#f6f3e9; --ink-soft:#d4e2de; --muted:#b5c9c4; --line:rgba(223,243,238,.22); --teal:#8ee0cf; --teal-dark:#8ee0cf; --teal-soft:#204d48; --gold:#ffcf70; --gold-soft:#493b20; --red:#ffadb2; --shadow:0 18px 42px rgba(0,0,0,.38); --soft-shadow:0 8px 22px rgba(0,0,0,.28); }
+.news-item strong {
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+/* 按鈕元件 vs 標籤分級：標籤回歸輕量說明性質，避免與按鈕混淆 */
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+.feature-tags strong {
+  min-height: 26px !important;
+  padding: 0 9px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  letter-spacing: 0.02em;
+}
+
+/* 分類切換鈕：純膠囊形狀，觸感細膩 */
+.category-tabs button {
+  border-radius: 999px !important;
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.category-tabs button:hover {
+  transform: translateY(-1px);
+}
+
+/* 主行動按鈕：穩重微圓角（14px）與立體微動效 */
+.launch-button {
+  min-height: 52px;
+  font-size: 1.05rem;
+  font-weight: 850;
+  border-radius: 14px !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 4px 0 #075e59, 0 8px 18px rgba(7, 99, 94, 0.22);
+}
+.launch-button:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 0 #075e59, 0 12px 24px rgba(7, 99, 94, 0.26);
+}
+.launch-button:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 0 #075e59, 0 4px 10px rgba(7, 99, 94, 0.2);
+}
+
+/* 頂部輔助資訊與深淺色切換微光質感 */
+.site-counter {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+}
+.top-stat {
+  border-radius: 14px;
+}
+
+  :root[data-theme="dark"]{ color-scheme:dark; --page:#102527; --panel:#193336; --panel-soft:#203d40; --ink:#f6f3e9; --ink-soft:#d4e2de; --muted:#b5c9c4; --line:rgba(223,243,238,.18); --teal:#8ee0cf; --teal-dark:#8ee0cf; --teal-soft:#204d48; --gold:#ffcf70; --gold-soft:#493b20; --red:#ffadb2; --shadow:0 16px 38px rgba(0,0,0,.34); --soft-shadow:0 6px 18px rgba(0,0,0,.24); }
   :root[data-theme="dark"] body{ background:radial-gradient(ellipse at 12% 5%,#20413b,transparent 45%),radial-gradient(ellipse at 90% 20%,#163b3a,transparent 50%),linear-gradient(135deg,#102527,#193336); }
   :root[data-theme="dark"] body::before{ background:radial-gradient(circle at 92% 34%,rgba(14,143,136,.08),transparent 24%); }
-  :root[data-theme="dark"] :is(.top-stat,.explorer-status,.site-counter){ background:#193336; color:#f6f3e9; border-color:#526b6b; box-shadow:0 8px 24px #0005; }
+  :root[data-theme="dark"] :is(.top-stat,.explorer-status,.site-counter){ background:#193336; color:#f6f3e9; border-color:rgba(142,224,207,.2); box-shadow:0 8px 24px #0005; }
   :root[data-theme="dark"] .top-stat :is(span,small), :root[data-theme="dark"] .explorer-status :is(span,small), :root[data-theme="dark"] .site-counter :is(span,small){ color:#b5c9c4; }
   :root[data-theme="dark"] .brand-island-link{ color:#102527; background:#8ee0cf; }
-  :root[data-theme="dark"] .nav-item.in-view{ color:#f6f3e9; background:#204d48; border-color:#526b6b; }
-  :root[data-theme="dark"] .news-toggle{ min-height:44px; color:#8ee0cf; background:#193336; border-color:#526b6b; }
+  :root[data-theme="dark"] .nav-item.in-view{ color:#f6f3e9; background:#204d48; border-color:rgba(142,224,207,.25); }
+  :root[data-theme="dark"] .news-toggle{ min-height:44px; color:#8ee0cf; background:#193336; border-color:rgba(142,224,207,.25); border-radius:999px; }
   :root[data-theme="dark"] html, :root[data-theme="dark"] body{ color-scheme:dark; background-color:var(--page); color:var(--ink); }
   :root[data-theme="dark"] :is(.app-shell,.dashboard,.hero-banner,.hero-news,.feedback-panel,.support-panel,.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.explorer-dialog){ color:var(--ink); }
   :root[data-theme="dark"] :is(.tool-card,.news-item,.metric-card,.mission-card,.recommend-card,.primary-tool,.hero-news,.feedback-panel,.support-panel){ background:var(--panel); border-color:var(--line); box-shadow:var(--shadow); }
   :root[data-theme="dark"] :is(.muted,.text-muted,.news-date,.news-summary){ color:var(--muted); }
   :root[data-theme="dark"] .news-link{ color:var(--teal); }
-  :root[data-theme="dark"] .about-content{ background:rgba(25,51,54,.96); border-color:#526b6b; color:var(--ink); }
+  :root[data-theme="dark"] .about-content{ background:rgba(25,51,54,.96); border-color:rgba(142,224,207,.2); color:var(--ink); }
   :root[data-theme="dark"] .about-content :is(h1,h2){ color:var(--ink); }
   :root[data-theme="dark"] .about-content :is(p,.about-list){ color:var(--ink-soft); }
   :root[data-theme="dark"] .about-eyebrow{ color:var(--teal); }
-  :root[data-theme="dark"] .mobile-dock{ background:rgba(25,51,54,.96); border-color:#526b6b; box-shadow:0 18px 42px rgba(0,0,0,.42); }
+  :root[data-theme="dark"] .mobile-dock{ background:rgba(25,51,54,.96); border-color:rgba(142,224,207,.2); box-shadow:0 18px 42px rgba(0,0,0,.42); }
   :root[data-theme="dark"] .mobile-dock a{ color:var(--ink-soft); }
   :root[data-theme="dark"] .mobile-dock a.active{ color:#102527; border-color:#8ee0cf; background:linear-gradient(180deg,#8ee0cf,#70cbb7); }
 
 .news-link { min-height:44px; display:inline-flex; align-items:center; }
 /* Prompt 7: dark-only contrast corrections */
-:root[data-theme="dark"] .side-panel{background:rgba(25,51,54,.98);border-color:#526b6b;color:#f6f3e9;box-shadow:0 18px 42px rgba(0,0,0,.38)}
+:root[data-theme="dark"] .side-panel{background:rgba(25,51,54,.98);border-color:rgba(142,224,207,.2);color:#f6f3e9;box-shadow:0 18px 42px rgba(0,0,0,.38)}
 :root[data-theme="dark"] .brand-about-link{color:#8ee0cf}
 :root[data-theme="dark"] .news-item time{color:#ffcf70;background:#493b20}
-:root[data-theme="dark"] .about-summary{background:#193336;border-color:#526b6b;color:#f6f3e9}
+:root[data-theme="dark"] .about-summary{background:#193336;border-color:rgba(142,224,207,.2);color:#f6f3e9}
 :root[data-theme="dark"] .about-summary :is(h2,p){color:#f6f3e9}
 :root[data-theme="dark"] .about-summary-kicker{color:#ffcf70}
 :root[data-theme="dark"] .about-summary a{color:#102527;background:#8ee0cf}
-:root[data-theme="dark"] .support-donate{color:#8ee0cf;background:#193336;border-color:#526b6b}
+:root[data-theme="dark"] .support-donate{color:#8ee0cf;background:#193336;border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] a[href*="facebook.com/TSY.Microglow"]{background:#1768d2;color:#fff}
 
 /* Dark surfaces must replace the light background layers, not only the base color. */
@@ -48,21 +128,21 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 :root[data-theme="dark"] .brand-logo-light{display:none}
 :root[data-theme="dark"] .brand-logo-dark{display:block;object-fit:contain}
 :root[data-theme="dark"] .hero-banner{background:var(--panel)}
-:root[data-theme="dark"] .category-tabs button{color:var(--ink-soft);background:var(--panel-soft);border-color:#526b6b}
-:root[data-theme="dark"] :is(.category-tabs .active,.launch-button){color:#102527;background:#8ee0cf;border-color:#8ee0cf}
-:root[data-theme="dark"] .search-box{background:var(--panel-soft);color:var(--ink);border-color:#526b6b}
+:root[data-theme="dark"] .category-tabs button{color:var(--ink-soft);background:var(--panel-soft);border-color:rgba(142,224,207,.2)}
+:root[data-theme="dark"] :is(.category-tabs .active,.launch-button){color:#102527;background:#8ee0cf;border-color:#8ee0cf;box-shadow:0 4px 12px rgba(142,224,207,.25)}
+:root[data-theme="dark"] .search-box{background:var(--panel-soft);color:var(--ink);border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] .search-box input::placeholder{color:#b5c9c4}
 :root[data-theme="dark"] .search-symbol{border-color:#b5c9c4}
 :root[data-theme="dark"] .search-symbol::after{background:#b5c9c4}
-:root[data-theme="dark"] .tool-record{background:var(--panel-soft);color:var(--ink-soft);border-color:#526b6b}
+:root[data-theme="dark"] .tool-record{background:var(--panel-soft);color:var(--ink-soft);border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] .tool-copy>p,:root[data-theme="dark"] .feature-tags strong:nth-child(2){color:#b7d4ff;background:#233e60}
 :root[data-theme="dark"] .feature-tags strong:nth-child(3){color:#ffcf70;background:#493b20}
 :root[data-theme="dark"] .feature-tags strong:nth-child(4){color:#e0c4ff;background:#463355}
-:root[data-theme="dark"] .tool-visual{background:var(--panel-soft);border-color:#526b6b}
-:root[data-theme="dark"] .primary-tool::after{border-color:#526b6b}
+:root[data-theme="dark"] .tool-visual{background:var(--panel-soft);border-color:rgba(142,224,207,.2)}
+:root[data-theme="dark"] .primary-tool::after{border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] .tool-empty{background:var(--panel-soft);color:var(--ink-soft)}
 
 :root[data-theme="dark"] .site-counter>span{background:var(--panel-soft)}
-:root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea,.known-issue,.known-issue-empty){background:var(--panel-soft);color:var(--ink);border-color:#526b6b}
+:root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea,.known-issue,.known-issue-empty){background:var(--panel-soft);color:var(--ink);border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea)::placeholder{color:var(--muted);opacity:1}
 :root[data-theme="dark"] :is(.feedback-button,.issue-badge[data-status="fixed"]){background:#8ee0cf;color:#102527}
