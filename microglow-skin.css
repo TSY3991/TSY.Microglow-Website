@@ -1,15 +1,15 @@
 /* Visual layer only; content, geometry and interactions remain in their existing files. */
 :root {
-  --microglow-style-version: 20261112b;
+  --microglow-style-version: 20261112c;
   --muted: #53625e;
   --radius: 14px;
-  --shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 0 #dce5d6, 0 10px 24px rgba(38, 75, 54, 0.055);
+  --shadow: 0 4px 16px rgba(23, 62, 55, 0.06), 0 1px 3px rgba(23, 62, 55, 0.04);
   --soft-shadow: 0 4px 14px rgba(38, 75, 54, 0.06);
 }
 body { background: radial-gradient(ellipse at 12% 5%, rgba(181, 140, 66, .07), transparent 45%), radial-gradient(ellipse at 90% 20%, rgba(10, 136, 126, .07), transparent 50%), linear-gradient(#f5f6ed, #f9f8f0); }
 :is(.hero-banner, .hero-news, .feedback-panel, .support-panel, .explorer-dialog) { border-color: #c5d9cb; border-radius: 24px; box-shadow: var(--shadow); }
 :is(.tool-card, .news-item, .metric-card, .mission-card, .recommend-card, .primary-tool) { border-color: #c5d9cb; border-radius: 20px; box-shadow: var(--shadow); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
-:is(.tool-card, .primary-tool):hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 #fff, 0 6px 0 #dce5d6, 0 16px 32px rgba(38, 75, 54, 0.09); border-color: #a8cdb5; }
+:is(.tool-card, .primary-tool):hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(23, 62, 55, 0.09), 0 2px 6px rgba(23, 62, 55, 0.04); border-color: #a8cdb5; }
 :is(.search-box, .feedback-field input, .feedback-field textarea) { border-color: #c5d9cb; border-radius: 14px; }
 :is(.launch-button, .feedback-button, .news-toggle, .account-status-link) { border-radius: 14px; }
 html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !important; box-shadow: 0 0 0 5px rgba(10, 136, 126, .14); }
@@ -146,3 +146,110 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 :root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea,.known-issue,.known-issue-empty){background:var(--panel-soft);color:var(--ink);border-color:rgba(142,224,207,.2)}
 :root[data-theme="dark"] :is(.feedback-field input,.feedback-field textarea)::placeholder{color:var(--muted);opacity:1}
 :root[data-theme="dark"] :is(.feedback-button,.issue-badge[data-status="fixed"]){background:#8ee0cf;color:#102527}
+
+/* 2026 GitHub 近代開源設計系統升級（shadcn/ui, Linear, Geist 規範） */
+
+/* 1. 現代字級與標題尺度收斂（徹底告別巨大笨重感） */
+.brand-mark h1,
+.hero-banner h1 {
+  font-size: clamp(1.9rem, 3.8vw, 2.2rem) !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.02em !important;
+  font-weight: 850 !important;
+}
+
+.hero-line {
+  font-size: 0.98rem !important;
+  line-height: 1.68 !important;
+}
+
+.section-head h2,
+.news-heading h2,
+.about-summary h2 {
+  font-size: 1.35rem !important;
+  letter-spacing: -0.015em !important;
+}
+
+.tool-copy h3,
+.primary-tool h3 {
+  font-size: 1.12rem !important;
+  letter-spacing: -0.01em !important;
+}
+
+.news-item p,
+.tool-copy span,
+.about-summary p,
+.support-copy p,
+.feedback-copy p {
+  font-size: 0.9rem !important;
+  line-height: 1.68 !important;
+  font-weight: 500 !important;
+}
+
+.news-item strong {
+  font-size: 0.98rem !important;
+  line-height: 1.4 !important;
+}
+
+/* 2. 主行動按鈕：精緻 44px 高度與物理減速手感 */
+.launch-button {
+  min-height: 44px !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  padding: 0 20px !important;
+  border-radius: 14px !important;
+  box-shadow: 0 3px 8px rgba(7, 99, 94, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), filter 180ms ease !important;
+}
+
+.launch-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(7, 99, 94, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+  filter: brightness(1.02);
+}
+
+.launch-button:active {
+  transform: translateY(1px) !important;
+  box-shadow: 0 2px 4px rgba(7, 99, 94, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 3. 卡片物理彈性懸浮微動效（Spring Curve） */
+.tool-card,
+.primary-tool,
+.news-item,
+.metric-card,
+.mission-card {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), border-color 220ms ease !important;
+}
+
+.tool-card:hover,
+.primary-tool:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px rgba(23, 62, 55, 0.08), 0 2px 6px rgba(23, 62, 55, 0.04) !important;
+  border-color: #a3ceb7 !important;
+}
+
+/* 4. 等寬數字與日期對齊（Geist Mono 質感） */
+:is(.top-stat strong, .site-counter strong, time, .news-date, [data-updated-at], .feature-tags strong) {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* 5. Command 質感搜尋框光暈 */
+.search-box:focus-within {
+  border-color: #0a887e !important;
+  box-shadow: 0 0 0 4px rgba(10, 136, 126, 0.16) !important;
+}
+
+/* 6. 便當盒視覺錨點（主打卡片微光環境暈染） */
+.primary-tool {
+  background: linear-gradient(135deg, rgba(255, 253, 245, 0.98), rgba(240, 248, 244, 0.95)) !important;
+  border-color: rgba(10, 136, 126, 0.28) !important;
+}
+
+/* 7. 懸浮毛玻璃 Dock 增強 */
+.mobile-dock {
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16) !important;
+}
