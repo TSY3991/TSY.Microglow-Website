@@ -241,8 +241,14 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
   box-shadow: 0 0 0 4px rgba(10, 136, 126, 0.16) !important;
 }
 
-/* 6. 便當盒視覺錨點（主打卡片微光環境暈染） */
+/* 6. 便當盒視覺錨點與現代高密度佈局（終結 4 欄硬塞與跳行） */
 .primary-tool {
+  display: grid !important;
+  grid-template-columns: auto 1fr minmax(130px, auto) auto !important;
+  align-items: center !important;
+  gap: 16px !important;
+  min-height: auto !important;
+  padding: 16px 20px !important;
   background: linear-gradient(135deg, #fffdf5, #f0f8f4) !important;
   border-color: rgba(10, 136, 126, 0.28) !important;
 }
@@ -252,9 +258,214 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
   border-color: rgba(142, 224, 207, 0.28) !important;
 }
 
-/* 7. 懸浮毛玻璃 Dock 增強 */
-.mobile-dock {
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.16) !important;
+/* 縮小 184px 佔位圓圈，改為緊緻現代徽章 */
+.primary-tool .tool-visual {
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(10, 136, 126, 0.2) !important;
+  background: rgba(14, 143, 136, 0.08) !important;
+}
+
+.primary-tool .tool-visual .antenna,
+.primary-tool .tool-visual .signal {
+  display: none !important;
+}
+
+.primary-tool .tool-visual::before {
+  content: "★";
+  font-size: 24px;
+  color: #0a887e;
+  line-height: 1;
+}
+
+:root[data-theme="dark"] .primary-tool .tool-visual::before {
+  color: #8ee0cf;
+}
+
+.primary-tool .tool-copy {
+  min-width: 0 !important;
+}
+
+.primary-tool .tool-copy h3 {
+  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+  margin: 2px 0 4px !important;
+}
+
+.primary-tool .tool-copy span {
+  display: block;
+  font-size: 0.9rem !important;
+  line-height: 1.55 !important;
+  color: var(--muted) !important;
+}
+
+.primary-tool .tool-record {
+  padding: 8px 12px !important;
+  min-width: 120px !important;
+}
+
+.primary-tool .launch-button {
+  min-height: 44px !important;
+  padding: 0 18px !important;
+  font-size: 0.95rem !important;
+  white-space: nowrap !important;
+}
+
+/* 解除過度截斷與跳行擠壓，確保文字內容完整可見 */
+.brand-copy strong,
+.account-status-link small,
+.account-status-link strong {
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  line-height: 1.25 !important;
+}
+
+/* 消除各區塊多餘滑桿（Scrollbars）與改為多行流動膠囊 */
+.category-tabs {
+  flex-wrap: wrap !important;
+  overflow-x: visible !important;
+  gap: 8px !important;
+  padding: 4px 0 !important;
+}
+
+.category-tabs button {
+  flex: 0 0 auto !important;
+  min-height: 38px !important;
+  padding: 6px 14px !important;
+  font-size: 0.88rem !important;
+  border-radius: 999px !important;
+}
+
+.nav-groups {
+  overflow-x: visible !important;
+  scrollbar-width: none !important;
+}
+
+/* 手機版響應式優化：避免內容被擠壓、消除反向過大按鈕 */
+@media (max-width: 680px) {
+  .primary-tool {
+    grid-template-columns: auto 1fr !important;
+    gap: 12px !important;
+    padding: 14px 16px !important;
+  }
+  .primary-tool .tool-record {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+  .primary-tool .launch-button {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 0.98rem !important;
+  }
+  .tool-visual {
+    width: 44px !important;
+    height: 44px !important;
+  }
+  .tool-copy h3 {
+    font-size: 1.08rem !important;
+  }
+  /* 確保手機版不會隱藏重要指標說明文字 */
+  .metric-card span {
+    display: inline-block !important;
+  }
+  .mobile-dock strong {
+    display: inline-block !important;
+    font-size: 0.72rem !important;
+  }
+}
+
+/* 8. 2026 現代向量 Icon 優化（取代舊式 CSS 方塊拼湊） */
+.home-symbol::before {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  clip-path: none !important;
+}
+
+.gamepad-symbol::before {
+  width: 18px !important;
+  height: 18px !important;
+  border: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='6' x2='10' y1='12' y2='12'/%3E%3Cline x1='8' x2='8' y1='10' y2='14'/%3E%3Cline x1='15' x2='15.01' y1='13' y2='13'/%3E%3Cline x1='18' x2='18.01' y1='11' y2='11'/%3E%3Crect width='20' height='12' x='2' y='6' rx='6'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='6' x2='10' y1='12' y2='12'/%3E%3Cline x1='8' x2='8' y1='10' y2='14'/%3E%3Cline x1='15' x2='15.01' y1='13' y2='13'/%3E%3Cline x1='18' x2='18.01' y1='11' y2='11'/%3E%3Crect width='20' height='12' x='2' y='6' rx='6'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+.gamepad-symbol::after {
+  display: none !important;
+}
+
+.cube-symbol::before {
+  width: 18px !important;
+  height: 18px !important;
+  border: 0 !important;
+  transform: none !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21 16-9 5-9-5V8l9-5 9 5v8Z'/%3E%3Cpath d='M3.27 6.96 12 12.01l8.73-5.05'/%3E%3Cline x1='12' x2='12' y1='22.08' y2='12'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21 16-9 5-9-5V8l9-5 9 5v8Z'/%3E%3Cpath d='M3.27 6.96 12 12.01l8.73-5.05'/%3E%3Cline x1='12' x2='12' y1='22.08' y2='12'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+.book-symbol::before {
+  width: 18px !important;
+  height: 18px !important;
+  border: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z'/%3E%3Cpath d='M6 6h10'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z'/%3E%3Cpath d='M6 6h10'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+.compass-symbol::before {
+  width: 18px !important;
+  height: 18px !important;
+  border: 0 !important;
+  background-color: currentColor !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolygon points='16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+.compass-symbol::after {
+  display: none !important;
+}
+
+.flame-icon {
+  background: rgba(240, 107, 93, 0.14) !important;
+}
+
+.flame-icon::before {
+  width: 22px !important;
+  height: 22px !important;
+  background-color: var(--red) !important;
+  clip-path: none !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+.trophy-icon {
+  background: rgba(245, 180, 50, 0.16) !important;
+}
+
+.trophy-icon::before {
+  width: 22px !important;
+  height: 22px !important;
+  background-color: var(--gold) !important;
+  clip-path: none !important;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6'/%3E%3Cpath d='M18 9h1.5a2.5 2.5 0 0 0 0-5H18'/%3E%3Cpath d='M4 22h16'/%3E%3Cpath d='M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22'/%3E%3Cpath d='M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22'/%3E%3Cpath d='M18 2H6v7a6 6 0 0 0 12 0V2Z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9H4.5a2.5 2.5 0 0 1 0-5H6'/%3E%3Cpath d='M18 9h1.5a2.5 2.5 0 0 0 0-5H18'/%3E%3Cpath d='M4 22h16'/%3E%3Cpath d='M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22'/%3E%3Cpath d='M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22'/%3E%3Cpath d='M18 2H6v7a6 6 0 0 0 12 0V2Z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+/* 深色模式下圖標徽章底色適應 */
+:root[data-theme="dark"] .flame-icon {
+  background: rgba(240, 107, 93, 0.22) !important;
+}
+:root[data-theme="dark"] .trophy-icon {
+  background: rgba(245, 180, 50, 0.22) !important;
+}
+:root[data-theme="dark"] .coin-icon {
+  background: rgba(245, 180, 50, 0.22) !important;
 }

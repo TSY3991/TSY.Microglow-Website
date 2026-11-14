@@ -46,7 +46,7 @@
 
 
 :root:not([data-theme="dark"]){--muted:#4e5b56}
-:root:not([data-theme="dark"]) .brand-island-link{color:#fff}
+:root:not([data-theme="dark"]) .brand-island-link{color:#102527}
 :root:not([data-theme="dark"]) .home-link{background:#07635e;color:#fff}
 :root:not([data-theme="dark"]) .banner-copy{color:#102527;text-shadow:none}
 :root:not([data-theme="dark"]) .finder>.finder-kicker{color:#875924}
