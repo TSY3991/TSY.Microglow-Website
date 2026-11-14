@@ -243,8 +243,13 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 
 /* 6. 便當盒視覺錨點（主打卡片微光環境暈染） */
 .primary-tool {
-  background: linear-gradient(135deg, rgba(255, 253, 245, 0.98), rgba(240, 248, 244, 0.95)) !important;
+  background: linear-gradient(135deg, #fffdf5, #f0f8f4) !important;
   border-color: rgba(10, 136, 126, 0.28) !important;
+}
+
+:root[data-theme="dark"] .primary-tool {
+  background: linear-gradient(135deg, #193336, #203d40) !important;
+  border-color: rgba(142, 224, 207, 0.28) !important;
 }
 
 /* 7. 懸浮毛玻璃 Dock 增強 */

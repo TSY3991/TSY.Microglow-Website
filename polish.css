@@ -710,6 +710,11 @@ html.is-tab-hidden *::after {
   .scroll-progress {
     display: none;
   }
+
+  :root :is(.launch-button,.tool-card,.primary-tool,.news-item,.metric-card,.mission-card) {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 @media (hover: none) {

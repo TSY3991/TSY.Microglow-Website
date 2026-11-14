@@ -12,6 +12,12 @@
     var value = theme === 'dark' ? meta.getAttribute('data-dark-theme-color') : meta.getAttribute('data-light-theme-color');
     if (value) meta.setAttribute('content', value);
   }
+  function updateLogo() {
+    var logo = document.querySelector('.brand-logo[data-light-src][data-dark-src]');
+    if (!logo) return;
+    var source = theme === 'dark' ? logo.getAttribute('data-dark-src') : logo.getAttribute('data-light-src');
+    if (source && logo.getAttribute('src') !== source) logo.setAttribute('src', source);
+  }
   function updateButton(button) {
     var dark = theme === 'dark';
     button.setAttribute('aria-pressed', dark ? 'true' : 'false');
@@ -24,6 +30,7 @@
     if (persist) { try { window.localStorage.setItem(storageKey, theme); } catch (_) {} }
     document.querySelectorAll('[data-theme-toggle]').forEach(updateButton);
     updateMeta();
+    updateLogo();
     document.dispatchEvent(new CustomEvent('tsy-theme-change', { detail: { theme: theme } }));
   }
   function mountButton() {
@@ -38,6 +45,6 @@
     host.insertBefore(button, host.firstChild); updateButton(button); return true;
   }
   updateMeta();
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { updateMeta(); if (!mountButton()) { var observer = new MutationObserver(function () { if (mountButton()) observer.disconnect(); }); observer.observe(document.body, { childList: true, subtree: true }); setTimeout(function () { observer.disconnect(); }, 5000); } }); else { updateMeta(); mountButton(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { updateMeta(); updateLogo(); if (!mountButton()) { var observer = new MutationObserver(function () { if (mountButton()) observer.disconnect(); }); observer.observe(document.body, { childList: true, subtree: true }); setTimeout(function () { observer.disconnect(); }, 5000); } }); else { updateMeta(); updateLogo(); mountButton(); }
   window.addEventListener('storage', function (event) { if (event.key === storageKey && (event.newValue === 'dark' || event.newValue === 'light')) setTheme(event.newValue, false); });
 })();
