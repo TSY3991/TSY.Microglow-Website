@@ -42,7 +42,12 @@
     var button = document.createElement('button');
     button.type = 'button'; button.className = 'tsy-theme-toggle'; button.setAttribute('data-theme-toggle', ''); button.setAttribute('aria-pressed', 'false');
     button.addEventListener('click', function () { setTheme(theme === 'dark' ? 'light' : 'dark', true); });
-    host.insertBefore(button, host.firstChild); updateButton(button); return true;
+    if (host.tagName === 'MAIN') {
+      host.insertBefore(button, host.firstChild);
+    } else {
+      host.appendChild(button);
+    }
+    updateButton(button); return true;
   }
   updateMeta();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { updateMeta(); updateLogo(); if (!mountButton()) { var observer = new MutationObserver(function () { if (mountButton()) observer.disconnect(); }); observer.observe(document.body, { childList: true, subtree: true }); setTimeout(function () { observer.disconnect(); }, 5000); } }); else { updateMeta(); updateLogo(); mountButton(); }
