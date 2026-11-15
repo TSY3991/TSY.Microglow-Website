@@ -99,7 +99,11 @@ for (let index = 0; index < Math.min(cards.length, tools.length); index += 1) {
 }
 
 if (/toolGrid\.innerHTML\s*=/.test(script)) fail('JavaScript 仍會以 innerHTML 重建入口卡片');
-if (!html.includes('src="./scripts/portal-records.js?v=20261026a"')) fail('portal-records.js 快取版本未升至 20261026a');
+{
+  // 只要求不低於靜態化入口那一版；之後每次改 portal-records.js 仍需自行往後升版。
+  const recordsVersion = (html.match(/src="\.\/scripts\/portal-records\.js\?v=(\d{8}[a-z])"/) || [])[1];
+  if (!recordsVersion || recordsVersion < '20261026a') fail('portal-records.js 快取版本缺漏或低於 20261026a');
+}
 if ((html.match(/<h1\b/g) || []).length !== 1) fail('首頁 H1 數量不是 1');
 if ((html.match(/class="news-item"/g) || []).length !== 28) fail('新聞筆數不是 28');
 
