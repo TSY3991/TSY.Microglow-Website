@@ -127,6 +127,7 @@
       const selected = tab.dataset.authTab === mode;
       tab.classList.toggle("is-active", selected);
       tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
     });
     passwordInput.autocomplete = mode === "login" ? "current-password" : "new-password";
     if (pwHint) pwHint.hidden = mode === "login";
@@ -436,6 +437,16 @@
   backLink.href = returnTo;
   continueLink.href = returnTo;
   tabs.forEach((tab) => tab.addEventListener("click", () => selectMode(tab.dataset.authTab)));
+  // ARIA tabs 慣例：只有目前分頁在 Tab 順序內，方向鍵／Home／End 切換
+  tabs.forEach((tab, index) => tab.addEventListener("keydown", (event) => {
+    const last = tabs.length - 1;
+    const next = { ArrowRight: index === last ? 0 : index + 1, ArrowLeft: index === 0 ? last : index - 1, Home: 0, End: last }[event.key];
+    if (next === undefined || tabs[next].disabled) return;
+    event.preventDefault();
+    selectMode(tabs[next].dataset.authTab);
+    tabs[next].focus();
+  }));
+  tabs.forEach((tab) => { tab.tabIndex = tab.getAttribute("aria-selected") === "true" ? 0 : -1; });
   form.addEventListener("submit", handleSubmit);
   forgotButton?.addEventListener("click", () => selectMode("reset"));
   resetBack?.addEventListener("click", () => selectMode("login"));

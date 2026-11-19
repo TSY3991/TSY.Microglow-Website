@@ -46,7 +46,7 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (form.elements.website.value) {
+    if (form.elements.hp_check.value) {
       setStatus("已收到，謝謝你的回報！", "ok");
       return;
     }

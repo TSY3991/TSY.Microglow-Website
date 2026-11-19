@@ -158,6 +158,19 @@ if (!html.includes('styles.css?v=20261031a') || !aboutHtml.includes('styles.css?
   }
 }
 
+// 專案網址與可發佈金鑰在 microglow-auth.js 與 portal-visit-beacon.js 各有一份（beacon 要能單獨被各站載入），這裡確認兩份一致。
+{
+  const read = (name) => fs.readFileSync(path.join(__dirname, name), 'utf8');
+  const pick = (source, name) => source.match(new RegExp(`const ${name} = "([^"]+)"`))?.[1];
+  const auth = read('microglow-auth.js');
+  const beacon = read('portal-visit-beacon.js');
+  for (const name of ['PROJECT_URL', 'PUBLISHABLE_KEY']) {
+    const a = name === 'PROJECT_URL' ? `https://${pick(auth, 'PROJECT_REF')}.supabase.co` : pick(auth, name);
+    const b = pick(beacon, name);
+    if (!a || !b || a !== b) fail(`${name} 在 microglow-auth.js 與 portal-visit-beacon.js 不一致或讀不到`);
+  }
+}
+
 if (!process.exitCode) {
   console.log(`PASS: ${tools.length} 筆 tools[] 與靜態卡片逐項相符；首頁與 About 頁的實體資料、canonical、單一 H1、28 則新聞及快取版本通過。`);
 }

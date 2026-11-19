@@ -532,7 +532,7 @@
 
     function setFilter(filter, navRole) {
       activeFilter = filter || "all";
-      activeNavRole = navRole || (activeFilter === "all" ? "tools" : activeFilter);
+      activeNavRole = navRole || (activeFilter === "all" ? "home" : activeFilter);
       updateTriggerState();
       applyFilters();
     }
@@ -541,8 +541,8 @@
       trigger.addEventListener("click", (event) => {
         const filter = trigger.dataset.filterTrigger || "all";
         const inNavigation = Boolean(trigger.closest(".nav-groups, .mobile-dock"));
-        const navRole = trigger.dataset.navRole || (filter === "all" ? "tools" : filter);
-        const scrollTarget = navRole === "home"
+        const navRole = trigger.dataset.navRole || (filter === "all" ? "home" : filter);
+        const scrollTarget = inNavigation && navRole === "home"
           ? document.querySelector("#top")
           : document.querySelector("#quick-title");
 
@@ -550,7 +550,8 @@
         if (inNavigation && searchInput) {
           searchInput.value = "";
         }
-        incrementProgress("filters");
+        // 只有真的換了分類才算一次篩選，避免重複點同一顆按鈕刷經驗值
+        if (filter !== activeFilter) incrementProgress("filters");
         setFilter(filter, navRole);
         scrollTarget?.scrollIntoView({
           behavior: "smooth",

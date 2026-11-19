@@ -260,7 +260,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .brand-title h1 { font-size: 22px; }
   .brand-title img { width: 44px; height: 44px; }
   .brand-lead { display: none; }
-  .brand-back { order: 1; margin-bottom: 0; }
+  .brand-back { order: 1; margin-bottom: 0; display: inline-flex; align-items: center; min-height: 44px; padding-inline-end: 8px; }
+  .list-controls input, .list-controls select { font-size: 16px; }
   .brand .tsy-theme-toggle { order: 1; margin-inline-start: auto; min-height: 36px; padding: 4px 12px; font-size: 12px; }
 
   .panel {
