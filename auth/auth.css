@@ -33,6 +33,12 @@ body {
 button,
 input {
   font: inherit;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .auth-shell,
@@ -57,8 +63,8 @@ input {
 
 .auth-card {
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
-  width: min(1040px, 96vw);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  width: min(1040px, 100%);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 28px;
@@ -304,7 +310,14 @@ input {
 
 @media (max-width: 720px) {
   .auth-shell {
-    padding: 68px 14px 18px;
+    padding: 16px 14px 24px;
+    align-content: start;
+  }
+
+  .auth-back {
+    position: static;
+    justify-self: start;
+    padding: 8px 4px;
   }
 
   .auth-card {

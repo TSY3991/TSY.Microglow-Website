@@ -30,7 +30,7 @@
   let point = { x: 0, y: 0 };
   let walkStart = { x: 0, y: 0 };
   let walkTarget = { x: 0, y: 0 };
-  let roaming = true;
+  let roaming = window.innerWidth > 680;
   let nextWalk = 5000;
   let drag = null;
   let suppressClickUntil = 0;
@@ -312,6 +312,10 @@
       canvas.hidden = false;
       companion.hidden = false;
       companion.classList.add("is-roaming");
+      if (roamButton) {
+        roamButton.textContent = roaming ? "自由散步：開啟" : "自由散步：關閉";
+        roamButton.setAttribute("aria-pressed", String(roaming));
+      }
       goHome();
       syncPause();
       prefetchActions();

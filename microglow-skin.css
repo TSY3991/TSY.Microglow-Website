@@ -1,11 +1,15 @@
 /* Visual layer only; content, geometry and interactions remain in their existing files. */
 :root {
-  --microglow-style-version: 20261114c;
+  --microglow-style-version: 20261126a;
   --muted: #53625e;
   --radius: 14px;
   --shadow: 0 4px 16px rgba(23, 62, 55, 0.06), 0 1px 3px rgba(23, 62, 55, 0.04);
   --soft-shadow: 0 4px 14px rgba(38, 75, 54, 0.06);
 }
+html, body { overflow-x: clip; max-width: 100%; }
+a, button, input, select, textarea, summary, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button:active, .nav-item:active, .mobile-dock a:active, .category-tabs button:active, .account-status-link:active, .follow-button:active { transform: scale(0.97); }
+.explorer-close { min-width: 44px !important; min-height: 44px !important; width: 44px !important; height: 44px !important; }
 body { background: radial-gradient(ellipse at 12% 5%, rgba(181, 140, 66, .07), transparent 45%), radial-gradient(ellipse at 90% 20%, rgba(10, 136, 126, .07), transparent 50%), linear-gradient(#f5f6ed, #f9f8f0); }
 :is(.hero-banner, .hero-news, .feedback-panel, .support-panel, .explorer-dialog) { border-color: #c5d9cb; border-radius: 24px; box-shadow: var(--shadow); }
 :is(.tool-card, .news-item, .metric-card, .mission-card, .recommend-card, .primary-tool) { border-color: #c5d9cb; border-radius: 20px; box-shadow: var(--shadow); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
@@ -522,13 +526,18 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
 
 @media (max-width: 980px) {
   .brand {
-    padding-right: 60px !important;
+    padding-right: 148px !important;
   }
   .brand-copy {
     display: flex !important;
     flex-wrap: wrap !important;
     align-items: center !important;
     gap: 6px 10px !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .brand-copy strong {
+    white-space: normal !important;
   }
   .brand-name {
     width: 100% !important;
@@ -543,8 +552,26 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
   }
 }
 
-/* 手機版響應式優化：消除空白、對齊 2x3 頂部列、避免文字與按鈕重疊 */
+@media (max-width: 480px) {
+  .brand {
+    padding-right: 60px !important;
+  }
+}
+
+/* 手機版響應式優化：消除空白、溢出與重疊，提升點擊與滑動流暢度 */
 @media (max-width: 680px) {
+  .mobile-dock {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(255, 253, 248, 0.98) !important;
+  }
+  :root[data-theme="dark"] .mobile-dock {
+    background: rgba(25, 51, 54, 0.98) !important;
+  }
+  .support-donate {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
   .topbar {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 8px !important;
@@ -594,17 +621,30 @@ html body :is(a, button, [tabindex]):focus-visible { outline-color: #0a887e !imp
   .metric-card {
     padding: 12px 10px !important;
   }
-  .metric-card span {
+  .metric-card span:not(.metric-icon) {
     display: inline-block !important;
     font-size: 0.75rem !important;
+  }
+  .mission-row .metric-card:last-child span:not(.metric-icon) {
+    grid-column: 2 !important;
   }
   .mobile-dock strong {
     display: inline-block !important;
     font-size: 0.72rem !important;
   }
   .mascot-companion {
-    right: 12px !important;
-    bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 10px !important;
+    bottom: calc(82px + env(safe-area-inset-bottom, 0px)) !important;
+    width: 72px !important;
+  }
+  .mascot-character {
+    width: 72px !important;
+    height: 72px !important;
+  }
+  .mascot-menu {
+    min-height: 36px !important;
+    padding: 4px 8px !important;
+    font-size: 0.68rem !important;
   }
 }
 

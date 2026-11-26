@@ -82,14 +82,11 @@
     // Re-play the entrance when the category filter or search shows a card again.
     const cards = Array.from(document.querySelectorAll("[data-tool-card]"));
     const hiddenObserver = new MutationObserver((mutations) => {
-      const shown = mutations
-        .map((mutation) => mutation.target)
-        .filter((card) => !card.hidden && card.classList.contains("is-in"));
-      shown.forEach((card, index) => {
-        card.style.setProperty("--d", `${index * 80}ms`);
-        card.classList.remove("is-in");
-        void card.offsetWidth;
-        requestAnimationFrame(() => card.classList.add("is-in"));
+      mutations.forEach((mutation) => {
+        const card = mutation.target;
+        if (card.hidden) return;
+        card.style.setProperty("--d", "0ms");
+        card.classList.add("is-in");
       });
     });
     window.addEventListener("beforeprint", () => {
