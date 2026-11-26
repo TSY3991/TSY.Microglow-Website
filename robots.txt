@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+Disallow: /auth/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /auth/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /auth/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /auth/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /auth/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /auth/
+
+Sitemap: https://tsy3991.github.io/TSY.Microglow-Website/sitemap.xml
+Sitemap: https://tsy3991.github.io/TSY.Microglow-Tools/sitemap.xml
+Sitemap: https://tsy3991.github.io/TSY.Microglow-Learning/sitemap.xml
+Sitemap: https://tsy3991.github.io/amateur-radio-quiz/sitemap.xml
+Sitemap: https://tsy3991.github.io/TSY.Microglow-Games/sitemap.xml
+Sitemap: https://tsy3991.github.io/TSY.Microglow-Creative/sitemap.xml

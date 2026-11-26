@@ -1,0 +1,40 @@
+# TSY 微光創作室（TSY.Microglow）
+
+> TSY 微光創作室（TSY.Microglow）是由 TSY 維護的免費中文數位作品入口，整合線上測驗練習、瀏覽器小遊戲、AI 課程學習資源、AI 創作工具與免安裝／安裝版 Windows 離線實用工具。
+
+## 核心入口與介紹
+
+- [主入口首頁](https://tsy3991.github.io/TSY.Microglow-Website/): 彙整全站 16 項公開作品入口、更新公告與問題回報。
+- [關於 TSY 微光創作室](https://tsy3991.github.io/TSY.Microglow-Website/about/): 品牌定位、五大作品分類與本機／雲端資料處理說明。
+- [微光島 3D 互動地圖](https://tsy3991.github.io/TSY.Microglow-Website/island/): 以遊戲、工具、創作、學習、測驗五大分區構成的 3D 六角小島導覽地圖。
+
+## 實用工具（Windows 離線桌面軟體 ＆ 網頁 App）
+
+- [微光工具箱大廳](https://tsy3991.github.io/TSY.Microglow-Tools/): 集中放置所有免費實用工具與最新 GitHub Releases 下載頁。
+- [PDF 工坊](https://tsy3991.github.io/TSY.Microglow-Tools/tools/pdf-workshop/): 免費離線 Windows PDF 工具，支援整理頁面、合併、拆分、塗黑遮蔽、壓縮、加頁碼與浮水印、圖片與 PDF 互轉、加解密等 20 項功能，檔案全程本機處理且不覆蓋原檔。
+- [PhotoConverter 照片轉檔工具](https://tsy3991.github.io/TSY.Microglow-Tools/tools/photo-converter/): 免費 Windows 批次照片轉檔工具，支援 HEIC／HEIF／JPG／PNG／WebP／AVIF／TIFF／BMP／GIF／ICO 互轉與合併 PDF，具備縮放裁剪、浮水印、長圖拼接與解碼驗證。
+- [媒體轉檔工具（CarMediaConverter）](https://tsy3991.github.io/TSY.Microglow-Tools/tools/car-media-converter/): 免費 Windows 影音轉檔工具，支援 MP3／MP4 等多格式批次轉換、來源影片分析、裝置相容建議與 Real-ESRGAN AI 畫質放大。
+- [隨身硬碟同步備份工具（PortableBackupTool）](https://tsy3991.github.io/TSY.Microglow-Tools/tools/portable-backup-tool/): 免費 Windows 資料夾同步備份工具，支援保守同步與鏡像同步，刪除檔案會先隔離 30 天保護資料安全。
+- [PriceRadar 價格雷達](https://tsy3991.github.io/TSY.Microglow-Tools/tools/price-radar/): 免費手機／網頁 PWA 比價工具，掃描商品條碼查詢與回報賣場價格、特價檔期與最划算購物清單。
+
+## 測驗練習
+
+- [三等業餘無線電人員測驗練習](https://tsy3991.github.io/amateur-radio-quiz/): 收錄 NCC 三等業餘無線電官方題庫 570 題，提供 35 題模擬考（25 題及格）、題庫練習、逐題解析、錯題本與本機學習統計，免安裝、免登入即可使用。
+
+## 課程學習
+
+- [微光課程學習大廳](https://tsy3991.github.io/TSY.Microglow-Learning/): 集中課堂教材、AI 實作與學習資源。
+- [AI 常用工具合集](https://tsy3991.github.io/TSY.Microglow-Learning/courses/ai-toolkit/): 彙整 Git、Node.js、Python、FFmpeg、OCR 等 15 個常用開發與實作工具官方下載連結，並附可貼給 Codex／Claude Code 的課堂環境檢查引導文字。
+
+## 創作工具
+
+- [微光創作工具大廳](https://tsy3991.github.io/TSY.Microglow-Creative/): 彙整 AI 圖片創作（宮廟祝賀海報、節慶祝福、活動視覺模板）與 LINE 貼圖創作工具（提示詞生成、母圖裁切與 ZIP 打包下載）。
+
+## 瀏覽器小遊戲
+
+- [微光遊戲大廳](https://tsy3991.github.io/TSY.Microglow-Games/): 免下載即開即玩的免費網頁遊戲，包含霓虹方塊俄羅斯、微光貪吃蛇、小朋友下樓梯、微光寶石（15 關三消）、微光連珠對戰（五行轉珠戰鬥）與微光商業帝國（多人連線策略桌遊）。
+
+## 官方社群與開源
+
+- [GitHub（TSY3991）](https://github.com/TSY3991)
+- [Facebook 粉專（TSY 微光創作室）](https://www.facebook.com/TSY.Microglow)
