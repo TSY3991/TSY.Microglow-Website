@@ -242,6 +242,25 @@ main:focus {
   animation-delay: 0ms;
 }
 
+@supports (top: calc(sibling-index() * 1px)) {
+  .nav-section {
+    --s: calc(sibling-index() - 1);
+  }
+  .nav-section > :nth-child(n + 2) {
+    --i: calc(sibling-index() - 2);
+  }
+  .topbar > * {
+    --i: calc(sibling-index() - 1);
+  }
+  .news-item {
+    --i: calc(sibling-index() - 1);
+  }
+  .news-item:nth-child(n + 5) {
+    --i: 0;
+    animation-delay: 0ms;
+  }
+}
+
 .news-toggle {
   animation: riseIn 0.8s var(--ease-out) 0.75s backwards;
 }

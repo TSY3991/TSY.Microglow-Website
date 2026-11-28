@@ -10,6 +10,31 @@ html, body { overflow-x: clip; max-width: 100%; }
 a, button, input, select, textarea, summary, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 button:active, .nav-item:active, .mobile-dock a:active, .category-tabs button:active, .account-status-link:active, .follow-button:active { transform: scale(0.97); }
 .explorer-close { min-width: 44px !important; min-height: 44px !important; width: 44px !important; height: 44px !important; }
+progress.progress-track {
+  display: block;
+  appearance: none;
+  border: 0 solid;
+  width: 100%;
+  height: 10px;
+  overflow: clip;
+  border-radius: 999px;
+  background: #e7dfd2;
+}
+:root[data-theme="dark"] progress.progress-track {
+  background: #203d40;
+}
+progress.progress-track::-webkit-progress-bar {
+  background: transparent;
+}
+progress.progress-track::-webkit-progress-value {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal), var(--green, #36b879));
+  transition: inline-size 240ms ease;
+}
+progress.progress-track::-moz-progress-bar {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--teal), var(--green, #36b879));
+}
 body { background: radial-gradient(ellipse at 12% 5%, rgba(181, 140, 66, .07), transparent 45%), radial-gradient(ellipse at 90% 20%, rgba(10, 136, 126, .07), transparent 50%), linear-gradient(#f5f6ed, #f9f8f0); }
 :is(.hero-banner, .hero-news, .feedback-panel, .support-panel, .explorer-dialog) { border-color: #c5d9cb; border-radius: 24px; box-shadow: var(--shadow); }
 :is(.tool-card, .news-item, .metric-card, .mission-card, .recommend-card, .primary-tool) { border-color: #c5d9cb; border-radius: 20px; box-shadow: var(--shadow); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }

@@ -92,8 +92,7 @@
     $("#statLevel").textContent = `Lv.${level}`;
     $("#statXp").textContent = `${xp} XP`;
     const progress = level >= 10 ? 100 : xp % 100;
-    $("#statXpBar").style.width = `${progress}%`;
-    $("#statXpTrack").setAttribute("aria-valuenow", String(progress));
+    $("#statXpBar").value = progress;
   }
 
   /* ---------- content: parsed from the portal's own static HTML ---------- */

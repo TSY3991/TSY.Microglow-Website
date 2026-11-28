@@ -9,13 +9,18 @@
     dialog.showModal();
     trigger.setAttribute("aria-expanded", "true");
   });
-  close.addEventListener("click", () => dialog.close());
-  dialog.addEventListener("click", (event) => {
-    if (event.target !== dialog) return;
-    const bounds = dialog.getBoundingClientRect();
-    if (event.clientX < bounds.left || event.clientX > bounds.right ||
-        event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
-  });
+  if (!("commandForElement" in HTMLButtonElement.prototype)) {
+    close.addEventListener("click", () => dialog.close());
+  }
+  if (!("closedBy" in HTMLDialogElement.prototype)) {
+    const outside = (e) => {
+      const r = dialog.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+    let pressedOutside = false;
+    dialog.addEventListener("pointerdown", (e) => { pressedOutside = outside(e); });
+    dialog.addEventListener("pointerup", (e) => { if (pressedOutside && outside(e)) dialog.close(); });
+  }
   dialog.addEventListener("close", () => {
     trigger.setAttribute("aria-expanded", "false");
     trigger.focus({ preventScroll: true });

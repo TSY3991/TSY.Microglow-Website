@@ -380,14 +380,9 @@
     if (explorerMetaEl) explorerMetaEl.textContent = `${xp} XP・${progress.visitedDays.length} 天探索`;
     if (explorerXpBarEl) explorerXpBarEl.style.width = `${xpPercent}%`;
     if (missionProgressBarEl) {
-      missionProgressBarEl.style.width = `${Math.round((missionCurrent / missionTotal) * 100)}%`;
-      const track = missionProgressBarEl.parentElement;
-      if (track) {
-        track.setAttribute("aria-label", "完成進度");
-        track.setAttribute("aria-valuemax", String(missionTotal));
-        track.setAttribute("aria-valuenow", String(missionCurrent));
-        track.setAttribute("aria-valuetext", `${missionCurrent} / ${missionTotal}`);
-      }
+      missionProgressBarEl.max = missionTotal;
+      missionProgressBarEl.value = missionCurrent;
+      missionProgressBarEl.setAttribute("aria-valuetext", `${missionCurrent} / ${missionTotal}`);
     }
     if (missionScoreEl) missionScoreEl.textContent = `${missionCurrent} / ${missionTotal}`;
   }
@@ -439,15 +434,18 @@
       trigger.setAttribute("aria-expanded", "false");
       trigger.focus();
     });
-    dialog.addEventListener("click", (event) => {
-      if (event.target !== dialog) return;
-      const bounds = dialog.getBoundingClientRect();
-      if (
-        event.clientX < bounds.left || event.clientX > bounds.right ||
-        event.clientY < bounds.top || event.clientY > bounds.bottom
-      ) dialog.close();
-    });
-    dialog.querySelector("[data-explorer-close]").addEventListener("click", () => dialog.close());
+    if (!("closedBy" in HTMLDialogElement.prototype)) {
+      const outside = (e) => {
+        const r = dialog.getBoundingClientRect();
+        return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      };
+      let pressedOutside = false;
+      dialog.addEventListener("pointerdown", (e) => { pressedOutside = outside(e); });
+      dialog.addEventListener("pointerup", (e) => { if (pressedOutside && outside(e)) dialog.close(); });
+    }
+    if (!("commandForElement" in HTMLButtonElement.prototype)) {
+      dialog.querySelector("[data-explorer-close]").addEventListener("click", () => dialog.close());
+    }
   }
 
   function setupFilters() {

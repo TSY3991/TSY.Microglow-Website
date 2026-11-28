@@ -142,7 +142,7 @@
   function setupProgressBars() {
     const bars = ["#explorerXpBar", "#missionProgressBar"]
       .map((id) => document.querySelector(id))
-      .filter(Boolean);
+      .filter((el) => el && el.tagName !== "PROGRESS");
     if (!bars.length || !("IntersectionObserver" in window)) return;
 
     const targets = new Map();

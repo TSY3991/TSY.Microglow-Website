@@ -59,15 +59,12 @@
       const hash = await sha1Hex(password);
       const prefix = hash.slice(0, 5);
       const suffix = hash.slice(5);
-      const controller = new AbortController();
-      const timer = window.setTimeout(() => controller.abort(), HIBP_TIMEOUT_MS);
       const response = await fetch(HIBP_RANGE_URL + prefix, {
         headers: { "Add-Padding": "true" },
-        signal: controller.signal,
+        signal: AbortSignal.timeout(HIBP_TIMEOUT_MS),
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
-      window.clearTimeout(timer);
       if (!response.ok) return null;
       const body = await response.text();
       for (const line of body.split("\n")) {

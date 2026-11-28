@@ -91,7 +91,7 @@
       const local = Array.isArray(stats?.sessions) ? stats.sessions : [];
       if (data.quizSessions.length > local.length) {
         // 雲端為去重後的聯集（新到舊）；本機維持舊到新的慣例
-        const merged = data.quizSessions.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+        const merged = data.quizSessions.toSorted((a, b) => new Date(a.date) - new Date(b.date));
         if (writeJson(STATS_KEY, { ...(isObject(stats) ? stats : {}), sessions: merged })) {
           changedKeys.push(STATS_KEY);
         }
